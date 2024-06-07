@@ -11,7 +11,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "customers", schema = "acme")
+@Table(name = "customers")
 public class Customer extends Individual{
     @Column(name = "phone", length = 10)
     private String phone;

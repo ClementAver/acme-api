@@ -14,11 +14,11 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "products", schema = "acme")
+@Table(name = "products")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idProduct", nullable = false)
+    @Column(name = "id_product", nullable = false)
     private Integer id;
 
     @Column(name = "name", nullable = false, length = 64)
@@ -28,6 +28,6 @@ public class Product {
     private Integer price;
 
     @OneToMany(mappedBy = "idProduct")
-    private Set<Orderline> orderlines = new LinkedHashSet<>();
+    private Set<OrderLine> orderlines = new LinkedHashSet<>();
 
 }

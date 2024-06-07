@@ -14,21 +14,21 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "orders", schema = "acme")
+@Table(name = "orders")
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idOrder", nullable = false)
-    private Integer id;
+    @Column(name = "id_order", nullable = false)
+    private Long idOrder;
 
     @Column(name = "date", nullable = false, length = 64)
     private String date;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "idCustomer", nullable = false)
+    @JoinColumn(name = "id_customer", nullable = false)
     private Customer idCustomer;
 
     @OneToMany(mappedBy = "idOrder")
-    private Set<Orderline> orderlines = new LinkedHashSet<>();
+    private Set<OrderLine> orderlines = new LinkedHashSet<>();
 
 }
