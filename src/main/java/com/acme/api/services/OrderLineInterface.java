@@ -8,6 +8,6 @@ import java.util.List;
 public interface OrderLineInterface {
     OrderLine createOrderLine(OrderLineRequestBody orderLineRequestBody);
     List<OrderLine> getAllOrderLines();
-    OrderLine getOrderLine(int id);
-    void deleteOrderLine(int id);
+    OrderLine getOrderLine(long id);
+    void deleteOrderLine(long id);
 }

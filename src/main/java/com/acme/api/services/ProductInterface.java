@@ -8,6 +8,6 @@ import java.util.List;
 public interface ProductInterface {
     Product createProduct(ProductRequestBody productRequestBody);
     List<Product> getAllProducts();
-    Product getProduct(int id);
-    void deleteProduct(int id);
+    Product getProduct(long id);
+    void deleteProduct(long id);
 }

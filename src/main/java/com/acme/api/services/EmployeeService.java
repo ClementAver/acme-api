@@ -32,12 +32,12 @@ public class EmployeeService implements EmployeeInterface{
     }
 
     @Override
-    public Employee getEmployee(int id) {
+    public Employee getEmployee(long id) {
         return employeeRepository.findById(id);
     }
 
     @Override
-    public void deleteEmployee(int id) {
+    public void deleteEmployee(long id) {
         employeeRepository.deleteById((long) id);
     }
 }

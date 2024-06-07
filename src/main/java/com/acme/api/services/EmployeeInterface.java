@@ -8,6 +8,6 @@ import java.util.List;
 public interface EmployeeInterface {
     Employee createEmployee(EmployeeRequestBody employeeRequestBody);
     List<Employee> getAllEmployees();
-    Employee getEmployee(int id);
-    void deleteEmployee(int id);
+    Employee getEmployee(long id);
+    void deleteEmployee(long id);
 }

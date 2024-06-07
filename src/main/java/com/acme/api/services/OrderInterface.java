@@ -8,6 +8,6 @@ import java.util.List;
 public interface OrderInterface {
     Order createOrder(OrderRequestBody orderRequestBody);
     List<Order> getAllOrders();
-    Order getOrder(int id);
-    void deleteOrder(int id);
+    Order getOrder(long id);
+    void deleteOrder(long id);
 }

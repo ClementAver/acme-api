@@ -29,12 +29,12 @@ public class ProductService implements ProductInterface{
     }
 
     @Override
-    public Product getProduct(int id) {
+    public Product getProduct(long id) {
         return productRepository.findById(id);
     }
 
     @Override
-    public void deleteProduct(int id) {
+    public void deleteProduct(long id) {
         productRepository.deleteById((long) id);
     }
 }

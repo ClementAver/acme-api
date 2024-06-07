@@ -34,12 +34,12 @@ public class CustomerService implements CustomerInterface{
     }
 
     @Override
-    public Customer getCustomer(int id) {
+    public Customer getCustomer(long id) {
         return customerRepository.findById(id);
     }
 
     @Override
-    public void deleteCustomer(int id) {
+    public void deleteCustomer(long id) {
         customerRepository.deleteById((long) id);
     }
 }

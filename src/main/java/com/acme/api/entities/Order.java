@@ -19,7 +19,7 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_order", nullable = false)
-    private Long idOrder;
+    private Long id;
 
     @Column(name = "date", nullable = false, length = 64)
     private String date;

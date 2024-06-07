@@ -31,12 +31,12 @@ public class OrderService implements OrderInterface{
     }
 
     @Override
-    public Order getOrder(int id) {
+    public Order getOrder(long id) {
         return orderRepository.findById(id);
     }
 
     @Override
-    public void deleteOrder(int id) {
+    public void deleteOrder(long id) {
         orderRepository.deleteById((long) id);
     }
 }

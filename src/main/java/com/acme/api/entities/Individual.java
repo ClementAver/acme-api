@@ -13,7 +13,7 @@ abstract class Individual {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id_individual", nullable = false)
-    private Long idIndividual;
+    private Long id;
 
     @Column(name = "first_name", nullable = false)
     private String firstName;

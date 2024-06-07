@@ -10,6 +10,6 @@ import java.util.List;
 public interface CustomerInterface {
     Customer createCustomer(CustomerRequestBody customerRequestBody);
     List<Customer> getAllCustomers();
-    Customer getCustomer(int id);
-    void deleteCustomer(int id);
+    Customer getCustomer(long id);
+    void deleteCustomer(long id);
 }

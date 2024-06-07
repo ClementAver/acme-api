@@ -18,8 +18,8 @@ public class OrderLineService implements OrderLineInterface{
 
     // take a look at this
     @Override
-    public OrderLine getOrderLine(int id) {
-        return null;
+    public OrderLine getOrderLine(long id) {
+        return orderRepository.findById(id);
     }
 
     @Override
@@ -34,7 +34,7 @@ public class OrderLineService implements OrderLineInterface{
     }
 
     @Override
-    public void deleteOrderLine(int id) {
+    public void deleteOrderLine(long id) {
         orderRepository.deleteById((long) id);
     }
 }
