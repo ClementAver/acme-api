@@ -14,6 +14,8 @@ import lombok.AllArgsConstructor;
 @Table(name = "orderlines")
 public class OrderLine {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_order_line", nullable = false)
     private Long id;
 
     @Column(name = "quantity", nullable = false)
