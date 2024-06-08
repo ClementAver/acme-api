@@ -1,7 +1,7 @@
 package com.acme.api.controllers;
 
 import com.acme.api.entities.Order;
-import com.acme.api.odt.OrderRequestBody;
+import com.acme.api.dto.OrderRequestBody;
 import com.acme.api.services.OrderService;
 import org.springframework.web.bind.annotation.*;
 

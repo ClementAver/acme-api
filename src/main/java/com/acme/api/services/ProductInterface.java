@@ -1,7 +1,7 @@
 package com.acme.api.services;
 
 import com.acme.api.entities.Product;
-import com.acme.api.odt.ProductRequestBody;
+import com.acme.api.dto.ProductRequestBody;
 
 import java.util.List;
 

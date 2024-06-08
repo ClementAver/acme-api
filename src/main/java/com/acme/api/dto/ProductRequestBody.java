@@ -1,6 +1,5 @@
-package com.acme.api.odt;
+package com.acme.api.dto;
 
-import com.acme.api.entities.Customer;
 import com.acme.api.entities.OrderLine;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,11 +14,10 @@ import java.util.Set;
 @AllArgsConstructor
 @Getter
 @Setter
-public class OrderRequestBody {
-    String date;
-    Customer idCustomer;
+public class ProductRequestBody {
+    String name;
+    Integer price;
     Set<OrderLine> orderlines;
-
 
     public String toString() {
         log.info("mon objet");

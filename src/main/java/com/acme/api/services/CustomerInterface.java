@@ -1,9 +1,7 @@
 package com.acme.api.services;
 
 import com.acme.api.entities.Customer;
-import com.acme.api.entities.Employee;
-import com.acme.api.odt.CustomerRequestBody;
-import com.acme.api.odt.EmployeeRequestBody;
+import com.acme.api.dto.CustomerRequestBody;
 
 import java.util.List;
 

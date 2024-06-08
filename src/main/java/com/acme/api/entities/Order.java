@@ -30,5 +30,4 @@ public class Order {
 
     @OneToMany(mappedBy = "idOrder")
     private Set<OrderLine> orderlines = new LinkedHashSet<>();
-
 }

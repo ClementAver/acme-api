@@ -1,8 +1,7 @@
 package com.acme.api.services;
 
 import com.acme.api.entities.Product;
-import com.acme.api.odt.ProductRequestBody;
-import com.acme.api.repositories.ProductRepository;
+import com.acme.api.dto.ProductRequestBody;
 import com.acme.api.repositories.ProductRepository;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +19,8 @@ public class ProductService implements ProductInterface{
     @Override
     public Product createProduct(ProductRequestBody productRequestBody) {
         Product product = new Product();
+        product.setName(productRequestBody.getName());
+        product.setPrice(productRequestBody.getPrice());
         return productRepository.save(product);
     }
 

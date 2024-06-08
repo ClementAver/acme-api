@@ -1,7 +1,7 @@
 package com.acme.api.services;
 
 import com.acme.api.entities.OrderLine;
-import com.acme.api.odt.OrderLineRequestBody;
+import com.acme.api.dto.OrderLineRequestBody;
 import com.acme.api.repositories.OrderLineRepository;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +25,9 @@ public class OrderLineService implements OrderLineInterface{
     @Override
     public OrderLine createOrderLine(OrderLineRequestBody orderRequestBody) {
         OrderLine order = new OrderLine();
+        order.setQuantity(orderRequestBody.getQuantity());
+        order.setIdProduct(orderRequestBody.getIdProduct());
+        order.setIdOrder(orderRequestBody.getIdOrder());
         return orderRepository.save(order);
     }
 

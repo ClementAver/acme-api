@@ -1,7 +1,7 @@
 package com.acme.api.controllers;
 
 import com.acme.api.entities.OrderLine;
-import com.acme.api.odt.OrderLineRequestBody;
+import com.acme.api.dto.OrderLineRequestBody;
 import com.acme.api.services.OrderLineService;
 import org.springframework.web.bind.annotation.*;
 

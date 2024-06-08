@@ -1,7 +1,7 @@
 package com.acme.api.controllers;
 
 import com.acme.api.entities.Employee;
-import com.acme.api.odt.EmployeeRequestBody;
+import com.acme.api.dto.EmployeeRequestBody;
 import com.acme.api.services.EmployeeService;
 import org.springframework.web.bind.annotation.*;
 

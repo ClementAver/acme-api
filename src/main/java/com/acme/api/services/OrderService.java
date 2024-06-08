@@ -1,7 +1,7 @@
 package com.acme.api.services;
 
 import com.acme.api.entities.Order;
-import com.acme.api.odt.OrderRequestBody;
+import com.acme.api.dto.OrderRequestBody;
 import com.acme.api.repositories.OrderRepository;
 import org.springframework.stereotype.Service;
 

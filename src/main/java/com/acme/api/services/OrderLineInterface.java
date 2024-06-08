@@ -1,7 +1,7 @@
 package com.acme.api.services;
 
 import com.acme.api.entities.OrderLine;
-import com.acme.api.odt.OrderLineRequestBody;
+import com.acme.api.dto.OrderLineRequestBody;
 
 import java.util.List;
 

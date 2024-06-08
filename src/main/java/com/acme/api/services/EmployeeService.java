@@ -1,7 +1,7 @@
 package com.acme.api.services;
 
 import com.acme.api.entities.Employee;
-import com.acme.api.odt.EmployeeRequestBody;
+import com.acme.api.dto.EmployeeRequestBody;
 import com.acme.api.repositories.EmployeeRepository;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +21,7 @@ public class EmployeeService implements EmployeeInterface{
         Employee employee = new Employee();
         employee.setFirstName(employeeRequestBody.getFirstName());
         employee.setLastName(employeeRequestBody.getLastName());
-        employee.setUsername(employeeRequestBody.getUserName());
+        employee.setUsername(employeeRequestBody.getUsername());
         employee.setPassword(employeeRequestBody.getPassword());
         return employeeRepository.save(employee);
     }

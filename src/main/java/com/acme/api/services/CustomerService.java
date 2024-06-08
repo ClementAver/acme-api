@@ -1,7 +1,7 @@
 package com.acme.api.services;
 
 import com.acme.api.entities.Customer;
-import com.acme.api.odt.CustomerRequestBody;
+import com.acme.api.dto.CustomerRequestBody;
 import com.acme.api.repositories.CustomerRepository;
 import org.springframework.stereotype.Service;
 

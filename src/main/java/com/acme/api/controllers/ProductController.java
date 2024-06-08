@@ -1,7 +1,7 @@
 package com.acme.api.controllers;
 
 import com.acme.api.entities.Product;
-import com.acme.api.odt.ProductRequestBody;
+import com.acme.api.dto.ProductRequestBody;
 import com.acme.api.services.ProductService;
 import org.springframework.web.bind.annotation.*;
 
