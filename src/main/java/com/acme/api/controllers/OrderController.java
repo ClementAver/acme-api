@@ -3,9 +3,12 @@ package com.acme.api.controllers;
 import com.acme.api.entities.Order;
 import com.acme.api.dto.OrderRequestBody;
 import com.acme.api.services.OrderService;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping("/api")
@@ -28,7 +31,8 @@ public class OrderController {
         return orderService.getOrder(id);
     }
 
-    @PostMapping("/order")
+    @ResponseStatus(value = HttpStatus.CREATED)
+    @PostMapping(value = "/order", consumes = APPLICATION_JSON_VALUE)
     public Order createOrder(@RequestBody OrderRequestBody orderRequestBody) {
         return orderService.createOrder(orderRequestBody);
     }

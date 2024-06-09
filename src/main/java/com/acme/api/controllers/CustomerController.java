@@ -3,9 +3,13 @@ package com.acme.api.controllers;
 import com.acme.api.entities.Customer;
 import com.acme.api.dto.CustomerRequestBody;
 import com.acme.api.services.CustomerService;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
 
 @RestController
 @RequestMapping("/api")
@@ -28,7 +32,8 @@ public class CustomerController {
         return customerService.getCustomer(id);
     }
 
-    @PostMapping("/customer")
+    @ResponseStatus(value = HttpStatus.CREATED)
+    @PostMapping(value = "/customer", consumes = APPLICATION_JSON_VALUE)
     public Customer createCustomer(@RequestBody CustomerRequestBody customerRequestBody) {
         return customerService.createCustomer(customerRequestBody);
     }

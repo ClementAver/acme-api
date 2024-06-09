@@ -3,9 +3,12 @@ package com.acme.api.controllers;
 import com.acme.api.entities.OrderLine;
 import com.acme.api.dto.OrderLineRequestBody;
 import com.acme.api.services.OrderLineService;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping("/api")
@@ -28,7 +31,8 @@ public class OrderLineController {
         return orderLineService.getOrderLine(id);
     }
 
-    @PostMapping("/orderline")
+    @ResponseStatus(value = HttpStatus.CREATED)
+    @PostMapping(value = "/orderline", consumes = APPLICATION_JSON_VALUE)
     public OrderLine createOrderLine(@RequestBody OrderLineRequestBody orderLineRequestBody) {
         return orderLineService.createOrderLine(orderLineRequestBody);
     }

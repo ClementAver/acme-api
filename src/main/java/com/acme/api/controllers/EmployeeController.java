@@ -3,9 +3,12 @@ package com.acme.api.controllers;
 import com.acme.api.entities.Employee;
 import com.acme.api.dto.EmployeeRequestBody;
 import com.acme.api.services.EmployeeService;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping("/api")
@@ -28,7 +31,8 @@ public class EmployeeController {
         return employeeService.getEmployee(id);
     }
 
-    @PostMapping("/employee")
+    @ResponseStatus(value = HttpStatus.CREATED)
+    @PostMapping(value = "/employee", consumes = APPLICATION_JSON_VALUE)
     public Employee createEmployee(@RequestBody EmployeeRequestBody employeeRequestBody) {
         return employeeService.createEmployee(employeeRequestBody);
     }
