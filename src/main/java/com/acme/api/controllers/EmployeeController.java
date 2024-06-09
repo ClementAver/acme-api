@@ -1,5 +1,6 @@
 package com.acme.api.controllers;
 
+import com.acme.api.entities.Customer;
 import com.acme.api.entities.Employee;
 import com.acme.api.dto.EmployeeRequestBody;
 import com.acme.api.services.EmployeeService;
@@ -7,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -28,7 +30,8 @@ public class EmployeeController {
 
     @GetMapping("/employee")
     public Employee getEmployee(@RequestParam(name = "id", required=true) long id) {
-        return employeeService.getEmployee(id);
+        Optional<Employee> employee = Optional.ofNullable(employeeService.getEmployee(id));
+        return employee.orElse(null);
     }
 
     @ResponseStatus(value = HttpStatus.CREATED)

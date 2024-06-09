@@ -1,12 +1,14 @@
 package com.acme.api.controllers;
 
 import com.acme.api.entities.Order;
+import com.acme.api.entities.Order;
 import com.acme.api.dto.OrderRequestBody;
 import com.acme.api.services.OrderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -28,7 +30,8 @@ public class OrderController {
 
     @GetMapping("/order")
     public Order getOrder(@RequestParam(name = "id", required=true) long id) {
-        return orderService.getOrder(id);
+        Optional<Order> order = Optional.ofNullable(orderService.getOrder(id));
+        return order.orElse(null);
     }
 
     @ResponseStatus(value = HttpStatus.CREATED)

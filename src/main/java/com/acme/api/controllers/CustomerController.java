@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -29,7 +30,8 @@ public class CustomerController {
 
     @GetMapping("/customer")
     public Customer getCustomer(@RequestParam(name = "id", required=true) long id) {
-        return customerService.getCustomer(id);
+        Optional<Customer> customer = Optional.ofNullable(customerService.getCustomer(id));
+        return customer.orElse(null);
     }
 
     @ResponseStatus(value = HttpStatus.CREATED)

@@ -1,12 +1,14 @@
 package com.acme.api.controllers;
 
 import com.acme.api.entities.OrderLine;
+import com.acme.api.entities.OrderLine;
 import com.acme.api.dto.OrderLineRequestBody;
 import com.acme.api.services.OrderLineService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -26,9 +28,10 @@ public class OrderLineController {
         return orderLineService.getAllOrderLines();
     }
 
-    @GetMapping("/orderline")
+    @GetMapping("/orderLine")
     public OrderLine getOrderLine(@RequestParam(name = "id", required=true) long id) {
-        return orderLineService.getOrderLine(id);
+        Optional<OrderLine> orderLine = Optional.ofNullable(orderLineService.getOrderLine(id));
+        return orderLine.orElse(null);
     }
 
     @ResponseStatus(value = HttpStatus.CREATED)
