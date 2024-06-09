@@ -19,7 +19,7 @@ public class Customer extends Individual{
     @Column(name = "address", nullable = false, length = 256)
     private String address;
 
-    @Column(name = "email", nullable = false, length = 64)
+    @Column(name = "email", nullable = false, length = 64, unique = true)
     private String email;
 
     @OneToMany(mappedBy = "idCustomer")

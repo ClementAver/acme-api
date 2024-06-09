@@ -13,7 +13,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 @Table(name = "employees")
 public class Employee extends Individual {
-    @Column(name = "username", nullable = false, length = 128)
+    @Column(name = "username", nullable = false, length = 128, unique = true)
     private String username;
 
     @Column(name = "password", nullable = false, length = 64)

@@ -21,7 +21,7 @@ public class Product {
     @Column(name = "id_product", nullable = false)
     private Integer id;
 
-    @Column(name = "name", nullable = false, length = 64)
+    @Column(name = "name", nullable = false, length = 64, unique = true)
     private String name;
 
     @Column(name = "price", nullable = false)
