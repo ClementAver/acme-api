@@ -21,7 +21,7 @@ public class OrderService implements OrderInterface{
         Order order = new Order();
         order.setDate(orderRequestBody.getDate());
         order.setIdCustomer(orderRequestBody.getIdCustomer());
-        order.setOrderlines(orderRequestBody.getOrderlines());
+        order.setOrderLines(orderRequestBody.getOrderLines());
         return orderRepository.save(order);
     }
 

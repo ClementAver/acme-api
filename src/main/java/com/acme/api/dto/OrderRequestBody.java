@@ -18,7 +18,7 @@ import java.util.Set;
 public class OrderRequestBody {
     String date;
     Customer idCustomer;
-    Set<OrderLine> orderlines;
+    Set<OrderLine> orderLines;
 
 
     public String toString() {

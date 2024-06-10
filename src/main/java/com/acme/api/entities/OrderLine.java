@@ -11,7 +11,7 @@ import lombok.AllArgsConstructor;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "orderlines")
+@Table(name = "order_lines")
 public class OrderLine {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,10 +21,12 @@ public class OrderLine {
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
 
+    // Will only be fetched when getOrderLines is called on a Product.
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_product", nullable = false)
     private Product idProduct;
 
+    // Will only be fetched when getOrderLines is called on an Order.
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_order", nullable = false)
     private Order idOrder;

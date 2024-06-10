@@ -1,5 +1,6 @@
 package com.acme.api.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,7 +28,9 @@ public class Product {
     @Column(name = "price", nullable = false)
     private Integer price;
 
-    @OneToMany(mappedBy = "idProduct")
-    private Set<OrderLine> orderlines = new LinkedHashSet<>();
+    // If not already, associated entities will also be persisted in the DB with this one.
+    // If this entity is deleted, the entities that depend on it will also be deleted from the DB.
+    @OneToMany(mappedBy = "idProduct", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private Set<OrderLine> orderLines = new LinkedHashSet<>();
 
 }
