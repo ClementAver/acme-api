@@ -21,6 +21,7 @@ public class EmployeeService implements EmployeeInterface{
         Employee employee = new Employee();
         employee.setFirstName(employeeRequestBody.getFirstName());
         employee.setLastName(employeeRequestBody.getLastName());
+        employee.setEmail(employeeRequestBody.getEmail());
         employee.setUsername(employeeRequestBody.getUsername());
         employee.setPassword(employeeRequestBody.getPassword());
         return employeeRepository.save(employee);
@@ -39,5 +40,27 @@ public class EmployeeService implements EmployeeInterface{
     @Override
     public void deleteEmployee(long id) {
         employeeRepository.deleteById((long) id);
+    }
+
+    @Override
+    public Employee updateEmployee(Long id, EmployeeRequestBody employeeRequestBody) {
+        Employee employeeToUpdate = employeeRepository.getReferenceById(id);
+
+        if(employeeRequestBody.getFirstName() != null){
+            employeeToUpdate.setFirstName(employeeRequestBody.getFirstName());
+        }
+        if(employeeRequestBody.getLastName() != null) {
+            employeeToUpdate.setLastName(employeeRequestBody.getLastName());
+        }
+        if(employeeRequestBody.getEmail() != null){
+            employeeToUpdate.setEmail(employeeRequestBody.getEmail());
+        }
+        if(employeeRequestBody.getUsername() != null){
+            employeeToUpdate.setUsername(employeeRequestBody.getUsername());
+        }
+        if(employeeRequestBody.getPassword() != null){
+            employeeToUpdate.setPassword(employeeRequestBody.getPassword());
+        }
+        return employeeRepository.save(employeeToUpdate);
     }
 }

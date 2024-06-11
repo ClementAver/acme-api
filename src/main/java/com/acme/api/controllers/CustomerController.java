@@ -44,5 +44,10 @@ public class CustomerController {
     public void deleteCustomer(@RequestParam(name = "id", required=true) long id) {
         customerService.deleteCustomer(id);
     }
+
+    @PutMapping(value = "/customer", consumes = APPLICATION_JSON_VALUE)
+    public Customer updateCustomer(@RequestParam(name = "id", required=true) long id, @RequestBody CustomerRequestBody customerRequestBody) {
+        return customerService.updateCustomer(id, customerRequestBody);
+    }
 }
 

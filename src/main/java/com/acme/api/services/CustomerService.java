@@ -21,12 +21,35 @@ public class CustomerService implements CustomerInterface{
         Customer customer = new Customer();
         customer.setFirstName(customerRequestBody.getFirstName());
         customer.setLastName(customerRequestBody.getLastName());
+        customer.setEmail(customerRequestBody.getEmail());
         customer.setPhone(customerRequestBody.getPhone());
         customer.setAddress(customerRequestBody.getAddress());
-        customer.setEmail(customerRequestBody.getEmail());
         customer.setOrders(customerRequestBody.getOrders());
         return customerRepository.save(customer);
     }
+
+    @Override
+    public Customer updateCustomer(Long id, CustomerRequestBody customerRequestBody) {
+        Customer customerToUpdate = customerRepository.getReferenceById(id);
+
+        if(customerRequestBody.getFirstName() != null){
+            customerToUpdate.setFirstName(customerRequestBody.getFirstName());
+        }
+        if(customerRequestBody.getLastName() != null){
+            customerToUpdate.setLastName(customerRequestBody.getLastName());
+        }
+        if(customerRequestBody.getEmail() != null){
+            customerToUpdate.setEmail(customerRequestBody.getEmail());
+        }
+        if(customerRequestBody.getPhone() != null){
+            customerToUpdate.setPhone(customerRequestBody.getPhone());
+        }
+        if(customerRequestBody.getAddress() != null){
+            customerToUpdate.setAddress(customerRequestBody.getAddress());
+        }
+        return customerRepository.save(customerToUpdate);
+    }
+
 
     @Override
     public List<Customer> getAllCustomers() {

@@ -1,7 +1,6 @@
 package com.acme.api.controllers;
 
 import com.acme.api.entities.OrderLine;
-import com.acme.api.entities.OrderLine;
 import com.acme.api.dto.OrderLineRequestBody;
 import com.acme.api.services.OrderLineService;
 import org.springframework.http.HttpStatus;

@@ -16,9 +16,9 @@ import java.util.Set;
 public class CustomerRequestBody {
     String firstName;
     String lastName;
+    String email;
     String phone;
     String address;
-    String email;
     Set<Order> orders;
 
     public String toString() {

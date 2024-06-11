@@ -1,6 +1,5 @@
 package com.acme.api.controllers;
 
-import com.acme.api.entities.Customer;
 import com.acme.api.entities.Employee;
 import com.acme.api.dto.EmployeeRequestBody;
 import com.acme.api.services.EmployeeService;
@@ -44,5 +43,12 @@ public class EmployeeController {
     public void deleteEmployee(@RequestParam(name = "id", required=true) long id) {
         employeeService.deleteEmployee(id);
     }
+
+    @PutMapping(value = "/employee", consumes = APPLICATION_JSON_VALUE)
+    public Employee updateEmployee(@RequestParam(name = "id", required=true) long id, @RequestBody EmployeeRequestBody employeeRequestBody) {
+        return employeeService.updateEmployee(id, employeeRequestBody);
+    }
 }
+
+
 

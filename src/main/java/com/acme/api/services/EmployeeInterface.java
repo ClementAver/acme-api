@@ -10,4 +10,6 @@ public interface EmployeeInterface {
     List<Employee> getAllEmployees();
     Employee getEmployee(long id);
     void deleteEmployee(long id);
-}
+    Employee updateEmployee(Long id, EmployeeRequestBody employeeRequestBody);
+
+    }

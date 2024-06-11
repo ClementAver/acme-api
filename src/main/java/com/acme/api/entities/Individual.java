@@ -20,4 +20,7 @@ public class Individual {
 
     @Column(name = "last_name", nullable = false)
     private String lastName;
+
+    @Column(name = "email", nullable = false, length = 64, unique = true)
+    private String email;
 }

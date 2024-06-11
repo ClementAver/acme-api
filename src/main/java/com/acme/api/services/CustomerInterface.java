@@ -10,4 +10,5 @@ public interface CustomerInterface {
     List<Customer> getAllCustomers();
     Customer getCustomer(long id);
     void deleteCustomer(long id);
+    Customer updateCustomer(Long id, CustomerRequestBody customerRequestBody);
 }
