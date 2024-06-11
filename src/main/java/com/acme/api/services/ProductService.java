@@ -38,4 +38,16 @@ public class ProductService implements ProductInterface{
     public void deleteProduct(long id) {
         productRepository.deleteById((long) id);
     }
+
+    @Override
+    public Product updateProduct(Long id, ProductRequestBody productRequestBody) {
+        Product productToUpdate = productRepository.getReferenceById(id);
+        if (productRequestBody.getName() != null) {
+            productToUpdate.setName(productRequestBody.getName());
+        }
+        if (productRequestBody.getPrice() != null) {
+            productToUpdate.setPrice(productRequestBody.getPrice());
+        }
+        return productRepository.save(productToUpdate);
+    }
 }

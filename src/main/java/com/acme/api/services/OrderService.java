@@ -39,4 +39,16 @@ public class OrderService implements OrderInterface{
     public void deleteOrder(long id) {
         orderRepository.deleteById((long) id);
     }
+
+    @Override
+    public Order updateOrder(Long id, OrderRequestBody orderRequestBody) {
+        Order orderToUpdate = orderRepository.getReferenceById(id);
+        if (orderRequestBody.getDate() != null) {
+            orderToUpdate.setDate(orderRequestBody.getDate());
+        }
+        if (orderRequestBody.getIdCustomer() != null) {
+            orderToUpdate.setIdCustomer(orderRequestBody.getIdCustomer());
+        }
+        return orderRepository.save(orderToUpdate);
+    }
 }

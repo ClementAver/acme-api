@@ -11,9 +11,11 @@ import java.util.List;
 public class OrderLineService implements OrderLineInterface{
 
     private final OrderLineRepository orderRepository;
+    private final OrderLineRepository orderLineRepository;
 
-    public OrderLineService(OrderLineRepository orderRepository) {
+    public OrderLineService(OrderLineRepository orderRepository, OrderLineRepository orderLineRepository) {
         this.orderRepository = orderRepository;
+        this.orderLineRepository = orderLineRepository;
     }
 
     // take a look at this
@@ -39,5 +41,20 @@ public class OrderLineService implements OrderLineInterface{
     @Override
     public void deleteOrderLine(long id) {
         orderRepository.deleteById((long) id);
+    }
+
+    @Override
+    public OrderLine updateOrderLine(Long id, OrderLineRequestBody orderLineRequestBody) {
+        OrderLine orderLineToUpdate = orderLineRepository.getReferenceById(id);
+        if (orderLineRequestBody.getQuantity() != null) {
+            orderLineToUpdate.setQuantity(orderLineRequestBody.getQuantity());
+        }
+        if (orderLineRequestBody.getIdProduct() != null) {
+            orderLineToUpdate.setIdProduct(orderLineRequestBody.getIdProduct());
+        }
+        if (orderLineRequestBody.getIdOrder() != null) {
+            orderLineToUpdate.setIdOrder(orderLineRequestBody.getIdOrder());
+        }
+        return orderLineRepository.save(orderLineToUpdate);
     }
 }
