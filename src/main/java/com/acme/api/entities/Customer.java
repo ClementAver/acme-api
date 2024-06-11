@@ -1,6 +1,7 @@
 package com.acme.api.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,6 +26,7 @@ public class Customer extends Individual{
 
     // If not already, associated entities will also be persisted in the DB with this one.
     // If this entity is deleted, the entities that depend on it will also be deleted from the DB.
-    @OneToMany(mappedBy = "idCustomer", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToMany(mappedBy = "idCustomer", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties("idCustomer")
     private Set<Order> orders = new LinkedHashSet<>();
 }

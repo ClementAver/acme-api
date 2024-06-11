@@ -1,6 +1,7 @@
 package com.acme.api.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,12 +27,14 @@ public class Order {
     private String date;
 
     // Will only be fetched when getOrders is called on a customer.
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "id_customer", nullable = false)
+    @JsonIgnoreProperties("orders")
     private Customer idCustomer;
 
     // If not already, associated entities will also be persisted in the DB with this one.
     // If this entity is deleted, the entities that depend on it will also be deleted from the DB.
-    @OneToMany(mappedBy = "idOrder", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToMany(mappedBy = "idOrder", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties("idOrder")
     private Set<OrderLine> orderLines = new LinkedHashSet<>();
 }

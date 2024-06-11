@@ -28,7 +28,7 @@ public class OrderLineController {
         return orderLineService.getAllOrderLines();
     }
 
-    @GetMapping("/orderLine")
+    @GetMapping("/orderline")
     public OrderLine getOrderLine(@RequestParam(name = "id", required=true) long id) {
         Optional<OrderLine> orderLine = Optional.ofNullable(orderLineService.getOrderLine(id));
         return orderLine.orElse(null);

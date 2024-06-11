@@ -1,5 +1,6 @@
 package com.acme.api.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,13 +23,15 @@ public class OrderLine {
     private Integer quantity;
 
     // Will only be fetched when getOrderLines is called on a Product.
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "id_product", nullable = false)
+    @JsonIgnoreProperties("orderLines")
     private Product idProduct;
 
     // Will only be fetched when getOrderLines is called on an Order.
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "id_order", nullable = false)
+    @JsonIgnoreProperties("orderLines")
     private Order idOrder;
 
 
