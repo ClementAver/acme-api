@@ -1,5 +1,7 @@
 package com.acme.api.controllers;
 
+import com.acme.api.dto.EmployeeRequestBody;
+import com.acme.api.entities.Employee;
 import com.acme.api.entities.Order;
 import com.acme.api.dto.OrderRequestBody;
 import com.acme.api.services.OrderService;
@@ -42,6 +44,11 @@ public class OrderController {
     @DeleteMapping("/order")
     public void deleteOrder(@RequestParam(name = "id", required=true) long id) {
         orderService.deleteOrder(id);
+    }
+
+    @PutMapping(value = "/order", consumes = APPLICATION_JSON_VALUE)
+    public Order updateOrder(@RequestParam(name = "id", required=true) long id, @RequestBody OrderRequestBody orderRequestBody) {
+        return orderService.updateOrder(id, orderRequestBody);
     }
 }
 

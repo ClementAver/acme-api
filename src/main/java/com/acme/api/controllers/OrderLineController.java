@@ -1,5 +1,7 @@
 package com.acme.api.controllers;
 
+import com.acme.api.dto.EmployeeRequestBody;
+import com.acme.api.entities.Employee;
 import com.acme.api.entities.OrderLine;
 import com.acme.api.dto.OrderLineRequestBody;
 import com.acme.api.services.OrderLineService;
@@ -42,6 +44,11 @@ public class OrderLineController {
     @DeleteMapping("/orderline")
     public void deleteOrderLine(@RequestParam(name = "id", required=true) long id) {
         orderLineService.deleteOrderLine(id);
+    }
+
+    @PutMapping(value = "/orderline", consumes = APPLICATION_JSON_VALUE)
+    public OrderLine updateOrderLine(@RequestParam(name = "id", required=true) long id, @RequestBody OrderLineRequestBody orderLineRequestBody) {
+        return orderLineService.updateOrderLine(id, orderLineRequestBody);
     }
 }
 

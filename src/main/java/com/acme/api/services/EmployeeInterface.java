@@ -11,5 +11,4 @@ public interface EmployeeInterface {
     Employee getEmployee(long id);
     void deleteEmployee(long id);
     Employee updateEmployee(Long id, EmployeeRequestBody employeeRequestBody);
-
     }

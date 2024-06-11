@@ -10,4 +10,5 @@ public interface OrderLineInterface {
     List<OrderLine> getAllOrderLines();
     OrderLine getOrderLine(long id);
     void deleteOrderLine(long id);
+    OrderLine updateOrderLine(Long id, OrderLineRequestBody orderLineRequestBody);
 }

@@ -10,4 +10,5 @@ public interface ProductInterface {
     List<Product> getAllProducts();
     Product getProduct(long id);
     void deleteProduct(long id);
+    Product updateProduct(Long id, ProductRequestBody productRequestBody);
 }

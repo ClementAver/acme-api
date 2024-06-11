@@ -1,5 +1,7 @@
 package com.acme.api.controllers;
 
+import com.acme.api.dto.EmployeeRequestBody;
+import com.acme.api.entities.Employee;
 import com.acme.api.entities.Product;
 import com.acme.api.dto.ProductRequestBody;
 import com.acme.api.services.ProductService;
@@ -42,6 +44,11 @@ public class ProductController {
     @DeleteMapping("/product")
     public void deleteProduct(@RequestParam(name = "id", required=true) long id) {
         productService.deleteProduct(id);
+    }
+
+    @PutMapping(value = "/product", consumes = APPLICATION_JSON_VALUE)
+    public Product updateProduct(@RequestParam(name = "id", required=true) long id, @RequestBody ProductRequestBody productRequestBody) {
+        return productService.updateProduct(id, productRequestBody);
     }
 }
 

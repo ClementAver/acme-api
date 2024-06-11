@@ -10,4 +10,5 @@ public interface OrderInterface {
     List<Order> getAllOrders();
     Order getOrder(long id);
     void deleteOrder(long id);
+    Order updateOrder(Long id, OrderRequestBody orderRequestBody);
 }
