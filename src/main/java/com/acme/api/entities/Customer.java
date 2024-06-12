@@ -17,7 +17,7 @@ public class Customer extends Individual{
     @Column(name = "phone", length = 10)
     private String phone;
 
-    @Column(name = "address", nullable = false, length = 256)
+    @Column(name = "address", length = 256)
     private String address;
 
     // If not already, associated entities will also be persisted in the DB with this one.

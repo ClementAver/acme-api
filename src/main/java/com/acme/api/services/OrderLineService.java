@@ -40,7 +40,7 @@ public class OrderLineService implements OrderLineInterface{
 
     @Override
     public void deleteOrderLine(long id) {
-        orderRepository.deleteById((long) id);
+        orderRepository.deleteById(id);
     }
 
     @Override

@@ -10,6 +10,9 @@ import lombok.Setter;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import static jakarta.persistence.CascadeType.MERGE;
+import static jakarta.persistence.CascadeType.PERSIST;
+
 @Entity
 @Getter
 @Setter
@@ -19,14 +22,14 @@ import java.util.Set;
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_order", nullable = false)
+    @Column(name = "id_order", nullable = false, unique = true)
     private Long id;
 
     @Column(name = "date", nullable = false, length = 64)
     private String date;
 
-    // Will only be fetched when getOrders is called on a customer.
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    // PERSIST = a customer will be created too / MERGE = a customer will be updated too.
+    @ManyToOne(fetch = FetchType.EAGER, optional = false, cascade = {PERSIST, MERGE})
     @JoinColumn(name = "id_customer", nullable = false)
     @JsonIgnoreProperties("orders")
     private Customer idCustomer;

@@ -6,6 +6,7 @@ import com.acme.api.repositories.CustomerRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CustomerService implements CustomerInterface{
@@ -22,10 +23,25 @@ public class CustomerService implements CustomerInterface{
         customer.setFirstName(customerRequestBody.getFirstName());
         customer.setLastName(customerRequestBody.getLastName());
         customer.setEmail(customerRequestBody.getEmail());
-        customer.setPhone(customerRequestBody.getPhone());
-        customer.setAddress(customerRequestBody.getAddress());
-        customer.setOrders(customerRequestBody.getOrders());
-        return customerRepository.save(customer);
+        if(customerRequestBody.getPhone() != null){
+            customer.setPhone(customerRequestBody.getPhone());
+        }
+        if(customerRequestBody.getAddress() != null){
+            customer.setAddress(customerRequestBody.getAddress());
+        }
+        if(customerRequestBody.getOrders() != null){
+            customer.setOrders(customerRequestBody.getOrders());
+        }
+
+        Customer customerInDB = customerRepository.findByEmail(customer.getEmail());
+        try {
+            if (customerInDB == null) {
+                return customerRepository.save(customer);
+            }
+            throw new Exception("Cet email a déjà été renseigné.");
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override
@@ -50,7 +66,6 @@ public class CustomerService implements CustomerInterface{
         return customerRepository.save(customerToUpdate);
     }
 
-
     @Override
     public List<Customer> getAllCustomers() {
         return customerRepository.findAll();
@@ -58,11 +73,21 @@ public class CustomerService implements CustomerInterface{
 
     @Override
     public Customer getCustomer(long id) {
-        return customerRepository.findById(id);
+        Optional<Customer> optionalCustomer = Optional.ofNullable(this.customerRepository.findById(id));
+        return optionalCustomer.orElse(null);
+    }
+
+    @Override
+    public Customer getOrCreateCustomer(Customer customer) {
+        Customer customerInDB = customerRepository.findByEmail(customer.getEmail());
+        if (customerInDB == null) {
+            customerInDB = customerRepository.save(customer);
+        }
+        return customerInDB;
     }
 
     @Override
     public void deleteCustomer(long id) {
-        customerRepository.deleteById((long) id);
+        customerRepository.deleteById(id);
     }
 }

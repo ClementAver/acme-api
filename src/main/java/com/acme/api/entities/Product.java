@@ -19,7 +19,7 @@ import java.util.Set;
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_product", nullable = false)
+    @Column(name = "id_product", nullable = false, unique = true)
     private Integer id;
 
     @Column(name = "name", nullable = false, length = 64, unique = true)

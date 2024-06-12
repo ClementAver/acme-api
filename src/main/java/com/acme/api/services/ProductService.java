@@ -36,7 +36,7 @@ public class ProductService implements ProductInterface{
 
     @Override
     public void deleteProduct(long id) {
-        productRepository.deleteById((long) id);
+        productRepository.deleteById(id);
     }
 
     @Override

@@ -11,4 +11,6 @@ public interface CustomerInterface {
     Customer getCustomer(long id);
     void deleteCustomer(long id);
     Customer updateCustomer(Long id, CustomerRequestBody customerRequestBody);
+
+    Customer getOrCreateCustomer(Customer customer);
 }

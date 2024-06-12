@@ -16,7 +16,7 @@ import lombok.AllArgsConstructor;
 public class OrderLine {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_order_line", nullable = false)
+    @Column(name = "id_order_line", nullable = false, unique = true)
     private Long id;
 
     @Column(name = "quantity", nullable = false)
