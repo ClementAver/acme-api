@@ -3,7 +3,6 @@ package com.acme.api.services;
 import com.acme.api.entities.Customer;
 import com.acme.api.entities.Order;
 import com.acme.api.dto.OrderRequestBody;
-import com.acme.api.repositories.CustomerRepository;
 import com.acme.api.repositories.OrderRepository;
 import org.springframework.stereotype.Service;
 
@@ -13,12 +12,10 @@ import java.util.List;
 public class OrderService implements OrderInterface{
 
     private final OrderRepository orderRepository;
-    private final CustomerRepository customerRepository;
     private final CustomerService customerService;
 
-    public OrderService(OrderRepository orderRepository, CustomerRepository customerRepository, CustomerService customerService) {
+    public OrderService(OrderRepository orderRepository, CustomerService customerService) {
         this.orderRepository = orderRepository;
-        this.customerRepository = customerRepository;
         this.customerService = customerService;
     }
 
@@ -26,6 +23,7 @@ public class OrderService implements OrderInterface{
     public Order createOrder(OrderRequestBody orderRequestBody) {
         Customer customer = customerService.getOrCreateCustomer(orderRequestBody.getIdCustomer());
         Order order = new Order();
+        order.setReference(orderRequestBody.getReference());
         order.setDate(orderRequestBody.getDate());
         order.setIdCustomer(customer);
         order.setOrderLines(orderRequestBody.getOrderLines());
@@ -57,5 +55,14 @@ public class OrderService implements OrderInterface{
             orderToUpdate.setIdCustomer(orderRequestBody.getIdCustomer());
         }
         return orderRepository.save(orderToUpdate);
+    }
+
+    @Override
+    public Order getOrCreateOrder(Order order) {
+        Order orderInDB = orderRepository.findByReference(order.getReference());
+        if (orderInDB == null) {
+            orderInDB = orderRepository.save(order);
+        }
+        return orderInDB;
     }
 }

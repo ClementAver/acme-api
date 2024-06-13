@@ -1,7 +1,5 @@
 package com.acme.api.controllers;
 
-import com.acme.api.dto.EmployeeRequestBody;
-import com.acme.api.entities.Employee;
 import com.acme.api.entities.Order;
 import com.acme.api.dto.OrderRequestBody;
 import com.acme.api.services.OrderService;

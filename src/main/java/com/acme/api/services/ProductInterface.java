@@ -1,5 +1,6 @@
 package com.acme.api.services;
 
+import com.acme.api.entities.Employee;
 import com.acme.api.entities.Product;
 import com.acme.api.dto.ProductRequestBody;
 
@@ -11,4 +12,5 @@ public interface ProductInterface {
     Product getProduct(long id);
     void deleteProduct(long id);
     Product updateProduct(Long id, ProductRequestBody productRequestBody);
+    Product getOrCreateProduct(Product product);
 }

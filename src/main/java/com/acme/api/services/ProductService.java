@@ -1,5 +1,6 @@
 package com.acme.api.services;
 
+import com.acme.api.entities.Employee;
 import com.acme.api.entities.Product;
 import com.acme.api.dto.ProductRequestBody;
 import com.acme.api.repositories.ProductRepository;
@@ -49,5 +50,14 @@ public class ProductService implements ProductInterface{
             productToUpdate.setPrice(productRequestBody.getPrice());
         }
         return productRepository.save(productToUpdate);
+    }
+    
+    @Override
+    public Product getOrCreateProduct(Product product) {
+        Product productInDB = productRepository.findByName(product.getName());
+        if (productInDB == null) {
+            productInDB = productRepository.save(product);
+        }
+        return productInDB;
     }
 }

@@ -1,5 +1,6 @@
 package com.acme.api.services;
 
+import com.acme.api.entities.Employee;
 import com.acme.api.entities.Order;
 import com.acme.api.dto.OrderRequestBody;
 
@@ -11,4 +12,5 @@ public interface OrderInterface {
     Order getOrder(long id);
     void deleteOrder(long id);
     Order updateOrder(Long id, OrderRequestBody orderRequestBody);
+    Order getOrCreateOrder(Order order);
 }

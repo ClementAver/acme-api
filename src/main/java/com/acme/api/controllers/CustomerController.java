@@ -1,13 +1,14 @@
 package com.acme.api.controllers;
 
+import com.acme.api.dto.CustomerResponseBody;
 import com.acme.api.entities.Customer;
 import com.acme.api.dto.CustomerRequestBody;
 import com.acme.api.services.CustomerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -24,7 +25,7 @@ public class CustomerController {
     }
 
     @GetMapping("/customers")
-    public List<Customer> getCustomers() {
+    public Stream<CustomerResponseBody> getCustomers() {
         return customerService.getAllCustomers();
     }
 

@@ -1,5 +1,6 @@
 package com.acme.api.services;
 
+import com.acme.api.entities.Customer;
 import com.acme.api.entities.Employee;
 import com.acme.api.dto.EmployeeRequestBody;
 import com.acme.api.repositories.EmployeeRepository;
@@ -62,5 +63,14 @@ public class EmployeeService implements EmployeeInterface{
             employeeToUpdate.setPassword(employeeRequestBody.getPassword());
         }
         return employeeRepository.save(employeeToUpdate);
+    }
+
+    @Override
+    public Employee getOrCreateEmployee(Employee employee) {
+        Employee employeeInDB = employeeRepository.findByEmail(employee.getEmail());
+        if (employeeInDB == null) {
+            employeeInDB = employeeRepository.save(employee);
+        }
+        return employeeInDB;
     }
 }

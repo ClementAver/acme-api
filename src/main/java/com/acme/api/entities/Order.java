@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -24,6 +25,10 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_order", nullable = false, unique = true)
     private Long id;
+
+    // UUID type Generated Value
+    @Column(name = "reference", nullable = false)
+    private String reference;
 
     @Column(name = "date", nullable = false, length = 64)
     private String date;
