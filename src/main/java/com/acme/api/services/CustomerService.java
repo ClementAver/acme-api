@@ -1,9 +1,9 @@
 package com.acme.api.services;
 
-import com.acme.api.dto.CustomerResponseBody;
+import com.acme.api.dto.GetAllCustomersDTO;
 import com.acme.api.entities.Customer;
 import com.acme.api.dto.CustomerRequestBody;
-import com.acme.api.mapper.CustomerDTOMapper;
+import com.acme.api.mapper.GetAllCustomersDTOMapper;
 import com.acme.api.repositories.CustomerRepository;
 import org.springframework.stereotype.Service;
 
@@ -15,11 +15,11 @@ import java.util.stream.Stream;
 public class CustomerService implements CustomerInterface{
 
     private final CustomerRepository customerRepository;
-    private final CustomerDTOMapper customerDTOMapper;
+    private final GetAllCustomersDTOMapper getAllCustomersDTOMapper;
 
-    public CustomerService(CustomerRepository customerRepository, CustomerDTOMapper customerDTOMapper) {
+    public CustomerService(CustomerRepository customerRepository, GetAllCustomersDTOMapper getAllCustomersDTOMapper) {
         this.customerRepository = customerRepository;
-        this.customerDTOMapper = customerDTOMapper;
+        this.getAllCustomersDTOMapper = getAllCustomersDTOMapper;
     }
 
     @Override
@@ -72,9 +72,9 @@ public class CustomerService implements CustomerInterface{
     }
 
     @Override
-    public Stream<CustomerResponseBody> getAllCustomers() {
+    public Stream<GetAllCustomersDTO> getAllCustomers() {
         return customerRepository.findAll()
-                .stream().map(customerDTOMapper);
+                .stream().map(getAllCustomersDTOMapper);
     }
 
     @Override

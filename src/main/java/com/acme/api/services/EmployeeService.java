@@ -1,20 +1,25 @@
 package com.acme.api.services;
 
+import com.acme.api.dto.GetAllEmployeesDTO;
 import com.acme.api.entities.Customer;
 import com.acme.api.entities.Employee;
 import com.acme.api.dto.EmployeeRequestBody;
+import com.acme.api.mapper.GetAllEmployeesDTOMapper;
 import com.acme.api.repositories.EmployeeRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 @Service
 public class EmployeeService implements EmployeeInterface{
 
     private final EmployeeRepository employeeRepository;
+    private final GetAllEmployeesDTOMapper getAllEmployeesDTOMapper;
 
-    public EmployeeService(EmployeeRepository employeeRepository) {
+    public EmployeeService(EmployeeRepository employeeRepository, GetAllEmployeesDTOMapper getAllEmployeesDTOMapper) {
         this.employeeRepository = employeeRepository;
+        this.getAllEmployeesDTOMapper = getAllEmployeesDTOMapper;
     }
 
     @Override
@@ -29,8 +34,9 @@ public class EmployeeService implements EmployeeInterface{
     }
 
     @Override
-    public List<Employee> getAllEmployees() {
-        return employeeRepository.findAll();
+    public Stream<GetAllEmployeesDTO> getAllEmployees() {
+        return employeeRepository.findAll()
+                .stream().map(getAllEmployeesDTOMapper);
     }
 
     @Override

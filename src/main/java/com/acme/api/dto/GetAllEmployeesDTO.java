@@ -9,12 +9,11 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class CustomerResponseBody {
+public class GetAllEmployeesDTO {
     String firstName;
     String lastName;
     String email;
-    String phone;
-    String address;
+    String username;
 }
 
 

@@ -1,5 +1,6 @@
 package com.acme.api.controllers;
 
+import com.acme.api.dto.GetAllEmployeesDTO;
 import com.acme.api.entities.Employee;
 import com.acme.api.dto.EmployeeRequestBody;
 import com.acme.api.services.EmployeeService;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -23,7 +25,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/employees")
-    public List<Employee> getEmployees() {
+    public Stream<GetAllEmployeesDTO> getEmployees() {
         return employeeService.getAllEmployees();
     }
 

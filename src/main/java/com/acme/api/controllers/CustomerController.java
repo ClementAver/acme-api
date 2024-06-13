@@ -1,6 +1,6 @@
 package com.acme.api.controllers;
 
-import com.acme.api.dto.CustomerResponseBody;
+import com.acme.api.dto.GetAllCustomersDTO;
 import com.acme.api.entities.Customer;
 import com.acme.api.dto.CustomerRequestBody;
 import com.acme.api.services.CustomerService;
@@ -25,7 +25,7 @@ public class CustomerController {
     }
 
     @GetMapping("/customers")
-    public Stream<CustomerResponseBody> getCustomers() {
+    public Stream<GetAllCustomersDTO> getCustomers() {
         return customerService.getAllCustomers();
     }
 
