@@ -1,7 +1,5 @@
 package com.acme.api.dto;
 
-import com.acme.api.entities.Order;
-import com.acme.api.entities.Product;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,10 +9,10 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class OrderLineRequestBody {
+public class GetAllOrderLinesDTO {
     Integer quantity;
-    Product idProduct;
-    Order idOrder;
+    String referenceProduct;
+    String referenceOrder;
 }
 
 

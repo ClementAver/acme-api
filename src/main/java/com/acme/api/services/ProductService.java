@@ -20,6 +20,7 @@ public class ProductService implements ProductInterface{
     @Override
     public Product createProduct(ProductRequestBody productRequestBody) {
         Product product = new Product();
+        product.setReference(productRequestBody.getReference());
         product.setName(productRequestBody.getName());
         product.setPrice(productRequestBody.getPrice());
         return productRepository.save(product);
@@ -43,6 +44,9 @@ public class ProductService implements ProductInterface{
     @Override
     public Product updateProduct(Long id, ProductRequestBody productRequestBody) {
         Product productToUpdate = productRepository.getReferenceById(id);
+        if (productRequestBody.getReference() != null) {
+            productToUpdate.setReference(productRequestBody.getReference());
+        }
         if (productRequestBody.getName() != null) {
             productToUpdate.setName(productRequestBody.getName());
         }
@@ -54,7 +58,7 @@ public class ProductService implements ProductInterface{
     
     @Override
     public Product getOrCreateProduct(Product product) {
-        Product productInDB = productRepository.findByName(product.getName());
+        Product productInDB = productRepository.findByReference(product.getReference());
         if (productInDB == null) {
             productInDB = productRepository.save(product);
         }

@@ -36,7 +36,7 @@ public class Order {
     // PERSIST = a customer will be created too / MERGE = a customer will be updated too.
     @ManyToOne(fetch = FetchType.EAGER, optional = false, cascade = {PERSIST, MERGE})
     @JoinColumn(name = "id_customer", nullable = false)
-    @JsonIgnoreProperties("orders")
+    @JsonIgnoreProperties({"orders", "id"})
     private Customer idCustomer;
 
     // If not already, associated entities will also be persisted in the DB with this one.

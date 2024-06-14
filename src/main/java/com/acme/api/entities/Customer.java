@@ -23,6 +23,6 @@ public class Customer extends Individual{
     // If not already, associated entities will also be persisted in the DB with this one.
     // If this entity is deleted, the entities that depend on it will also be deleted from the DB.
     @OneToMany(mappedBy = "idCustomer", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnoreProperties("idCustomer")
+    @JsonIgnoreProperties({"idCustomer"})
     private Set<Order> orders = new LinkedHashSet<>();
 }

@@ -25,14 +25,23 @@ public class OrderLine {
     // Will only be fetched when getOrderLines is called on a Product.
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "id_product", nullable = false)
-    @JsonIgnoreProperties("orderLines")
+    @JsonIgnoreProperties({"orderLines", "id"})
     private Product idProduct;
 
     // Will only be fetched when getOrderLines is called on an Order.
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "id_order", nullable = false)
-    @JsonIgnoreProperties("orderLines")
+    @JsonIgnoreProperties({"orderLines", "id"})
+
     private Order idOrder;
 
 
+    // Custom getters for DTO purpose.
+    public String getProductReference() {
+        return idProduct.getReference();
+    }
+
+    public String getOrderReference() {
+        return idOrder.getReference();
+    }
 }
