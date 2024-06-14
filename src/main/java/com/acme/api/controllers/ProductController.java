@@ -41,14 +41,14 @@ public class ProductController {
         return productService.createProduct(productRequestBody);
     }
 
-    @DeleteMapping("/product")
-    public void deleteProduct(@RequestParam(name = "id", required=true) long id) {
-        productService.deleteProduct(id);
-    }
-
     @PutMapping(value = "/product", consumes = APPLICATION_JSON_VALUE)
     public Product updateProduct(@RequestParam(name = "id", required=true) long id, @RequestBody ProductRequestBody productRequestBody) {
         return productService.updateProduct(id, productRequestBody);
+    }
+
+    @DeleteMapping("/product")
+    public void deleteProduct(@RequestParam(name = "id", required=true) long id) {
+        productService.deleteProduct(id);
     }
 }
 

@@ -39,14 +39,14 @@ public class OrderLineController {
         return orderLineService.createOrderLine(orderLineRequestBody);
     }
 
-    @DeleteMapping("/order-line")
-    public void deleteOrderLine(@RequestParam(name = "id", required=true) long id) {
-        orderLineService.deleteOrderLine(id);
-    }
-
     @PutMapping(value = "/order-line", consumes = APPLICATION_JSON_VALUE)
     public OrderLine updateOrderLine(@RequestParam(name = "id", required=true) long id, @RequestBody OrderLineRequestBody orderLineRequestBody) {
         return orderLineService.updateOrderLine(id, orderLineRequestBody);
+    }
+
+    @DeleteMapping("/order-line")
+    public void deleteOrderLine(@RequestParam(name = "id", required=true) long id) {
+        orderLineService.deleteOrderLine(id);
     }
 }
 

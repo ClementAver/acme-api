@@ -39,14 +39,14 @@ public class OrderController {
         return orderService.createOrder(orderRequestBody);
     }
 
-    @DeleteMapping("/order")
-    public void deleteOrder(@RequestParam(name = "id", required=true) long id) {
-        orderService.deleteOrder(id);
-    }
-
     @PutMapping(value = "/order", consumes = APPLICATION_JSON_VALUE)
     public Order updateOrder(@RequestParam(name = "id", required=true) long id, @RequestBody OrderRequestBody orderRequestBody) {
         return orderService.updateOrder(id, orderRequestBody);
+    }
+
+    @DeleteMapping("/order")
+    public void deleteOrder(@RequestParam(name = "id", required=true) long id) {
+        orderService.deleteOrder(id);
     }
 }
 

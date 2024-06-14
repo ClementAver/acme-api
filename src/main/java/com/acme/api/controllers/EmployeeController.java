@@ -41,14 +41,14 @@ public class EmployeeController {
         return employeeService.createEmployee(employeeRequestBody);
     }
 
-    @DeleteMapping("/employee")
-    public void deleteEmployee(@RequestParam(name = "id", required=true) long id) {
-        employeeService.deleteEmployee(id);
-    }
-
     @PutMapping(value = "/employee", consumes = APPLICATION_JSON_VALUE)
     public Employee updateEmployee(@RequestParam(name = "id", required=true) long id, @RequestBody EmployeeRequestBody employeeRequestBody) {
         return employeeService.updateEmployee(id, employeeRequestBody);
+    }
+
+    @DeleteMapping("/employee")
+    public void deleteEmployee(@RequestParam(name = "id", required=true) long id) {
+        employeeService.deleteEmployee(id);
     }
 }
 
