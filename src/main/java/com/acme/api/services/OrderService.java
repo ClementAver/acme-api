@@ -1,22 +1,27 @@
 package com.acme.api.services;
 
+import com.acme.api.dto.GetAllOrdersDTO;
 import com.acme.api.entities.Customer;
 import com.acme.api.entities.Order;
 import com.acme.api.dto.OrderRequestBody;
+import com.acme.api.mapper.GetAllOrdersDTOMapper;
 import com.acme.api.repositories.OrderRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 @Service
 public class OrderService implements OrderInterface{
 
     private final OrderRepository orderRepository;
     private final CustomerService customerService;
+    private final GetAllOrdersDTOMapper getAllOrdersDTOMapper;
 
-    public OrderService(OrderRepository orderRepository, CustomerService customerService) {
+    public OrderService(OrderRepository orderRepository, CustomerService customerService, GetAllOrdersDTOMapper getAllOrdersDTOMapper) {
         this.orderRepository = orderRepository;
         this.customerService = customerService;
+        this.getAllOrdersDTOMapper = getAllOrdersDTOMapper;
     }
 
     @Override
@@ -31,8 +36,9 @@ public class OrderService implements OrderInterface{
     }
 
     @Override
-    public List<Order> getAllOrders() {
-        return orderRepository.findAll();
+    public Stream<GetAllOrdersDTO> getAllOrders() {
+        return orderRepository.findAll()
+                .stream().map(getAllOrdersDTOMapper);
     }
 
     @Override

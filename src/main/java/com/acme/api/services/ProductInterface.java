@@ -1,14 +1,14 @@
 package com.acme.api.services;
 
-import com.acme.api.entities.Employee;
+import com.acme.api.dto.GetAllProductsDTO;
 import com.acme.api.entities.Product;
 import com.acme.api.dto.ProductRequestBody;
 
-import java.util.List;
+import java.util.stream.Stream;
 
 public interface ProductInterface {
     Product createProduct(ProductRequestBody productRequestBody);
-    List<Product> getAllProducts();
+    Stream<GetAllProductsDTO> getAllProducts();
     Product getProduct(long id);
     void deleteProduct(long id);
     Product updateProduct(Long id, ProductRequestBody productRequestBody);

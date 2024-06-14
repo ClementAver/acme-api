@@ -1,20 +1,23 @@
 package com.acme.api.services;
 
-import com.acme.api.entities.Employee;
+import com.acme.api.dto.GetAllProductsDTO;
 import com.acme.api.entities.Product;
 import com.acme.api.dto.ProductRequestBody;
+import com.acme.api.mapper.GetAllProductsDTOMapper;
 import com.acme.api.repositories.ProductRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.stream.Stream;
 
 @Service
 public class ProductService implements ProductInterface{
 
     private final ProductRepository productRepository;
+    private final GetAllProductsDTOMapper getAllProductsDTOMapper;
 
     public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
+        this.getAllProductsDTOMapper = new GetAllProductsDTOMapper();
     }
 
     @Override
@@ -27,8 +30,9 @@ public class ProductService implements ProductInterface{
     }
 
     @Override
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public Stream<GetAllProductsDTO> getAllProducts() {
+        return productRepository.findAll()
+                .stream().map(getAllProductsDTOMapper);
     }
 
     @Override

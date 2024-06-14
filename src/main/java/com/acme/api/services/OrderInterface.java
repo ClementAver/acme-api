@@ -1,14 +1,14 @@
 package com.acme.api.services;
 
-import com.acme.api.entities.Employee;
+import com.acme.api.dto.GetAllOrdersDTO;
 import com.acme.api.entities.Order;
 import com.acme.api.dto.OrderRequestBody;
 
-import java.util.List;
+import java.util.stream.Stream;
 
 public interface OrderInterface {
     Order createOrder(OrderRequestBody orderRequestBody);
-    List<Order> getAllOrders();
+    Stream<GetAllOrdersDTO> getAllOrders();
     Order getOrder(long id);
     void deleteOrder(long id);
     Order updateOrder(Long id, OrderRequestBody orderRequestBody);

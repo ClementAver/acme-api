@@ -1,5 +1,6 @@
 package com.acme.api.controllers;
 
+import com.acme.api.dto.GetAllOrdersDTO;
 import com.acme.api.entities.Order;
 import com.acme.api.dto.OrderRequestBody;
 import com.acme.api.services.OrderService;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -23,7 +25,7 @@ public class OrderController {
     }
 
     @GetMapping("/orders")
-    public List<Order> getOrders() {
+    public Stream<GetAllOrdersDTO> getOrders() {
         return orderService.getAllOrders();
     }
 

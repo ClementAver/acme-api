@@ -1,6 +1,7 @@
 package com.acme.api.controllers;
 
 import com.acme.api.dto.EmployeeRequestBody;
+import com.acme.api.dto.GetAllProductsDTO;
 import com.acme.api.entities.Employee;
 import com.acme.api.entities.Product;
 import com.acme.api.dto.ProductRequestBody;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -25,7 +27,7 @@ public class ProductController {
     }
 
     @GetMapping("/products")
-    public List<Product> getProducts() {
+    public Stream<GetAllProductsDTO> getProducts() {
         return productService.getAllProducts();
     }
 
