@@ -18,5 +18,4 @@ public class Employee extends Individual {
 
     @Column(name = "password", nullable = false, length = 64)
     private String password;
-
 }

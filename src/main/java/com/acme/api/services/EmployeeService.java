@@ -1,6 +1,7 @@
 package com.acme.api.services;
 
 import com.acme.api.dto.GetAllEmployeesDTO;
+import com.acme.api.dto.GetEmployeeDTO;
 import com.acme.api.entities.Customer;
 import com.acme.api.entities.Employee;
 import com.acme.api.dto.EmployeeRequestBody;
@@ -39,9 +40,15 @@ public class EmployeeService implements EmployeeInterface{
                 .stream().map(getAllEmployeesDTOMapper);
     }
 
+//    @Override
+//    public Employee getEmployee(long id) {
+//        return employeeRepository.findById(id);
+//    }
+
     @Override
-    public Employee getEmployee(long id) {
-        return employeeRepository.findById(id);
+    public GetEmployeeDTO getEmployeeByUsername(String username) {
+        Employee employee = employeeRepository.findByUsername(username);
+        return new GetEmployeeDTO(employee.getFirstName(), employee.getLastName(), employee.getEmail(), employee.getUsername());
     }
 
     @Override

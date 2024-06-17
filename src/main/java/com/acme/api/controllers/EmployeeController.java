@@ -1,6 +1,8 @@
 package com.acme.api.controllers;
 
 import com.acme.api.dto.GetAllEmployeesDTO;
+import com.acme.api.dto.GetCustomerDTO;
+import com.acme.api.dto.GetEmployeeDTO;
 import com.acme.api.entities.Employee;
 import com.acme.api.dto.EmployeeRequestBody;
 import com.acme.api.services.EmployeeService;
@@ -29,10 +31,15 @@ public class EmployeeController {
         return employeeService.getAllEmployees();
     }
 
+//    @GetMapping("/employee")
+//    public Employee getEmployee(@RequestParam(name = "id", required=true) long id) {
+//        Optional<Employee> employee = Optional.ofNullable(employeeService.getEmployee(id));
+//        return employee.orElse(null);
+//    }
+
     @GetMapping("/employee")
-    public Employee getEmployee(@RequestParam(name = "id", required=true) long id) {
-        Optional<Employee> employee = Optional.ofNullable(employeeService.getEmployee(id));
-        return employee.orElse(null);
+    public GetEmployeeDTO getEmployee(@RequestParam(name = "username", required=true) String username) {
+        return employeeService.getEmployeeByUsername(username);
     }
 
     @ResponseStatus(value = HttpStatus.CREATED)
