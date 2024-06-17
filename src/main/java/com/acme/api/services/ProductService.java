@@ -35,9 +35,14 @@ public class ProductService implements ProductInterface{
                 .stream().map(getAllProductsDTOMapper);
     }
 
+//    @Override
+//    public Product getProduct(long id) {
+//        return productRepository.findById(id);
+//    }
+
     @Override
-    public Product getProduct(long id) {
-        return productRepository.findById(id);
+    public Product getProduct(String reference) {
+        return productRepository.findByReference(reference);
     }
 
     @Override

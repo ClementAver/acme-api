@@ -42,8 +42,8 @@ public class OrderService implements OrderInterface{
     }
 
     @Override
-    public Order getOrder(long id) {
-        return orderRepository.findById(id);
+    public Order getOrder(String reference) {
+        return orderRepository.findByReference(reference);
     }
 
     @Override

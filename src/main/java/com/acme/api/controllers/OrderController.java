@@ -30,8 +30,8 @@ public class OrderController {
     }
 
     @GetMapping("/order")
-    public Order getOrder(@RequestParam(name = "id", required=true) long id) {
-        Optional<Order> order = Optional.ofNullable(orderService.getOrder(id));
+    public Order getOrder(@RequestParam(name = "reference", required=true) String reference) {
+        Optional<Order> order = Optional.ofNullable(orderService.getOrder(reference));
         return order.orElse(null);
     }
 

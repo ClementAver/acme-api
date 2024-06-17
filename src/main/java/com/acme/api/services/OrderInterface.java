@@ -9,7 +9,8 @@ import java.util.stream.Stream;
 public interface OrderInterface {
     Order createOrder(OrderRequestBody orderRequestBody);
     Stream<GetAllOrdersDTO> getAllOrders();
-    Order getOrder(long id);
+    // Order getOrder(long id);
+    Order getOrder(String reference);
     void deleteOrder(long id);
     Order updateOrder(Long id, OrderRequestBody orderRequestBody);
     Order getOrCreateOrder(Order order);

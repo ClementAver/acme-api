@@ -15,6 +15,14 @@ public class OrderLineRequestBody {
     Integer quantity;
     Product idProduct;
     Order idOrder;
+
+    public String getIdProductReference() {
+        return idProduct.getReference();
+    }
+
+    public String getIdOrderReference() {
+        return idOrder.getReference();
+    }
 }
 
 

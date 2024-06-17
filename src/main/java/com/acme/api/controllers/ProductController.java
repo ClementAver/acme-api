@@ -32,8 +32,8 @@ public class ProductController {
     }
 
     @GetMapping("/product")
-    public Product getProduct(@RequestParam(name = "id", required=true) long id) {
-        Optional<Product> product = Optional.ofNullable(productService.getProduct(id));
+    public Product getProduct(@RequestParam(name = "reference", required=true) String reference) {
+        Optional<Product> product = Optional.ofNullable(productService.getProduct(reference));
         return product.orElse(null);
     }
 

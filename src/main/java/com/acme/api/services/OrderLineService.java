@@ -2,8 +2,11 @@ package com.acme.api.services;
 
 import com.acme.api.dto.GetAllCustomersDTO;
 import com.acme.api.dto.GetAllOrderLinesDTO;
+import com.acme.api.entities.Customer;
+import com.acme.api.entities.Order;
 import com.acme.api.entities.OrderLine;
 import com.acme.api.dto.OrderLineRequestBody;
+import com.acme.api.entities.Product;
 import com.acme.api.mapper.GetAllCustomersDTOMapper;
 import com.acme.api.mapper.GetAllOrderLinesDTOMapper;
 import com.acme.api.repositories.OrderLineRepository;
@@ -18,11 +21,15 @@ public class OrderLineService implements OrderLineInterface{
     private final OrderLineRepository orderRepository;
     private final OrderLineRepository orderLineRepository;
     private final GetAllOrderLinesDTOMapper getAllOrderLinesDTOMapper;
+    private final ProductService productService;
+    private final OrderService orderService;
 
-    public OrderLineService(OrderLineRepository orderRepository, OrderLineRepository orderLineRepository) {
+    public OrderLineService(OrderLineRepository orderRepository, OrderLineRepository orderLineRepository, ProductService productService, OrderService orderService) {
         this.orderRepository = orderRepository;
         this.orderLineRepository = orderLineRepository;
+        this.orderService = orderService;
         this.getAllOrderLinesDTOMapper = new GetAllOrderLinesDTOMapper();
+        this.productService = productService;
     }
 
     // take a look at this
@@ -33,10 +40,12 @@ public class OrderLineService implements OrderLineInterface{
 
     @Override
     public OrderLine createOrderLine(OrderLineRequestBody orderLineRequestBody) {
+        Product product = productService.getOrCreateProduct(productService.getProduct(orderLineRequestBody.getIdProductReference()));
+        Order order = orderService.getOrCreateOrder(orderService.getOrder(orderLineRequestBody.getIdOrderReference()));
         OrderLine orderLine = new OrderLine();
         orderLine.setQuantity(orderLineRequestBody.getQuantity());
-        orderLine.setIdProduct(orderLineRequestBody.getIdProduct());
-        orderLine.setIdOrder(orderLineRequestBody.getIdOrder());
+        orderLine.setIdProduct(product);
+        orderLine.setIdOrder(order);
         return orderRepository.save(orderLine);
     }
 
