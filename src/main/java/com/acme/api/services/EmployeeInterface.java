@@ -11,7 +11,7 @@ import java.util.stream.Stream;
 public interface EmployeeInterface {
     Employee createEmployee(EmployeeRequestBody employeeRequestBody);
     Stream<GetAllEmployeesDTO> getAllEmployees();
-    // Employee getEmployee(long id);
+    Employee getEmployee(long id);
     GetEmployeeDTO getEmployeeByUsername(String username);
     void deleteEmployee(long id);
     Employee updateEmployee(Long id, EmployeeRequestBody employeeRequestBody);

@@ -29,12 +29,6 @@ public class OrderLineController {
         return orderLineService.getAllOrderLines();
     }
 
-    @GetMapping("/order-line")
-    public OrderLine getOrderLine(@RequestParam(name = "id", required=true) long id) {
-        Optional<OrderLine> orderLine = Optional.ofNullable(orderLineService.getOrderLine(id));
-        return orderLine.orElse(null);
-    }
-
     @ResponseStatus(value = HttpStatus.CREATED)
     @PostMapping(value = "/order-line", consumes = APPLICATION_JSON_VALUE)
     public OrderLine createOrderLine(@RequestBody OrderLineRequestBody orderLineRequestBody) {
@@ -49,6 +43,11 @@ public class OrderLineController {
     @DeleteMapping("/order-line")
     public void deleteOrderLine(@RequestParam(name = "id", required=true) long id) {
         orderLineService.deleteOrderLine(id);
+    }
+
+    @GetMapping("/order-lines-from-order")
+    public Stream<GetAllOrderLinesDTO> getOrderLinesFromOrder(@RequestParam(name = "reference", required=true) String orderReference) {
+        return orderLineService.getAllOrderLinesFromOrder(orderReference);
     }
 }
 

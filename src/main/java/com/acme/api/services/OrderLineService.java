@@ -32,18 +32,13 @@ public class OrderLineService implements OrderLineInterface{
     }
 
     @Override
-    public OrderLine createOrderLine(OrderLineRequestBody orderRequestBody) {
-        OrderLine order = new OrderLine();
-        order.setQuantity(orderRequestBody.getQuantity());
-        order.setIdProduct(orderRequestBody.getIdProduct());
-        order.setIdOrder(orderRequestBody.getIdOrder());
-        return orderRepository.save(order);
+    public OrderLine createOrderLine(OrderLineRequestBody orderLineRequestBody) {
+        OrderLine orderLine = new OrderLine();
+        orderLine.setQuantity(orderLineRequestBody.getQuantity());
+        orderLine.setIdProduct(orderLineRequestBody.getIdProduct());
+        orderLine.setIdOrder(orderLineRequestBody.getIdOrder());
+        return orderRepository.save(orderLine);
     }
-
-//    @Override
-//    public List<OrderLine> getAllOrderLines() {
-//        return orderRepository.findAll();
-//    }
 
     @Override
     public Stream<GetAllOrderLinesDTO> getAllOrderLines() {
@@ -69,5 +64,11 @@ public class OrderLineService implements OrderLineInterface{
             orderLineToUpdate.setIdOrder(orderLineRequestBody.getIdOrder());
         }
         return orderLineRepository.save(orderLineToUpdate);
+    }
+
+    @Override
+    public Stream<GetAllOrderLinesDTO> getAllOrderLinesFromOrder(String orderReference) {
+        return orderLineRepository.findAllByIdOrder_Reference(orderReference)
+                .stream().map(getAllOrderLinesDTOMapper);
     }
 }

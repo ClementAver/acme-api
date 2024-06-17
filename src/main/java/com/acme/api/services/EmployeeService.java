@@ -40,10 +40,10 @@ public class EmployeeService implements EmployeeInterface{
                 .stream().map(getAllEmployeesDTOMapper);
     }
 
-//    @Override
-//    public Employee getEmployee(long id) {
-//        return employeeRepository.findById(id);
-//    }
+    @Override
+    public Employee getEmployee(long id) {
+        return employeeRepository.findById(id);
+    }
 
     @Override
     public GetEmployeeDTO getEmployeeByUsername(String username) {

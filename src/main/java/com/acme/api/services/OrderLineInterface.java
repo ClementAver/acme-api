@@ -12,4 +12,5 @@ public interface OrderLineInterface {
     OrderLine getOrderLine(long id);
     void deleteOrderLine(long id);
     OrderLine updateOrderLine(Long id, OrderLineRequestBody orderLineRequestBody);
+    Stream<GetAllOrderLinesDTO> getAllOrderLinesFromOrder(String orderReference);
 }
