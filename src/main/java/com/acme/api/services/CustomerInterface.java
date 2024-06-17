@@ -9,7 +9,8 @@ import java.util.stream.Stream;
 public interface CustomerInterface {
     Customer createCustomer(CustomerRequestBody customerRequestBody);
     Stream<GetAllCustomersDTO> getAllCustomers();
-    Customer getCustomer(long id);
+    // Customer getCustomer(long id);
+    GetAllCustomersDTO getCustomerByEmail(String email);
     void deleteCustomer(long id);
     Customer updateCustomer(Long id, CustomerRequestBody customerRequestBody);
     Customer getOrCreateCustomer(Customer customer);

@@ -29,10 +29,15 @@ public class CustomerController {
         return customerService.getAllCustomers();
     }
 
+//    @GetMapping("/customer")
+//    public Customer getCustomer(@RequestParam(name = "id", required=true) long id) {
+//        Optional<Customer> customer = Optional.ofNullable(customerService.getCustomer(id));
+//        return customer.orElse(null);
+//    }
+
     @GetMapping("/customer")
-    public Customer getCustomer(@RequestParam(name = "id", required=true) long id) {
-        Optional<Customer> customer = Optional.ofNullable(customerService.getCustomer(id));
-        return customer.orElse(null);
+    public GetAllCustomersDTO getCustomer(@RequestParam(name = "email", required=true) String email) {
+        return customerService.getCustomerByEmail(email);
     }
 
     @ResponseStatus(value = HttpStatus.CREATED)
