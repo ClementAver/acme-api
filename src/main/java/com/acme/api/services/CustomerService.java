@@ -1,6 +1,7 @@
 package com.acme.api.services;
 
 import com.acme.api.dto.GetAllCustomersDTO;
+import com.acme.api.dto.GetCustomerDTO;
 import com.acme.api.entities.Customer;
 import com.acme.api.dto.CustomerRequestBody;
 import com.acme.api.mapper.GetAllCustomersDTOMapper;
@@ -82,9 +83,9 @@ public class CustomerService implements CustomerInterface{
 //    }
 
     @Override
-    public GetAllCustomersDTO getCustomerByEmail(String email) {
+    public GetCustomerDTO getCustomerByEmail(String email) {
         Customer customer = customerRepository.findByEmail(email);
-        return new GetAllCustomersDTO(customer.getFirstName(), customer.getLastName(), customer.getEmail(), customer.getPhone(), customer.getAddress());
+        return new GetCustomerDTO(customer.getFirstName(), customer.getLastName(), customer.getEmail(), customer.getPhone(), customer.getAddress(), customer.getOrders());
     }
 
     @Override

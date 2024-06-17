@@ -1,6 +1,7 @@
 package com.acme.api.controllers;
 
 import com.acme.api.dto.GetAllCustomersDTO;
+import com.acme.api.dto.GetCustomerDTO;
 import com.acme.api.entities.Customer;
 import com.acme.api.dto.CustomerRequestBody;
 import com.acme.api.services.CustomerService;
@@ -36,7 +37,7 @@ public class CustomerController {
 //    }
 
     @GetMapping("/customer")
-    public GetAllCustomersDTO getCustomer(@RequestParam(name = "email", required=true) String email) {
+    public GetCustomerDTO getCustomer(@RequestParam(name = "email", required=true) String email) {
         return customerService.getCustomerByEmail(email);
     }
 

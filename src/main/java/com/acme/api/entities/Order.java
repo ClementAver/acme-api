@@ -42,6 +42,6 @@ public class Order {
     // If not already, associated entities will also be persisted in the DB with this one.
     // If this entity is deleted, the entities that depend on it will also be deleted from the DB.
     @OneToMany(mappedBy = "idOrder", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnoreProperties("idOrder")
+    @JsonIgnoreProperties({"idOrder"})
     private Set<OrderLine> orderLines = new LinkedHashSet<>();
 }
