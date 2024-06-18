@@ -8,7 +8,7 @@ import com.acme.api.mapper.GetAllOrdersDTOMapper;
 import com.acme.api.repositories.OrderRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.LinkedHashSet;
 import java.util.stream.Stream;
 
 @Service
@@ -31,7 +31,11 @@ public class OrderService implements OrderInterface{
         order.setReference(orderRequestBody.getReference());
         order.setDate(orderRequestBody.getDate());
         order.setIdCustomer(customer);
-        order.setOrderLines(orderRequestBody.getOrderLines());
+        if (orderRequestBody.getOrderLines() == null) {
+            order.setOrderLines(new LinkedHashSet<>());
+        } else {
+            order.setOrderLines(orderRequestBody.getOrderLines());
+        }
         return orderRepository.save(order);
     }
 

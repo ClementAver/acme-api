@@ -1,18 +1,14 @@
 package com.acme.api.services;
 
-import com.acme.api.dto.GetAllCustomersDTO;
 import com.acme.api.dto.GetAllOrderLinesDTO;
-import com.acme.api.entities.Customer;
 import com.acme.api.entities.Order;
 import com.acme.api.entities.OrderLine;
 import com.acme.api.dto.OrderLineRequestBody;
 import com.acme.api.entities.Product;
-import com.acme.api.mapper.GetAllCustomersDTOMapper;
 import com.acme.api.mapper.GetAllOrderLinesDTOMapper;
 import com.acme.api.repositories.OrderLineRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.stream.Stream;
 
 @Service
