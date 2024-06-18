@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -37,4 +38,7 @@ public class Product {
     @JsonIgnoreProperties("idProduct")
     private Set<OrderLine> orderLines = new LinkedHashSet<>();
 
+    public static String generateReference() {
+        return "PRO-" + new Date().getTime();
+    }
 }

@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import java.util.LinkedHashSet;
 import java.util.stream.Stream;
 
+import static com.acme.api.entities.Order.generateReference;
+
 @Service
 public class OrderService implements OrderInterface{
 
@@ -28,7 +30,7 @@ public class OrderService implements OrderInterface{
     public Order createOrder(OrderRequestBody orderRequestBody) {
         Customer customer = customerService.getOrCreateCustomer(orderRequestBody.getIdCustomer());
         Order order = new Order();
-        order.setReference(orderRequestBody.getReference());
+        order.setReference(generateReference());
         order.setDate(orderRequestBody.getDate());
         order.setIdCustomer(customer);
         if (orderRequestBody.getOrderLines() == null) {

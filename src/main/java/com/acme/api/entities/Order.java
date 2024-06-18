@@ -6,8 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.GenericGenerator;
 
+import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -44,4 +44,8 @@ public class Order {
     @OneToMany(mappedBy = "idOrder", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnoreProperties({"idOrder"})
     private Set<OrderLine> orderLines = new LinkedHashSet<>();
+
+    public static String generateReference() {
+        return "ORD-" + new Date().getTime();
+    }
 }

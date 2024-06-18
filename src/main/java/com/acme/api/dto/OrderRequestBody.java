@@ -17,10 +17,8 @@ import java.util.Set;
 @Setter
 public class OrderRequestBody {
     String date;
-    String reference;
     Customer idCustomer;
     Set<OrderLine> orderLines;
-
 
     public String toString() {
         log.info("mon objet");

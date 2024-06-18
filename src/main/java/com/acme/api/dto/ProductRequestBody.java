@@ -15,7 +15,6 @@ import java.util.Set;
 @Getter
 @Setter
 public class ProductRequestBody {
-    String reference;
     String name;
     Integer price;
     Set<OrderLine> orderlines;

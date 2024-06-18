@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.stream.Stream;
 
+import static com.acme.api.entities.Product.generateReference;
+
 @Service
 public class ProductService implements ProductInterface{
 
@@ -23,7 +25,7 @@ public class ProductService implements ProductInterface{
     @Override
     public Product createProduct(ProductRequestBody productRequestBody) {
         Product product = new Product();
-        product.setReference(productRequestBody.getReference());
+        product.setReference(generateReference());
         product.setName(productRequestBody.getName());
         product.setPrice(productRequestBody.getPrice());
         return productRepository.save(product);
@@ -53,9 +55,6 @@ public class ProductService implements ProductInterface{
     @Override
     public Product updateProduct(Long id, ProductRequestBody productRequestBody) {
         Product productToUpdate = productRepository.getReferenceById(id);
-        if (productRequestBody.getReference() != null) {
-            productToUpdate.setReference(productRequestBody.getReference());
-        }
         if (productRequestBody.getName() != null) {
             productToUpdate.setName(productRequestBody.getName());
         }
