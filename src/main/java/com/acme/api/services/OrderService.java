@@ -8,9 +8,11 @@ import com.acme.api.mapper.GetAllOrdersDTOMapper;
 import com.acme.api.repositories.OrderRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.stream.Stream;
 
+import static com.acme.api.entities.Order.generateDate;
 import static com.acme.api.entities.Order.generateReference;
 
 @Service
@@ -31,7 +33,7 @@ public class OrderService implements OrderInterface{
         Customer customer = customerService.getOrCreateCustomer(orderRequestBody.getIdCustomer());
         Order order = new Order();
         order.setReference(generateReference());
-        order.setDate(orderRequestBody.getDate());
+        order.setDate(generateDate());
         order.setIdCustomer(customer);
         if (orderRequestBody.getOrderLines() == null) {
             order.setOrderLines(new LinkedHashSet<>());
@@ -60,9 +62,6 @@ public class OrderService implements OrderInterface{
     @Override
     public Order updateOrder(Long id, OrderRequestBody orderRequestBody) {
         Order orderToUpdate = orderRepository.getReferenceById(id);
-        if (orderRequestBody.getDate() != null) {
-            orderToUpdate.setDate(orderRequestBody.getDate());
-        }
         if (orderRequestBody.getIdCustomer() != null) {
             orderToUpdate.setIdCustomer(orderRequestBody.getIdCustomer());
         }
