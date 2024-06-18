@@ -1,6 +1,5 @@
 package com.acme.api.services;
 
-import com.acme.api.dto.GetAllCustomersDTO;
 import com.acme.api.dto.GetCustomerDTO;
 import com.acme.api.entities.Customer;
 import com.acme.api.dto.CustomerRequestBody;
@@ -9,7 +8,7 @@ import java.util.stream.Stream;
 
 public interface CustomerInterface {
     Customer createCustomer(CustomerRequestBody customerRequestBody);
-    Stream<GetAllCustomersDTO> getAllCustomers();
+    Stream<GetCustomerDTO> getAllCustomers();
     // Customer getCustomer(long id);
     GetCustomerDTO getCustomerByEmail(String email);
     void deleteCustomer(long id);

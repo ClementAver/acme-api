@@ -1,10 +1,9 @@
 package com.acme.api.services;
 
-import com.acme.api.dto.GetAllCustomersDTO;
 import com.acme.api.dto.GetCustomerDTO;
 import com.acme.api.entities.Customer;
 import com.acme.api.dto.CustomerRequestBody;
-import com.acme.api.mapper.GetAllCustomersDTOMapper;
+import com.acme.api.mapper.GetCustomerDTOMapper;
 import com.acme.api.repositories.CustomerRepository;
 import org.springframework.stereotype.Service;
 
@@ -14,11 +13,11 @@ import java.util.stream.Stream;
 public class CustomerService implements CustomerInterface{
 
     private final CustomerRepository customerRepository;
-    private final GetAllCustomersDTOMapper getAllCustomersDTOMapper;
+    private final GetCustomerDTOMapper getCustomerDTOMapper;
 
-    public CustomerService(CustomerRepository customerRepository, GetAllCustomersDTOMapper getAllCustomersDTOMapper) {
+    public CustomerService(CustomerRepository customerRepository, GetCustomerDTOMapper getCustomerDTOMapper) {
         this.customerRepository = customerRepository;
-        this.getAllCustomersDTOMapper = getAllCustomersDTOMapper;
+        this.getCustomerDTOMapper = getCustomerDTOMapper;
     }
 
     @Override
@@ -71,9 +70,9 @@ public class CustomerService implements CustomerInterface{
     }
 
     @Override
-    public Stream<GetAllCustomersDTO> getAllCustomers() {
+    public Stream<GetCustomerDTO> getAllCustomers() {
         return customerRepository.findAll()
-                .stream().map(getAllCustomersDTOMapper);
+                .stream().map(getCustomerDTOMapper);
     }
 
 //    @Override
@@ -85,7 +84,7 @@ public class CustomerService implements CustomerInterface{
     @Override
     public GetCustomerDTO getCustomerByEmail(String email) {
         Customer customer = customerRepository.findByEmail(email);
-        return new GetCustomerDTO(customer.getFirstName(), customer.getLastName(), customer.getEmail(), customer.getPhone(), customer.getAddress(), customer.getOrders());
+        return new GetCustomerDTO(customer.getFirstName(), customer.getLastName(), customer.getEmail(), customer.getPhone(), customer.getAddress());
     }
 
     @Override

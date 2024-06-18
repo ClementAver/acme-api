@@ -1,12 +1,9 @@
 package com.acme.api.dto;
 
-import com.acme.api.entities.Order;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,7 +15,6 @@ public class GetCustomerDTO {
     String email;
     String phone;
     String address;
-    Set<Order> orders;
 }
 
 
