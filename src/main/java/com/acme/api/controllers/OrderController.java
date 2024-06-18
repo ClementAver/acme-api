@@ -7,7 +7,6 @@ import com.acme.api.services.OrderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -49,6 +48,11 @@ public class OrderController {
     @DeleteMapping("/order")
     public void deleteOrder(@RequestParam(name = "id", required=true) long id) {
         orderService.deleteOrder(id);
+    }
+
+    @GetMapping("/orders-from-customer")
+    public Stream<GetAllOrdersDTO> getOrdersFromCustomer(@RequestParam(name = "customerEmail", required=true) String customerEmail) {
+        return orderService.getAllOrdersFromCustomer(customerEmail);
     }
 }
 

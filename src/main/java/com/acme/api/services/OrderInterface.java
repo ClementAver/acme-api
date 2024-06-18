@@ -9,6 +9,7 @@ import java.util.stream.Stream;
 public interface OrderInterface {
     Order createOrder(OrderRequestBody orderRequestBody);
     Stream<GetAllOrdersDTO> getAllOrders();
+    Stream<GetAllOrdersDTO> getAllOrdersFromCustomer(String customerEmail);
     // Order getOrder(long id);
     Order getOrder(String reference);
     void deleteOrder(long id);

@@ -44,10 +44,10 @@ public class OrderLineController {
     public void deleteOrderLine(@RequestParam(name = "id", required=true) long id) {
         orderLineService.deleteOrderLine(id);
     }
-
     @GetMapping("/order-lines-from-order")
     public Stream<GetAllOrderLinesDTO> getOrderLinesFromOrder(@RequestParam(name = "reference", required=true) String orderReference) {
         return orderLineService.getAllOrderLinesFromOrder(orderReference);
     }
+
 }
 

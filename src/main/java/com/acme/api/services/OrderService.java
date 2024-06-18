@@ -8,7 +8,6 @@ import com.acme.api.mapper.GetAllOrdersDTOMapper;
 import com.acme.api.repositories.OrderRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.stream.Stream;
 
@@ -46,6 +45,12 @@ public class OrderService implements OrderInterface{
     @Override
     public Stream<GetAllOrdersDTO> getAllOrders() {
         return orderRepository.findAll()
+                .stream().map(getAllOrdersDTOMapper);
+    }
+
+    @Override
+    public Stream<GetAllOrdersDTO> getAllOrdersFromCustomer(String customerEmail) {
+        return orderRepository.findAllByIdCustomer_Email(customerEmail)
                 .stream().map(getAllOrdersDTOMapper);
     }
 
