@@ -1,12 +1,11 @@
 package com.acme.api.services;
 
-import com.acme.api.dto.GetAllProductsDTO;
+import com.acme.api.dto.GetProductDTO;
 import com.acme.api.entities.Product;
 import com.acme.api.dto.ProductRequestBody;
 import com.acme.api.mapper.GetAllProductsDTOMapper;
 import com.acme.api.repositories.ProductRepository;
 import org.springframework.stereotype.Service;
-
 import java.util.stream.Stream;
 
 import static com.acme.api.entities.Product.generateReference;
@@ -32,19 +31,20 @@ public class ProductService implements ProductInterface{
     }
 
     @Override
-    public Stream<GetAllProductsDTO> getAllProducts() {
+    public Stream<GetProductDTO> getAllProducts() {
         return productRepository.findAll()
                 .stream().map(getAllProductsDTOMapper);
     }
 
-//    @Override
-//    public Product getProduct(long id) {
-//        return productRepository.findById(id);
-//    }
+    @Override
+    public Product getProductEntity(String reference) {
+        return productRepository.findByReference(reference);
+    }
 
     @Override
-    public Product getProduct(String reference) {
-        return productRepository.findByReference(reference);
+    public GetProductDTO getProduct(String reference) {
+        Product product = productRepository.findByReference(reference);
+        return new GetProductDTO(product.getReference(), product.getName(), product.getPrice());
     }
 
     @Override

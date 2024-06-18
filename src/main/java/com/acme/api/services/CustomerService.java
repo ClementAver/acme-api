@@ -6,7 +6,6 @@ import com.acme.api.dto.CustomerRequestBody;
 import com.acme.api.mapper.GetCustomerDTOMapper;
 import com.acme.api.repositories.CustomerRepository;
 import org.springframework.stereotype.Service;
-
 import java.util.stream.Stream;
 
 @Service
@@ -74,12 +73,6 @@ public class CustomerService implements CustomerInterface{
         return customerRepository.findAll()
                 .stream().map(getCustomerDTOMapper);
     }
-
-//    @Override
-//    public Customer getCustomer(long id) {
-//        Optional<Customer> optionalCustomer = Optional.ofNullable(this.customerRepository.findById(id));
-//        return optionalCustomer.orElse(null);
-//    }
 
     @Override
     public GetCustomerDTO getCustomerByEmail(String email) {

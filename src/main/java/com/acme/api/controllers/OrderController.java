@@ -1,13 +1,11 @@
 package com.acme.api.controllers;
 
-import com.acme.api.dto.GetAllOrdersDTO;
+import com.acme.api.dto.GetOrderDTO;
 import com.acme.api.entities.Order;
 import com.acme.api.dto.OrderRequestBody;
 import com.acme.api.services.OrderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -24,14 +22,13 @@ public class OrderController {
     }
 
     @GetMapping("/orders")
-    public Stream<GetAllOrdersDTO> getOrders() {
+    public Stream<GetOrderDTO> getOrders() {
         return orderService.getAllOrders();
     }
 
     @GetMapping("/order")
-    public Order getOrder(@RequestParam(name = "reference", required=true) String reference) {
-        Optional<Order> order = Optional.ofNullable(orderService.getOrder(reference));
-        return order.orElse(null);
+    public GetOrderDTO getOrder(@RequestParam(name = "reference", required=true) String reference) {
+        return orderService.getOrder(reference);
     }
 
     @ResponseStatus(value = HttpStatus.CREATED)
@@ -51,7 +48,7 @@ public class OrderController {
     }
 
     @GetMapping("/orders-from-customer")
-    public Stream<GetAllOrdersDTO> getOrdersFromCustomer(@RequestParam(name = "customerEmail", required=true) String customerEmail) {
+    public Stream<GetOrderDTO> getOrdersFromCustomer(@RequestParam(name = "customerEmail", required=true) String customerEmail) {
         return orderService.getAllOrdersFromCustomer(customerEmail);
     }
 }

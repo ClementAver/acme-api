@@ -3,7 +3,6 @@ package com.acme.api.mapper;
 import com.acme.api.dto.GetCustomerDTO;
 import com.acme.api.entities.Customer;
 import org.springframework.stereotype.Component;
-
 import java.util.function.Function;
 
 @Component

@@ -1,15 +1,14 @@
 package com.acme.api.mapper;
 
-import com.acme.api.dto.GetAllOrderLinesDTO;
+import com.acme.api.dto.GetOrderLineDTO;
 import com.acme.api.entities.OrderLine;
 import org.springframework.stereotype.Component;
-
 import java.util.function.Function;
 
 @Component
-public class GetAllOrderLinesDTOMapper implements Function<OrderLine, GetAllOrderLinesDTO> {
+public class GetAllOrderLinesDTOMapper implements Function<OrderLine, GetOrderLineDTO> {
     @Override
-    public GetAllOrderLinesDTO apply(OrderLine orderline) {
-        return new GetAllOrderLinesDTO(orderline.getQuantity(), orderline.getProductReference(), orderline.getOrderReference());
+    public GetOrderLineDTO apply(OrderLine orderline) {
+        return new GetOrderLineDTO(orderline.getQuantity(), orderline.getProductReference(), orderline.getOrderReference());
     }
 }

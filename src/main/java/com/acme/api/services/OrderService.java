@@ -1,13 +1,12 @@
 package com.acme.api.services;
 
-import com.acme.api.dto.GetAllOrdersDTO;
+import com.acme.api.dto.GetOrderDTO;
 import com.acme.api.entities.Customer;
 import com.acme.api.entities.Order;
 import com.acme.api.dto.OrderRequestBody;
 import com.acme.api.mapper.GetAllOrdersDTOMapper;
 import com.acme.api.repositories.OrderRepository;
 import org.springframework.stereotype.Service;
-
 import java.util.LinkedHashSet;
 import java.util.stream.Stream;
 
@@ -43,20 +42,26 @@ public class OrderService implements OrderInterface{
     }
 
     @Override
-    public Stream<GetAllOrdersDTO> getAllOrders() {
+    public Stream<GetOrderDTO> getAllOrders() {
         return orderRepository.findAll()
                 .stream().map(getAllOrdersDTOMapper);
     }
 
     @Override
-    public Stream<GetAllOrdersDTO> getAllOrdersFromCustomer(String customerEmail) {
+    public Stream<GetOrderDTO> getAllOrdersFromCustomer(String customerEmail) {
         return orderRepository.findAllByIdCustomer_Email(customerEmail)
                 .stream().map(getAllOrdersDTOMapper);
     }
 
     @Override
-    public Order getOrder(String reference) {
+    public Order getOrderEntity(String reference) {
         return orderRepository.findByReference(reference);
+    }
+
+    @Override
+    public GetOrderDTO getOrder(String reference) {
+        Order order = orderRepository.findByReference(reference);
+        return new GetOrderDTO(order.getReference(), order.getDate(), order.getIdCustomer().getEmail());
     }
 
     @Override

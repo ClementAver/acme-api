@@ -9,7 +9,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class GetAllOrderLinesDTO {
+public class GetOrderLineDTO {
     Integer quantity;
     String referenceProduct;
     String referenceOrder;

@@ -1,14 +1,11 @@
 package com.acme.api.controllers;
 
-import com.acme.api.dto.GetAllOrderLinesDTO;
+import com.acme.api.dto.GetOrderLineDTO;
 import com.acme.api.entities.OrderLine;
 import com.acme.api.dto.OrderLineRequestBody;
 import com.acme.api.services.OrderLineService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -25,7 +22,7 @@ public class OrderLineController {
     }
 
     @GetMapping("/order-lines")
-    public Stream<GetAllOrderLinesDTO> getOrderLines() {
+    public Stream<GetOrderLineDTO> getOrderLines() {
         return orderLineService.getAllOrderLines();
     }
 
@@ -45,7 +42,7 @@ public class OrderLineController {
         orderLineService.deleteOrderLine(id);
     }
     @GetMapping("/order-lines-from-order")
-    public Stream<GetAllOrderLinesDTO> getOrderLinesFromOrder(@RequestParam(name = "reference", required=true) String orderReference) {
+    public Stream<GetOrderLineDTO> getOrderLinesFromOrder(@RequestParam(name = "reference", required=true) String orderReference) {
         return orderLineService.getAllOrderLinesFromOrder(orderReference);
     }
 

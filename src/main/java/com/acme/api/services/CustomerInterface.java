@@ -3,7 +3,6 @@ package com.acme.api.services;
 import com.acme.api.dto.GetCustomerDTO;
 import com.acme.api.entities.Customer;
 import com.acme.api.dto.CustomerRequestBody;
-
 import java.util.stream.Stream;
 
 public interface CustomerInterface {

@@ -1,6 +1,6 @@
 package com.acme.api.services;
 
-import com.acme.api.dto.GetAllOrderLinesDTO;
+import com.acme.api.dto.GetOrderLineDTO;
 import com.acme.api.entities.Order;
 import com.acme.api.entities.OrderLine;
 import com.acme.api.dto.OrderLineRequestBody;
@@ -36,8 +36,8 @@ public class OrderLineService implements OrderLineInterface{
 
     @Override
     public OrderLine createOrderLine(OrderLineRequestBody orderLineRequestBody) {
-        Product product = productService.getOrCreateProduct(productService.getProduct(orderLineRequestBody.getIdProductReference()));
-        Order order = orderService.getOrCreateOrder(orderService.getOrder(orderLineRequestBody.getIdOrderReference()));
+        Product product = productService.getOrCreateProduct(productService.getProductEntity(orderLineRequestBody.getIdProductReference()));
+        Order order = orderService.getOrCreateOrder(orderService.getOrderEntity(orderLineRequestBody.getIdOrderReference()));
         OrderLine orderLine = new OrderLine();
         orderLine.setQuantity(orderLineRequestBody.getQuantity());
         orderLine.setIdProduct(product);
@@ -46,7 +46,7 @@ public class OrderLineService implements OrderLineInterface{
     }
 
     @Override
-    public Stream<GetAllOrderLinesDTO> getAllOrderLines() {
+    public Stream<GetOrderLineDTO> getAllOrderLines() {
         return orderLineRepository.findAll()
                 .stream().map(getAllOrderLinesDTOMapper);
     }
@@ -72,7 +72,7 @@ public class OrderLineService implements OrderLineInterface{
     }
 
     @Override
-    public Stream<GetAllOrderLinesDTO> getAllOrderLinesFromOrder(String orderReference) {
+    public Stream<GetOrderLineDTO> getAllOrderLinesFromOrder(String orderReference) {
         return orderLineRepository.findAllByIdOrder_Reference(orderReference)
                 .stream().map(getAllOrderLinesDTOMapper);
     }
