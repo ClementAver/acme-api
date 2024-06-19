@@ -1,11 +1,12 @@
 package com.acme.api.controllers;
 
 import com.acme.api.dto.GetCustomerDTO;
-import com.acme.api.entities.Customer;
 import com.acme.api.dto.CustomerRequestBody;
 import com.acme.api.services.CustomerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.util.stream.Stream;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -27,12 +28,6 @@ public class CustomerController {
         return customerService.getAllCustomers();
     }
 
-//    @GetMapping("/customer")
-//    public Customer getCustomer(@RequestParam(name = "id", required=true) long id) {
-//        Optional<Customer> customer = Optional.ofNullable(customerService.getCustomer(id));
-//        return customer.orElse(null);
-//    }
-
     @GetMapping("/customer")
     public GetCustomerDTO getCustomer(@RequestParam(name = "email", required=true) String email) {
         return customerService.getCustomerByEmail(email);
@@ -40,18 +35,33 @@ public class CustomerController {
 
     @ResponseStatus(value = HttpStatus.CREATED)
     @PostMapping(value = "/customer", consumes = APPLICATION_JSON_VALUE)
-    public Customer createCustomer(@RequestBody CustomerRequestBody customerRequestBody) {
-        return customerService.createCustomer(customerRequestBody);
+    public String createCustomer(@RequestBody CustomerRequestBody customerRequestBody) {
+        try {
+            customerService.createCustomer(customerRequestBody);
+            return "Création effectuée.";
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
     }
 
     @PutMapping(value = "/customer", consumes = APPLICATION_JSON_VALUE)
-    public Customer updateCustomer(@RequestParam(name = "id", required=true) long id, @RequestBody CustomerRequestBody customerRequestBody) {
-        return customerService.updateCustomer(id, customerRequestBody);
+    public String updateCustomer(@RequestParam(name = "email", required=true) String email, @RequestBody CustomerRequestBody customerRequestBody) {
+        try {
+            customerService.updateCustomer(email, customerRequestBody);
+            return "Mise à jour effectuée.";
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
     }
 
     @DeleteMapping("/customer")
-    public void deleteCustomer(@RequestParam(name = "id", required=true) long id) {
-        customerService.deleteCustomer(id);
+    public String deleteCustomer(@RequestParam(name = "email", required=true) String email) {
+        try {
+            customerService.deleteCustomer(email);
+            return "Supression effectuée.";
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
     }
 
 

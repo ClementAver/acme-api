@@ -6,11 +6,10 @@ import com.acme.api.dto.CustomerRequestBody;
 import java.util.stream.Stream;
 
 public interface CustomerInterface {
-    Customer createCustomer(CustomerRequestBody customerRequestBody);
+    void createCustomer(CustomerRequestBody customerRequestBody) throws Exception;
     Stream<GetCustomerDTO> getAllCustomers();
-    // Customer getCustomer(long id);
     GetCustomerDTO getCustomerByEmail(String email);
-    void deleteCustomer(long id);
-    Customer updateCustomer(Long id, CustomerRequestBody customerRequestBody);
+    void deleteCustomer(String email) throws Exception;
+    void updateCustomer(String email, CustomerRequestBody customerRequestBody) throws Exception;
     Customer getOrCreateCustomer(Customer customer);
 }

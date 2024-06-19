@@ -20,7 +20,7 @@ public class CustomerService implements CustomerInterface{
     }
 
     @Override
-    public Customer createCustomer(CustomerRequestBody customerRequestBody) {
+    public void createCustomer(CustomerRequestBody customerRequestBody) throws Exception {
         Customer customer = new Customer();
         customer.setFirstName(customerRequestBody.getFirstName());
         customer.setLastName(customerRequestBody.getLastName());
@@ -36,36 +36,34 @@ public class CustomerService implements CustomerInterface{
         }
 
         Customer customerInDB = customerRepository.findByEmail(customer.getEmail());
-        try {
-            if (customerInDB == null) {
-                return customerRepository.save(customer);
-            }
+        if (customerInDB != null) {
             throw new Exception("Cet email a déjà été renseigné.");
-        } catch (Exception e) {
-            return null;
         }
+        customerRepository.save(customer);
     }
 
     @Override
-    public Customer updateCustomer(Long id, CustomerRequestBody customerRequestBody) {
-        Customer customerToUpdate = customerRepository.getReferenceById(id);
-
-        if(customerRequestBody.getFirstName() != null){
-            customerToUpdate.setFirstName(customerRequestBody.getFirstName());
-        }
-        if(customerRequestBody.getLastName() != null){
-            customerToUpdate.setLastName(customerRequestBody.getLastName());
-        }
-        if(customerRequestBody.getEmail() != null){
-            customerToUpdate.setEmail(customerRequestBody.getEmail());
-        }
-        if(customerRequestBody.getPhone() != null){
-            customerToUpdate.setPhone(customerRequestBody.getPhone());
-        }
-        if(customerRequestBody.getAddress() != null){
-            customerToUpdate.setAddress(customerRequestBody.getAddress());
-        }
-        return customerRepository.save(customerToUpdate);
+    public void updateCustomer(String email, CustomerRequestBody customerRequestBody) throws Exception {
+            Customer customerToUpdate = customerRepository.findByEmail(email);
+            if (customerToUpdate == null) {
+                throw new Exception("Utilisateur inconnu.");
+            }
+            if(customerRequestBody.getFirstName() != null){
+                customerToUpdate.setFirstName(customerRequestBody.getFirstName());
+            }
+            if(customerRequestBody.getLastName() != null){
+                customerToUpdate.setLastName(customerRequestBody.getLastName());
+            }
+            if(customerRequestBody.getEmail() != null){
+                customerToUpdate.setEmail(customerRequestBody.getEmail());
+            }
+            if(customerRequestBody.getPhone() != null){
+                customerToUpdate.setPhone(customerRequestBody.getPhone());
+            }
+            if(customerRequestBody.getAddress() != null){
+                customerToUpdate.setAddress(customerRequestBody.getAddress());
+            }
+            customerRepository.save(customerToUpdate);
     }
 
     @Override
@@ -90,7 +88,13 @@ public class CustomerService implements CustomerInterface{
     }
 
     @Override
-    public void deleteCustomer(long id) {
-        customerRepository.deleteById(id);
+    public void deleteCustomer(String email) throws Exception {
+        Customer customer = customerRepository.findByEmail(email);
+        if (customer != null) {
+            customerRepository.delete(customer);
+        } else {
+            throw new Exception("Client inconnu.");
+        }
+
     }
 }
