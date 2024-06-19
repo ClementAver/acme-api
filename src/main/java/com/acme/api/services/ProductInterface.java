@@ -9,6 +9,7 @@ public interface ProductInterface {
     Product createProduct(ProductRequestBody productRequestBody);
     Stream<GetProductDTO> getAllProducts();
     Product getProductEntity(String reference);
+    Stream<GetProductDTO> getAllProductsByName(String name);
     GetProductDTO getProduct(String reference);
     void deleteProduct(long id);
     Product updateProduct(Long id, ProductRequestBody productRequestBody);

@@ -42,6 +42,12 @@ public class ProductService implements ProductInterface{
     }
 
     @Override
+    public Stream<GetProductDTO> getAllProductsByName(String name) {
+        return productRepository.findAllByName(name)
+                .stream().map(getAllProductsDTOMapper);
+    }
+
+    @Override
     public GetProductDTO getProduct(String reference) {
         Product product = productRepository.findByReference(reference);
         return new GetProductDTO(product.getReference(), product.getName(), product.getPrice());

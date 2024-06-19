@@ -31,6 +31,11 @@ public class ProductController {
         return productService.getProduct(reference);
     }
 
+    @GetMapping("/products-by-name")
+    public Stream<GetProductDTO> getProductsByName(@RequestParam(name = "name", required=true) String name) {
+        return productService.getAllProductsByName(name);
+    }
+
     @ResponseStatus(value = HttpStatus.CREATED)
     @PostMapping(value = "/product", consumes = APPLICATION_JSON_VALUE)
     public Product createProduct(@RequestBody ProductRequestBody productRequestBody) {
