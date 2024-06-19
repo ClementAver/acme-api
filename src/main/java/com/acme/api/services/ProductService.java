@@ -54,20 +54,18 @@ public class ProductService implements ProductInterface{
     }
 
     @Override
-    public void deleteProduct(long id) {
-        productRepository.deleteById(id);
-    }
-
-    @Override
-    public Product updateProduct(Long id, ProductRequestBody productRequestBody) {
-        Product productToUpdate = productRepository.getReferenceById(id);
+    public void updateProduct(String reference, ProductRequestBody productRequestBody) throws Exception {
+        Product productToUpdate = productRepository.findByReference(reference);
+        if (productToUpdate == null) {
+            throw new Exception("Produit non référencé.");
+        }
         if (productRequestBody.getName() != null) {
             productToUpdate.setName(productRequestBody.getName());
         }
         if (productRequestBody.getPrice() != null) {
             productToUpdate.setPrice(productRequestBody.getPrice());
         }
-        return productRepository.save(productToUpdate);
+        productRepository.save(productToUpdate);
     }
     
     @Override
@@ -77,5 +75,15 @@ public class ProductService implements ProductInterface{
             productInDB = productRepository.save(product);
         }
         return productInDB;
+    }
+
+    @Override
+    public void deleteProduct(String reference) throws Exception {
+        Product product = productRepository.findByReference(reference);
+        if (product != null) {
+            productRepository.delete(product);
+        } else {
+            throw new Exception("Produit non référencé.");
+        }
     }
 }

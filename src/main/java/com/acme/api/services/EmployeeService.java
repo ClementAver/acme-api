@@ -37,25 +37,19 @@ public class EmployeeService implements EmployeeInterface{
     }
 
     @Override
-    public Employee getEmployee(long id) {
-        return employeeRepository.findById(id);
-    }
-
-    @Override
     public GetEmployeeDTO getEmployeeByUsername(String username) {
         Employee employee = employeeRepository.findByUsername(username);
         return new GetEmployeeDTO(employee.getFirstName(), employee.getLastName(), employee.getEmail(), employee.getUsername());
     }
 
-    @Override
-    public void deleteEmployee(long id) {
-        employeeRepository.deleteById(id);
-    }
+
 
     @Override
-    public Employee updateEmployee(Long id, EmployeeRequestBody employeeRequestBody) {
-        Employee employeeToUpdate = employeeRepository.getReferenceById(id);
-
+    public void updateEmployee(String email, EmployeeRequestBody employeeRequestBody) throws Exception {
+        Employee employeeToUpdate = employeeRepository.findByEmail(email);
+        if (employeeToUpdate == null) {
+            throw new Exception("Utilisateur inconnu.");
+        }
         if(employeeRequestBody.getFirstName() != null){
             employeeToUpdate.setFirstName(employeeRequestBody.getFirstName());
         }
@@ -71,7 +65,7 @@ public class EmployeeService implements EmployeeInterface{
         if(employeeRequestBody.getPassword() != null){
             employeeToUpdate.setPassword(employeeRequestBody.getPassword());
         }
-        return employeeRepository.save(employeeToUpdate);
+        employeeRepository.save(employeeToUpdate);
     }
 
     @Override
@@ -81,5 +75,16 @@ public class EmployeeService implements EmployeeInterface{
             employeeInDB = employeeRepository.save(employee);
         }
         return employeeInDB;
+    }
+
+    @Override
+    public void deleteEmployee(String email) throws Exception {
+        Employee employee = employeeRepository.findByEmail(email);
+        if (employee != null) {
+            employeeRepository.delete(employee);
+        } else {
+            throw new Exception("Client inconnu.");
+        }
+
     }
 }

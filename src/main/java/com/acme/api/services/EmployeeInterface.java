@@ -8,9 +8,8 @@ import java.util.stream.Stream;
 public interface EmployeeInterface {
     Employee createEmployee(EmployeeRequestBody employeeRequestBody);
     Stream<GetEmployeeDTO> getAllEmployees();
-    Employee getEmployee(long id);
     GetEmployeeDTO getEmployeeByUsername(String username);
-    void deleteEmployee(long id);
-    Employee updateEmployee(Long id, EmployeeRequestBody employeeRequestBody);
+    void deleteEmployee(String email) throws Exception;
+    void updateEmployee(String email, EmployeeRequestBody employeeRequestBody) throws Exception;
     Employee getOrCreateEmployee(Employee employee);
     }

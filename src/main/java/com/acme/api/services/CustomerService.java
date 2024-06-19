@@ -43,6 +43,19 @@ public class CustomerService implements CustomerInterface{
     }
 
     @Override
+    public Stream<GetCustomerDTO> getAllCustomers() {
+        return customerRepository.findAll()
+                .stream().map(getCustomerDTOMapper);
+    }
+
+    @Override
+    public GetCustomerDTO getCustomerByEmail(String email) {
+        Customer customer = customerRepository.findByEmail(email);
+        return new GetCustomerDTO(customer.getFirstName(), customer.getLastName(), customer.getEmail(), customer.getPhone(), customer.getAddress());
+    }
+
+
+    @Override
     public void updateCustomer(String email, CustomerRequestBody customerRequestBody) throws Exception {
             Customer customerToUpdate = customerRepository.findByEmail(email);
             if (customerToUpdate == null) {
@@ -67,18 +80,6 @@ public class CustomerService implements CustomerInterface{
     }
 
     @Override
-    public Stream<GetCustomerDTO> getAllCustomers() {
-        return customerRepository.findAll()
-                .stream().map(getCustomerDTOMapper);
-    }
-
-    @Override
-    public GetCustomerDTO getCustomerByEmail(String email) {
-        Customer customer = customerRepository.findByEmail(email);
-        return new GetCustomerDTO(customer.getFirstName(), customer.getLastName(), customer.getEmail(), customer.getPhone(), customer.getAddress());
-    }
-
-    @Override
     public Customer getOrCreateCustomer(Customer customer) {
         Customer customerInDB = customerRepository.findByEmail(customer.getEmail());
         if (customerInDB == null) {
@@ -95,6 +96,5 @@ public class CustomerService implements CustomerInterface{
         } else {
             throw new Exception("Client inconnu.");
         }
-
     }
 }

@@ -11,7 +11,7 @@ public interface ProductInterface {
     Product getProductEntity(String reference);
     Stream<GetProductDTO> getAllProductsByName(String name);
     GetProductDTO getProduct(String reference);
-    void deleteProduct(long id);
-    Product updateProduct(Long id, ProductRequestBody productRequestBody);
+    void updateProduct(String reference, ProductRequestBody productRequestBody) throws Exception;
     Product getOrCreateProduct(Product product);
+    void deleteProduct(String reference) throws Exception;
 }

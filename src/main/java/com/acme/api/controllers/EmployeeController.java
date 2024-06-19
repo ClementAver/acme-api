@@ -1,11 +1,14 @@
 package com.acme.api.controllers;
 
+import com.acme.api.dto.CustomerRequestBody;
 import com.acme.api.dto.GetEmployeeDTO;
 import com.acme.api.entities.Employee;
 import com.acme.api.dto.EmployeeRequestBody;
 import com.acme.api.services.EmployeeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.util.stream.Stream;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -38,13 +41,24 @@ public class EmployeeController {
     }
 
     @PutMapping(value = "/employee", consumes = APPLICATION_JSON_VALUE)
-    public Employee updateEmployee(@RequestParam(name = "id", required=true) long id, @RequestBody EmployeeRequestBody employeeRequestBody) {
-        return employeeService.updateEmployee(id, employeeRequestBody);
+    public String updateEmployee(@RequestParam(name = "email", required=true) String email, @RequestBody EmployeeRequestBody employeeRequestBody) {
+        try {
+            employeeService.updateEmployee(email, employeeRequestBody);
+            return "Mise à jour effectuée.";
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+
     }
 
     @DeleteMapping("/employee")
-    public void deleteEmployee(@RequestParam(name = "id", required=true) long id) {
-        employeeService.deleteEmployee(id);
+    public String deleteEmployee(@RequestParam(name = "email", required=true) String email) {
+        try {
+            employeeService.deleteEmployee(email);
+            return "Supression effectuée.";
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
     }
 }
 
