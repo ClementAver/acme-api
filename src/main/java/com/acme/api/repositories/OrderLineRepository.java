@@ -7,4 +7,5 @@ import java.util.Set;
 public interface OrderLineRepository extends JpaRepository<OrderLine, Long> {
     OrderLine findById(long id);
     Set<OrderLine> findAllByIdOrder_Reference(String orderReference);
+    Set<OrderLine> findAllByIdProduct_Reference(String productReference);
 }

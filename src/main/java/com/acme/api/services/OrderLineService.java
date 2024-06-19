@@ -76,4 +76,10 @@ public class OrderLineService implements OrderLineInterface{
         return orderLineRepository.findAllByIdOrder_Reference(orderReference)
                 .stream().map(getAllOrderLinesDTOMapper);
     }
+
+    @Override
+    public Stream<GetOrderLineDTO> getAllOrderLinesFromProduct(String productReference) {
+        return orderLineRepository.findAllByIdProduct_Reference(productReference)
+                .stream().map(getAllOrderLinesDTOMapper);
+    }
 }

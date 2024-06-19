@@ -41,9 +41,15 @@ public class OrderLineController {
     public void deleteOrderLine(@RequestParam(name = "id", required=true) long id) {
         orderLineService.deleteOrderLine(id);
     }
+
     @GetMapping("/order-lines-from-order")
     public Stream<GetOrderLineDTO> getOrderLinesFromOrder(@RequestParam(name = "reference", required=true) String orderReference) {
         return orderLineService.getAllOrderLinesFromOrder(orderReference);
+    }
+
+    @GetMapping("/order-lines-from-product")
+    public Stream<GetOrderLineDTO> getOrderLinesFromProduct(@RequestParam(name = "reference", required=true) String productReference) {
+        return orderLineService.getAllOrderLinesFromProduct(productReference);
     }
 
 }
