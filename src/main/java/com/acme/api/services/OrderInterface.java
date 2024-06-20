@@ -6,14 +6,12 @@ import com.acme.api.dto.OrderRequestBody;
 import java.util.stream.Stream;
 
 public interface OrderInterface {
-    Order createOrder(OrderRequestBody orderRequestBody);
-    Stream<GetOrderDTO> getAllOrders();
-    Stream<GetOrderDTO> getAllOrdersFromCustomer(String customerEmail);
-    Order getOrderEntity(String reference);
-    GetOrderDTO getOrder(String reference);
-    void deleteOrder(long id);
-    Order updateOrder(Long id, OrderRequestBody orderRequestBody);
+    Stream<GetOrderDTO> getOrders();
+    Stream<GetOrderDTO> getOrdersFromCustomer(String customerEmail);
+    Order getOrderEntity(String reference) throws Exception;
+    GetOrderDTO getOrderByReference(String reference) throws Exception;
+    void createOrder(OrderRequestBody orderRequestBody) throws Exception;
+    void updateOrder(String reference, OrderRequestBody orderRequestBody) throws Exception;
+    void deleteOrder(String reference) throws Exception;
     Order getOrCreateOrder(Order order);
-
-
 }

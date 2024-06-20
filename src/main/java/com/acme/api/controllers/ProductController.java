@@ -25,23 +25,33 @@ public class ProductController {
 
     @GetMapping("/products")
     public Stream<GetProductDTO> getProducts() {
-        return productService.getAllProducts();
+        return productService.getProducts();
     }
 
     @GetMapping("/product")
     public GetProductDTO getProduct(@RequestParam(name = "reference", required=true) String reference) {
-        return productService.getProduct(reference);
+        try {
+        return productService.getProductByReference(reference);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
     }
 
     @GetMapping("/products-by-name")
     public Stream<GetProductDTO> getProductsByName(@RequestParam(name = "name", required=true) String name) {
-        return productService.getAllProductsByName(name);
+        return productService.getProductsByName(name);
     }
 
     @ResponseStatus(value = HttpStatus.CREATED)
     @PostMapping(value = "/product", consumes = APPLICATION_JSON_VALUE)
-    public Product createProduct(@RequestBody ProductRequestBody productRequestBody) {
-        return productService.createProduct(productRequestBody);
+    public String createProduct(@RequestBody ProductRequestBody productRequestBody) {
+        try {
+            productService.createProduct(productRequestBody);
+            return "Création effectuée.";
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+
     }
 
     @PutMapping(value = "/product", consumes = APPLICATION_JSON_VALUE)

@@ -16,6 +16,7 @@ import java.util.Set;
 @Setter
 public class OrderRequestBody {
     Customer idCustomer;
+    String date;
     Set<OrderLine> orderLines;
 
     public String toString() {

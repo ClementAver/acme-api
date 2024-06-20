@@ -1,6 +1,8 @@
 package com.acme.api.services;
 
+import com.acme.api.dto.GetCustomerDTO;
 import com.acme.api.dto.GetEmployeeDTO;
+import com.acme.api.entities.Customer;
 import com.acme.api.entities.Employee;
 import com.acme.api.dto.EmployeeRequestBody;
 import com.acme.api.mapper.GetEmployeeDTOMapper;
@@ -20,35 +22,54 @@ public class EmployeeService implements EmployeeInterface{
     }
 
     @Override
-    public Employee createEmployee(EmployeeRequestBody employeeRequestBody) {
+    public Stream<GetEmployeeDTO> getEmployees() {
+        return employeeRepository.findAll()
+                .stream().map(getEmployeeDTOMapper);
+    }
+
+    @Override
+    public GetEmployeeDTO getEmployeeByEmail(String email) throws Exception {
+        Employee employeeInDB = employeeRepository.findByEmail(email);
+        if (employeeInDB == null) {
+            throw new Exception("Email inconnu.");
+        }
+        return new GetEmployeeDTO(employeeInDB.getFirstName(), employeeInDB.getLastName(), employeeInDB.getEmail(), employeeInDB.getUsername());
+    }
+
+    @Override
+    public GetEmployeeDTO getEmployeeByUsername(String username) throws Exception {
+        Employee employeeInDB = employeeRepository.findByUsername(username);
+        if (employeeInDB == null) {
+            throw new Exception("Pseudonyme inconnu.");
+        }
+        return new GetEmployeeDTO(employeeInDB.getFirstName(), employeeInDB.getLastName(), employeeInDB.getEmail(), employeeInDB.getUsername());
+    }
+
+    @Override
+    public void createEmployee(EmployeeRequestBody employeeRequestBody) throws Exception {
         Employee employee = new Employee();
         employee.setFirstName(employeeRequestBody.getFirstName());
         employee.setLastName(employeeRequestBody.getLastName());
         employee.setEmail(employeeRequestBody.getEmail());
         employee.setUsername(employeeRequestBody.getUsername());
         employee.setPassword(employeeRequestBody.getPassword());
-        return employeeRepository.save(employee);
+
+        Employee mailInDB = employeeRepository.findByEmail(employee.getEmail());
+        if (mailInDB != null) {
+            throw new Exception("Cet email a déjà été renseigné.");
+        }
+        Employee usernameInDB = employeeRepository.findByUsername(employee.getUsername());
+        if (usernameInDB != null) {
+            throw new Exception("Ce pseudonyme n'est pas disponible.");
+        }
+        employeeRepository.save(employee);
     }
-
-    @Override
-    public Stream<GetEmployeeDTO> getAllEmployees() {
-        return employeeRepository.findAll()
-                .stream().map(getEmployeeDTOMapper);
-    }
-
-    @Override
-    public GetEmployeeDTO getEmployeeByUsername(String username) {
-        Employee employee = employeeRepository.findByUsername(username);
-        return new GetEmployeeDTO(employee.getFirstName(), employee.getLastName(), employee.getEmail(), employee.getUsername());
-    }
-
-
 
     @Override
     public void updateEmployee(String email, EmployeeRequestBody employeeRequestBody) throws Exception {
         Employee employeeToUpdate = employeeRepository.findByEmail(email);
         if (employeeToUpdate == null) {
-            throw new Exception("Utilisateur inconnu.");
+            throw new Exception("Employé inconnu.");
         }
         if(employeeRequestBody.getFirstName() != null){
             employeeToUpdate.setFirstName(employeeRequestBody.getFirstName());
@@ -69,22 +90,24 @@ public class EmployeeService implements EmployeeInterface{
     }
 
     @Override
+    public void deleteEmployee(String email) throws Exception {
+        Employee employeeToDelete = employeeRepository.findByEmail(email);
+        if (employeeToDelete != null) {
+            employeeRepository.delete(employeeToDelete);
+        } else {
+            throw new Exception("Employé inconnu.");
+        }
+
+    }
+
+    // Tools
+
+    @Override
     public Employee getOrCreateEmployee(Employee employee) {
         Employee employeeInDB = employeeRepository.findByEmail(employee.getEmail());
         if (employeeInDB == null) {
             employeeInDB = employeeRepository.save(employee);
         }
         return employeeInDB;
-    }
-
-    @Override
-    public void deleteEmployee(String email) throws Exception {
-        Employee employee = employeeRepository.findByEmail(email);
-        if (employee != null) {
-            employeeRepository.delete(employee);
-        } else {
-            throw new Exception("Client inconnu.");
-        }
-
     }
 }

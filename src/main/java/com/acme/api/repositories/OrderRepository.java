@@ -7,5 +7,5 @@ import java.util.Set;
 public interface OrderRepository extends JpaRepository<Order, Long> {
     Order findById(long id);
     Order findByReference(String reference);
-    Set<Order> findAllByIdCustomer_Email(String customerEmail);
+    Set<Order> findAllByIdCustomer_Email(String email);
 }

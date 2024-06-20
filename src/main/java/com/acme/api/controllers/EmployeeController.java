@@ -26,18 +26,36 @@ public class EmployeeController {
 
     @GetMapping("/employees")
     public Stream<GetEmployeeDTO> getEmployees() {
-        return employeeService.getAllEmployees();
+        return employeeService.getEmployees();
     }
 
     @GetMapping("/employee")
-    public GetEmployeeDTO getEmployee(@RequestParam(name = "username", required=true) String username) {
-        return employeeService.getEmployeeByUsername(username);
+    public GetEmployeeDTO getEmployee(@RequestParam(name = "email", required=true) String email) {
+        try {
+            return employeeService.getEmployeeByEmail(email);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+    @GetMapping("/employee-by-username")
+    public GetEmployeeDTO getEmployeeByUsername(@RequestParam(name = "username", required=true) String username) {
+        try {
+            return employeeService.getEmployeeByUsername(username);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
     }
 
     @ResponseStatus(value = HttpStatus.CREATED)
     @PostMapping(value = "/employee", consumes = APPLICATION_JSON_VALUE)
-    public Employee createEmployee(@RequestBody EmployeeRequestBody employeeRequestBody) {
-        return employeeService.createEmployee(employeeRequestBody);
+    public String createEmployee(@RequestBody EmployeeRequestBody employeeRequestBody) {
+        try {
+            employeeService.createEmployee(employeeRequestBody);
+            return "Création effectuée.";
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
     }
 
     @PutMapping(value = "/employee", consumes = APPLICATION_JSON_VALUE)

@@ -6,10 +6,11 @@ import com.acme.api.dto.EmployeeRequestBody;
 import java.util.stream.Stream;
 
 public interface EmployeeInterface {
-    Employee createEmployee(EmployeeRequestBody employeeRequestBody);
-    Stream<GetEmployeeDTO> getAllEmployees();
-    GetEmployeeDTO getEmployeeByUsername(String username);
-    void deleteEmployee(String email) throws Exception;
+    Stream<GetEmployeeDTO> getEmployees();
+    GetEmployeeDTO getEmployeeByEmail(String email) throws Exception;
+    GetEmployeeDTO getEmployeeByUsername(String username) throws Exception;
+    void createEmployee(EmployeeRequestBody employeeRequestBody) throws Exception;
     void updateEmployee(String email, EmployeeRequestBody employeeRequestBody) throws Exception;
+    void deleteEmployee(String email) throws Exception;
     Employee getOrCreateEmployee(Employee employee);
     }

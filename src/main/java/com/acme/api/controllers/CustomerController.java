@@ -25,12 +25,16 @@ public class CustomerController {
 
     @GetMapping("/customers")
     public Stream<GetCustomerDTO> getCustomers() {
-        return customerService.getAllCustomers();
+        return customerService.getCustomers();
     }
 
     @GetMapping("/customer")
     public GetCustomerDTO getCustomer(@RequestParam(name = "email", required=true) String email) {
-        return customerService.getCustomerByEmail(email);
+        try {
+            return customerService.getCustomerByEmail(email);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
     }
 
     @ResponseStatus(value = HttpStatus.CREATED)

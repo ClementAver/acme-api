@@ -6,12 +6,12 @@ import com.acme.api.dto.ProductRequestBody;
 import java.util.stream.Stream;
 
 public interface ProductInterface {
-    Product createProduct(ProductRequestBody productRequestBody);
-    Stream<GetProductDTO> getAllProducts();
-    Product getProductEntity(String reference);
-    Stream<GetProductDTO> getAllProductsByName(String name);
-    GetProductDTO getProduct(String reference);
+    Stream<GetProductDTO> getProducts();
+    Stream<GetProductDTO> getProductsByName(String name);
+    Product getProductEntity(String reference) throws Exception;
+    GetProductDTO getProductByReference(String reference) throws Exception;
+    void createProduct(ProductRequestBody productRequestBody);
     void updateProduct(String reference, ProductRequestBody productRequestBody) throws Exception;
-    Product getOrCreateProduct(Product product);
     void deleteProduct(String reference) throws Exception;
+    Product getOrCreateProduct(Product product);
 }

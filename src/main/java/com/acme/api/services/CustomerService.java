@@ -20,6 +20,21 @@ public class CustomerService implements CustomerInterface{
     }
 
     @Override
+    public Stream<GetCustomerDTO> getCustomers() {
+        return customerRepository.findAll()
+                .stream().map(getCustomerDTOMapper);
+    }
+
+    @Override
+    public GetCustomerDTO getCustomerByEmail(String email) throws Exception {
+        Customer customerInDB = customerRepository.findByEmail(email);
+        if (customerInDB == null) {
+            throw new Exception("Email inconnu.");
+        }
+        return new GetCustomerDTO(customerInDB.getFirstName(), customerInDB.getLastName(), customerInDB.getEmail(), customerInDB.getPhone(), customerInDB.getAddress());
+    }
+
+    @Override
     public void createCustomer(CustomerRequestBody customerRequestBody) throws Exception {
         Customer customer = new Customer();
         customer.setFirstName(customerRequestBody.getFirstName());
@@ -43,23 +58,10 @@ public class CustomerService implements CustomerInterface{
     }
 
     @Override
-    public Stream<GetCustomerDTO> getAllCustomers() {
-        return customerRepository.findAll()
-                .stream().map(getCustomerDTOMapper);
-    }
-
-    @Override
-    public GetCustomerDTO getCustomerByEmail(String email) {
-        Customer customer = customerRepository.findByEmail(email);
-        return new GetCustomerDTO(customer.getFirstName(), customer.getLastName(), customer.getEmail(), customer.getPhone(), customer.getAddress());
-    }
-
-
-    @Override
     public void updateCustomer(String email, CustomerRequestBody customerRequestBody) throws Exception {
             Customer customerToUpdate = customerRepository.findByEmail(email);
             if (customerToUpdate == null) {
-                throw new Exception("Utilisateur inconnu.");
+                throw new Exception("Client inconnu.");
             }
             if(customerRequestBody.getFirstName() != null){
                 customerToUpdate.setFirstName(customerRequestBody.getFirstName());
@@ -80,21 +82,23 @@ public class CustomerService implements CustomerInterface{
     }
 
     @Override
+    public void deleteCustomer(String email) throws Exception {
+        Customer customerToDelete = customerRepository.findByEmail(email);
+        if (customerToDelete != null) {
+            customerRepository.delete(customerToDelete);
+        } else {
+            throw new Exception("Client inconnu.");
+        }
+    }
+
+    // Tools
+
+    @Override
     public Customer getOrCreateCustomer(Customer customer) {
         Customer customerInDB = customerRepository.findByEmail(customer.getEmail());
         if (customerInDB == null) {
             customerInDB = customerRepository.save(customer);
         }
         return customerInDB;
-    }
-
-    @Override
-    public void deleteCustomer(String email) throws Exception {
-        Customer customer = customerRepository.findByEmail(email);
-        if (customer != null) {
-            customerRepository.delete(customer);
-        } else {
-            throw new Exception("Client inconnu.");
-        }
     }
 }

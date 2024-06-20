@@ -25,7 +25,7 @@ public class Product {
     @Column(name = "reference", nullable = false, unique = true)
     private String reference;
 
-    @Column(name = "name", nullable = false, length = 64, unique = true)
+    @Column(name = "name", nullable = false, length = 64)
     private String name;
 
     @Column(name = "price", nullable = false)

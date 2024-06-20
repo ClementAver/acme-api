@@ -6,6 +6,8 @@ import com.acme.api.dto.OrderRequestBody;
 import com.acme.api.services.OrderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.util.stream.Stream;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -23,33 +25,52 @@ public class OrderController {
 
     @GetMapping("/orders")
     public Stream<GetOrderDTO> getOrders() {
-        return orderService.getAllOrders();
+        return orderService.getOrders();
+    }
+
+    @GetMapping("/orders-from-customer")
+    public Stream<GetOrderDTO> getOrdersFromCustomer(@RequestParam(name = "email", required=true) String email) {
+        return orderService.getOrdersFromCustomer(email);
     }
 
     @GetMapping("/order")
     public GetOrderDTO getOrder(@RequestParam(name = "reference", required=true) String reference) {
-        return orderService.getOrder(reference);
+        try {
+            return orderService.getOrderByReference(reference);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
     }
 
     @ResponseStatus(value = HttpStatus.CREATED)
     @PostMapping(value = "/order", consumes = APPLICATION_JSON_VALUE)
-    public Order createOrder(@RequestBody OrderRequestBody orderRequestBody) {
-        return orderService.createOrder(orderRequestBody);
+    public String createOrder(@RequestBody OrderRequestBody orderRequestBody) {
+        try {
+            orderService.createOrder(orderRequestBody);
+            return "Création effectuée.";
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
     }
 
     @PutMapping(value = "/order", consumes = APPLICATION_JSON_VALUE)
-    public Order updateOrder(@RequestParam(name = "id", required=true) long id, @RequestBody OrderRequestBody orderRequestBody) {
-        return orderService.updateOrder(id, orderRequestBody);
+    public String updateOrder(@RequestParam(name = "reference", required=true) String reference, @RequestBody OrderRequestBody orderRequestBody) {
+       try {
+           orderService.updateOrder(reference, orderRequestBody);
+           return "Mise à jour effectuée.";
+       } catch (Exception e) {
+           throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+       }
     }
 
     @DeleteMapping("/order")
-    public void deleteOrder(@RequestParam(name = "id", required=true) long id) {
-        orderService.deleteOrder(id);
-    }
-
-    @GetMapping("/orders-from-customer")
-    public Stream<GetOrderDTO> getOrdersFromCustomer(@RequestParam(name = "customerEmail", required=true) String customerEmail) {
-        return orderService.getAllOrdersFromCustomer(customerEmail);
+    public String deleteOrder(@RequestParam(name = "reference", required=true) String reference) {
+        try {
+        orderService.deleteOrder(reference);
+            return "Supression effectuée.";
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
     }
 }
 

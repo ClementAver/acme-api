@@ -22,35 +22,42 @@ public class ProductService implements ProductInterface{
     }
 
     @Override
-    public Product createProduct(ProductRequestBody productRequestBody) {
-        Product product = new Product();
-        product.setReference(generateReference());
-        product.setName(productRequestBody.getName());
-        product.setPrice(productRequestBody.getPrice());
-        return productRepository.save(product);
-    }
-
-    @Override
-    public Stream<GetProductDTO> getAllProducts() {
+    public Stream<GetProductDTO> getProducts() {
         return productRepository.findAll()
                 .stream().map(getAllProductsDTOMapper);
     }
 
     @Override
-    public Product getProductEntity(String reference) {
-        return productRepository.findByReference(reference);
-    }
-
-    @Override
-    public Stream<GetProductDTO> getAllProductsByName(String name) {
+    public Stream<GetProductDTO> getProductsByName(String name) {
         return productRepository.findAllByName(name)
                 .stream().map(getAllProductsDTOMapper);
     }
 
     @Override
-    public GetProductDTO getProduct(String reference) {
-        Product product = productRepository.findByReference(reference);
-        return new GetProductDTO(product.getReference(), product.getName(), product.getPrice());
+    public Product getProductEntity(String reference) throws Exception {
+        Product productInDB = productRepository.findByReference(reference);
+        if (productInDB == null) {
+            throw new Exception("Produit non référencé.");
+        }
+        return productInDB;
+    }
+
+    @Override
+    public GetProductDTO getProductByReference(String reference) throws Exception {
+        Product productInDB = productRepository.findByReference(reference);
+        if (productInDB == null) {
+            throw new Exception("Produit non référencé.");
+        }
+        return new GetProductDTO(productInDB.getReference(), productInDB.getName(), productInDB.getPrice());
+    }
+
+    @Override
+    public void createProduct(ProductRequestBody productRequestBody) {
+        Product product = new Product();
+        product.setReference(generateReference());
+        product.setName(productRequestBody.getName());
+        product.setPrice(productRequestBody.getPrice());
+        productRepository.save(product);
     }
 
     @Override
@@ -67,7 +74,19 @@ public class ProductService implements ProductInterface{
         }
         productRepository.save(productToUpdate);
     }
-    
+
+    @Override
+    public void deleteProduct(String reference) throws Exception {
+        Product productToDelete = productRepository.findByReference(reference);
+        if (productToDelete != null) {
+            productRepository.delete(productToDelete);
+        } else {
+            throw new Exception("Produit non référencé.");
+        }
+    }
+
+    // Tools
+
     @Override
     public Product getOrCreateProduct(Product product) {
         Product productInDB = productRepository.findByReference(product.getReference());
@@ -77,13 +96,4 @@ public class ProductService implements ProductInterface{
         return productInDB;
     }
 
-    @Override
-    public void deleteProduct(String reference) throws Exception {
-        Product product = productRepository.findByReference(reference);
-        if (product != null) {
-            productRepository.delete(product);
-        } else {
-            throw new Exception("Produit non référencé.");
-        }
-    }
 }

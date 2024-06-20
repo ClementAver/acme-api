@@ -28,58 +28,76 @@ public class OrderLineService implements OrderLineInterface{
         this.productService = productService;
     }
 
-    // take a look at this
     @Override
-    public OrderLine getOrderLine(long id) {
-        return orderRepository.findById(id);
-    }
-
-    @Override
-    public OrderLine createOrderLine(OrderLineRequestBody orderLineRequestBody) {
-        Product product = productService.getOrCreateProduct(productService.getProductEntity(orderLineRequestBody.getIdProductReference()));
-        Order order = orderService.getOrCreateOrder(orderService.getOrderEntity(orderLineRequestBody.getIdOrderReference()));
-        OrderLine orderLine = new OrderLine();
-        orderLine.setQuantity(orderLineRequestBody.getQuantity());
-        orderLine.setIdProduct(product);
-        orderLine.setIdOrder(order);
-        return orderRepository.save(orderLine);
-    }
-
-    @Override
-    public Stream<GetOrderLineDTO> getAllOrderLines() {
+    public Stream<GetOrderLineDTO> getOrderLines() {
         return orderLineRepository.findAll()
                 .stream().map(getAllOrderLinesDTOMapper);
     }
 
     @Override
-    public void deleteOrderLine(long id) {
-        orderRepository.deleteById(id);
-    }
-
-    @Override
-    public OrderLine updateOrderLine(Long id, OrderLineRequestBody orderLineRequestBody) {
-        OrderLine orderLineToUpdate = orderLineRepository.getReferenceById(id);
-        if (orderLineRequestBody.getQuantity() != null) {
-            orderLineToUpdate.setQuantity(orderLineRequestBody.getQuantity());
-        }
-        if (orderLineRequestBody.getIdProduct() != null) {
-            orderLineToUpdate.setIdProduct(orderLineRequestBody.getIdProduct());
-        }
-        if (orderLineRequestBody.getIdOrder() != null) {
-            orderLineToUpdate.setIdOrder(orderLineRequestBody.getIdOrder());
-        }
-        return orderLineRepository.save(orderLineToUpdate);
-    }
-
-    @Override
-    public Stream<GetOrderLineDTO> getAllOrderLinesFromOrder(String orderReference) {
+    public Stream<GetOrderLineDTO> getOrderLinesFromOrder(String orderReference) {
         return orderLineRepository.findAllByIdOrder_Reference(orderReference)
                 .stream().map(getAllOrderLinesDTOMapper);
     }
 
     @Override
-    public Stream<GetOrderLineDTO> getAllOrderLinesFromProduct(String productReference) {
+    public Stream<GetOrderLineDTO> getOrderLinesFromProduct(String productReference) {
         return orderLineRepository.findAllByIdProduct_Reference(productReference)
                 .stream().map(getAllOrderLinesDTOMapper);
+    }
+
+    @Override
+    public void createOrderLine(OrderLineRequestBody orderLineRequestBody) throws Exception {
+        OrderLine orderLine = new OrderLine();
+        try {
+            Product product = productService.getOrCreateProduct(productService.getProductEntity(orderLineRequestBody.getIdProductReference()));
+            orderLine.setIdProduct(product);
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+        try {
+            Order order = orderService.getOrCreateOrder(orderService.getOrderEntity(orderLineRequestBody.getIdOrderReference()));
+            orderLine.setIdOrder(order);
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+        orderLine.setQuantity(orderLineRequestBody.getQuantity());
+        orderRepository.save(orderLine);
+    }
+
+    @Override
+    public void updateOrderLine(long id, OrderLineRequestBody orderLineRequestBody) throws Exception {
+        OrderLine orderLineToUpdate = orderLineRepository.findById(id);
+        if (orderLineToUpdate == null) {
+            throw new Exception("Ligne de facturation inconnu.");
+        }
+        try {
+            Product product = productService.getOrCreateProduct(productService.getProductEntity(orderLineRequestBody.getIdProductReference()));
+            orderLineToUpdate.setIdProduct(product);
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+        try {
+            Order order = orderService.getOrCreateOrder(orderService.getOrderEntity(orderLineRequestBody.getIdOrderReference()));
+            orderLineToUpdate.setIdOrder(order);
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+
+        if (orderLineRequestBody.getQuantity() != null) {
+            orderLineToUpdate.setQuantity(orderLineRequestBody.getQuantity());
+        }
+
+        orderLineRepository.save(orderLineToUpdate);
+    }
+
+    @Override
+    public void deleteOrderLine(long id) throws Exception {
+        OrderLine orderLineToDelete = orderLineRepository.findById(id);
+        if (orderLineToDelete != null) {
+            orderLineRepository.delete(orderLineToDelete);
+        } else {
+            throw new Exception("Ligne de facturation inconnu.");
+        }
     }
 }
