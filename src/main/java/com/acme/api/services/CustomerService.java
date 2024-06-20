@@ -5,7 +5,10 @@ import com.acme.api.entities.Customer;
 import com.acme.api.dto.CustomerRequestBody;
 import com.acme.api.mapper.GetCustomerDTOMapper;
 import com.acme.api.repositories.CustomerRepository;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.util.stream.Stream;
 
 @Service
@@ -26,16 +29,16 @@ public class CustomerService implements CustomerInterface{
     }
 
     @Override
-    public GetCustomerDTO getCustomerByEmail(String email) throws Exception {
+    public GetCustomerDTO getCustomerByEmail(String email) throws ResponseStatusException {
         Customer customerInDB = customerRepository.findByEmail(email);
         if (customerInDB == null) {
-            throw new Exception("Email inconnu.");
+            throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Email inconnu.");
         }
         return new GetCustomerDTO(customerInDB.getFirstName(), customerInDB.getLastName(), customerInDB.getEmail(), customerInDB.getPhone(), customerInDB.getAddress());
     }
 
     @Override
-    public void createCustomer(CustomerRequestBody customerRequestBody) throws Exception {
+    public void createCustomer(CustomerRequestBody customerRequestBody) throws ResponseStatusException {
         Customer customer = new Customer();
         customer.setFirstName(customerRequestBody.getFirstName());
         customer.setLastName(customerRequestBody.getLastName());
@@ -52,16 +55,16 @@ public class CustomerService implements CustomerInterface{
 
         Customer customerInDB = customerRepository.findByEmail(customer.getEmail());
         if (customerInDB != null) {
-            throw new Exception("Cet email a déjà été renseigné.");
+            throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Cet email a déjà été renseigné.");
         }
         customerRepository.save(customer);
     }
 
     @Override
-    public void updateCustomer(String email, CustomerRequestBody customerRequestBody) throws Exception {
+    public void updateCustomer(String email, CustomerRequestBody customerRequestBody) throws ResponseStatusException {
             Customer customerToUpdate = customerRepository.findByEmail(email);
             if (customerToUpdate == null) {
-                throw new Exception("Client inconnu.");
+                throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Client inconnu.");
             }
             if(customerRequestBody.getFirstName() != null){
                 customerToUpdate.setFirstName(customerRequestBody.getFirstName());
@@ -82,12 +85,12 @@ public class CustomerService implements CustomerInterface{
     }
 
     @Override
-    public void deleteCustomer(String email) throws Exception {
+    public void deleteCustomer(String email) throws ResponseStatusException {
         Customer customerToDelete = customerRepository.findByEmail(email);
         if (customerToDelete != null) {
             customerRepository.delete(customerToDelete);
         } else {
-            throw new Exception("Client inconnu.");
+            throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Client inconnu.");
         }
     }
 

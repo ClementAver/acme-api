@@ -32,8 +32,8 @@ public class ProductController {
     public GetProductDTO getProduct(@RequestParam(name = "reference", required=true) String reference) {
         try {
         return productService.getProductByReference(reference);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (ResponseStatusException e) {
+            throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
         }
     }
 
@@ -48,10 +48,9 @@ public class ProductController {
         try {
             productService.createProduct(productRequestBody);
             return "Création effectuée.";
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        } catch (ResponseStatusException e) {
+            throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
         }
-
     }
 
     @PutMapping(value = "/product", consumes = APPLICATION_JSON_VALUE)
@@ -59,8 +58,8 @@ public class ProductController {
         try {
             productService.updateProduct(reference, productRequestBody);
             return "Mise à jour effectuée.";
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        } catch (ResponseStatusException e) {
+            throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
         }
     }
 
@@ -69,8 +68,8 @@ public class ProductController {
         try {
             productService.deleteProduct(reference);
             return "Supression effectuée.";
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        } catch (ResponseStatusException e) {
+            throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
         }
     }
 }

@@ -9,6 +9,6 @@ import java.util.function.Function;
 public class GetAllOrderLinesDTOMapper implements Function<OrderLine, GetOrderLineDTO> {
     @Override
     public GetOrderLineDTO apply(OrderLine orderline) {
-        return new GetOrderLineDTO(orderline.getQuantity(), orderline.getProductReference(), orderline.getOrderReference());
+        return new GetOrderLineDTO(orderline.getId(), orderline.getQuantity(), orderline.getProductReference(), orderline.getOrderReference());
     }
 }

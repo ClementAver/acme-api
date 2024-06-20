@@ -10,6 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class GetOrderLineDTO {
+    Long id;
     Integer quantity;
     String referenceProduct;
     String referenceOrder;

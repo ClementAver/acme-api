@@ -43,8 +43,8 @@ public class OrderLineController {
         try {
             orderLineService.createOrderLine(orderLineRequestBody);
             return "Création effectuée.";
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        } catch (ResponseStatusException e) {
+            throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
         }
     }
 
@@ -53,8 +53,8 @@ public class OrderLineController {
         try {
             orderLineService.updateOrderLine(id, orderLineRequestBody);
             return "Mise à jour effectuée.";
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        } catch (ResponseStatusException e) {
+            throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
         }
     }
 
@@ -63,10 +63,9 @@ public class OrderLineController {
         try {
             orderLineService.deleteOrderLine(id);
             return "Supression effectuée.";
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        } catch (ResponseStatusException e) {
+            throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
         }
     }
-
 }
 

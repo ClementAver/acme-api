@@ -5,7 +5,11 @@ import com.acme.api.entities.Product;
 import com.acme.api.dto.ProductRequestBody;
 import com.acme.api.mapper.GetAllProductsDTOMapper;
 import com.acme.api.repositories.ProductRepository;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static com.acme.api.entities.Product.generateReference;
@@ -29,24 +33,27 @@ public class ProductService implements ProductInterface{
 
     @Override
     public Stream<GetProductDTO> getProductsByName(String name) {
-        return productRepository.findAllByName(name)
-                .stream().map(getAllProductsDTOMapper);
+        Set<Product> productInDB = productRepository.findAllByName(name);
+        if (productInDB.isEmpty()) {
+            throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Aucune occurence.");
+        }
+         return productInDB.stream().map(getAllProductsDTOMapper);
     }
 
     @Override
-    public Product getProductEntity(String reference) throws Exception {
+    public Product getProductEntity(String reference) throws ResponseStatusException {
         Product productInDB = productRepository.findByReference(reference);
         if (productInDB == null) {
-            throw new Exception("Produit non référencé.");
+            throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Produit non référencé.");
         }
         return productInDB;
     }
 
     @Override
-    public GetProductDTO getProductByReference(String reference) throws Exception {
+    public GetProductDTO getProductByReference(String reference) throws ResponseStatusException {
         Product productInDB = productRepository.findByReference(reference);
         if (productInDB == null) {
-            throw new Exception("Produit non référencé.");
+            throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Produit non référencé.");
         }
         return new GetProductDTO(productInDB.getReference(), productInDB.getName(), productInDB.getPrice());
     }
@@ -61,10 +68,11 @@ public class ProductService implements ProductInterface{
     }
 
     @Override
-    public void updateProduct(String reference, ProductRequestBody productRequestBody) throws Exception {
+    public void updateProduct(String reference, ProductRequestBody productRequestBody) throws ResponseStatusException {
         Product productToUpdate = productRepository.findByReference(reference);
         if (productToUpdate == null) {
-            throw new Exception("Produit non référencé.");
+
+            throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Produit non référencé.");
         }
         if (productRequestBody.getName() != null) {
             productToUpdate.setName(productRequestBody.getName());
@@ -76,12 +84,12 @@ public class ProductService implements ProductInterface{
     }
 
     @Override
-    public void deleteProduct(String reference) throws Exception {
+    public void deleteProduct(String reference) throws ResponseStatusException {
         Product productToDelete = productRepository.findByReference(reference);
         if (productToDelete != null) {
             productRepository.delete(productToDelete);
         } else {
-            throw new Exception("Produit non référencé.");
+            throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Produit non référencé.");
         }
     }
 

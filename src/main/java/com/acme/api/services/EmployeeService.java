@@ -1,13 +1,15 @@
 package com.acme.api.services;
 
-import com.acme.api.dto.GetCustomerDTO;
+
 import com.acme.api.dto.GetEmployeeDTO;
-import com.acme.api.entities.Customer;
 import com.acme.api.entities.Employee;
 import com.acme.api.dto.EmployeeRequestBody;
 import com.acme.api.mapper.GetEmployeeDTOMapper;
 import com.acme.api.repositories.EmployeeRepository;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.util.stream.Stream;
 
 @Service
@@ -28,25 +30,25 @@ public class EmployeeService implements EmployeeInterface{
     }
 
     @Override
-    public GetEmployeeDTO getEmployeeByEmail(String email) throws Exception {
+    public GetEmployeeDTO getEmployeeByEmail(String email) throws ResponseStatusException {
         Employee employeeInDB = employeeRepository.findByEmail(email);
         if (employeeInDB == null) {
-            throw new Exception("Email inconnu.");
+            throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Email inconnu.");
         }
         return new GetEmployeeDTO(employeeInDB.getFirstName(), employeeInDB.getLastName(), employeeInDB.getEmail(), employeeInDB.getUsername());
     }
 
     @Override
-    public GetEmployeeDTO getEmployeeByUsername(String username) throws Exception {
+    public GetEmployeeDTO getEmployeeByUsername(String username) throws ResponseStatusException {
         Employee employeeInDB = employeeRepository.findByUsername(username);
         if (employeeInDB == null) {
-            throw new Exception("Pseudonyme inconnu.");
+            throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Pseudonyme inconnu.");
         }
         return new GetEmployeeDTO(employeeInDB.getFirstName(), employeeInDB.getLastName(), employeeInDB.getEmail(), employeeInDB.getUsername());
     }
 
     @Override
-    public void createEmployee(EmployeeRequestBody employeeRequestBody) throws Exception {
+    public void createEmployee(EmployeeRequestBody employeeRequestBody) throws ResponseStatusException {
         Employee employee = new Employee();
         employee.setFirstName(employeeRequestBody.getFirstName());
         employee.setLastName(employeeRequestBody.getLastName());
@@ -56,20 +58,20 @@ public class EmployeeService implements EmployeeInterface{
 
         Employee mailInDB = employeeRepository.findByEmail(employee.getEmail());
         if (mailInDB != null) {
-            throw new Exception("Cet email a déjà été renseigné.");
+            throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Cet email a déjà été renseigné.");
         }
         Employee usernameInDB = employeeRepository.findByUsername(employee.getUsername());
         if (usernameInDB != null) {
-            throw new Exception("Ce pseudonyme n'est pas disponible.");
+            throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Ce pseudonyme n'est pas disponible.");
         }
         employeeRepository.save(employee);
     }
 
     @Override
-    public void updateEmployee(String email, EmployeeRequestBody employeeRequestBody) throws Exception {
+    public void updateEmployee(String email, EmployeeRequestBody employeeRequestBody) throws ResponseStatusException {
         Employee employeeToUpdate = employeeRepository.findByEmail(email);
         if (employeeToUpdate == null) {
-            throw new Exception("Employé inconnu.");
+            throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Employé inconnu.");
         }
         if(employeeRequestBody.getFirstName() != null){
             employeeToUpdate.setFirstName(employeeRequestBody.getFirstName());
@@ -90,14 +92,13 @@ public class EmployeeService implements EmployeeInterface{
     }
 
     @Override
-    public void deleteEmployee(String email) throws Exception {
+    public void deleteEmployee(String email) throws ResponseStatusException {
         Employee employeeToDelete = employeeRepository.findByEmail(email);
         if (employeeToDelete != null) {
             employeeRepository.delete(employeeToDelete);
         } else {
-            throw new Exception("Employé inconnu.");
+            throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Employé inconnu.");
         }
-
     }
 
     // Tools

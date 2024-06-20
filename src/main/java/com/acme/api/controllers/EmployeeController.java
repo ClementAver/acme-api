@@ -33,8 +33,8 @@ public class EmployeeController {
     public GetEmployeeDTO getEmployee(@RequestParam(name = "email", required=true) String email) {
         try {
             return employeeService.getEmployeeByEmail(email);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (ResponseStatusException e) {
+            throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
         }
     }
 
@@ -42,8 +42,8 @@ public class EmployeeController {
     public GetEmployeeDTO getEmployeeByUsername(@RequestParam(name = "username", required=true) String username) {
         try {
             return employeeService.getEmployeeByUsername(username);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (ResponseStatusException e) {
+            throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
         }
     }
 
@@ -53,8 +53,8 @@ public class EmployeeController {
         try {
             employeeService.createEmployee(employeeRequestBody);
             return "Création effectuée.";
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        } catch (ResponseStatusException e) {
+            throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
         }
     }
 
@@ -63,10 +63,9 @@ public class EmployeeController {
         try {
             employeeService.updateEmployee(email, employeeRequestBody);
             return "Mise à jour effectuée.";
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        } catch (ResponseStatusException e) {
+            throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
         }
-
     }
 
     @DeleteMapping("/employee")
@@ -74,8 +73,8 @@ public class EmployeeController {
         try {
             employeeService.deleteEmployee(email);
             return "Supression effectuée.";
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        } catch (ResponseStatusException e) {
+            throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
         }
     }
 }

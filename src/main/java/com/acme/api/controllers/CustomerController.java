@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.stream.Stream;
-
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 
@@ -32,8 +31,8 @@ public class CustomerController {
     public GetCustomerDTO getCustomer(@RequestParam(name = "email", required=true) String email) {
         try {
             return customerService.getCustomerByEmail(email);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (ResponseStatusException e) {
+            throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
         }
     }
 
@@ -43,8 +42,8 @@ public class CustomerController {
         try {
             customerService.createCustomer(customerRequestBody);
             return "Création effectuée.";
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        } catch (ResponseStatusException e) {
+            throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
         }
     }
 
@@ -53,8 +52,8 @@ public class CustomerController {
         try {
             customerService.updateCustomer(email, customerRequestBody);
             return "Mise à jour effectuée.";
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        } catch (ResponseStatusException e) {
+            throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
         }
     }
 
@@ -63,11 +62,9 @@ public class CustomerController {
         try {
             customerService.deleteCustomer(email);
             return "Supression effectuée.";
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        } catch (ResponseStatusException e) {
+            throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
         }
     }
-
-
 }
 

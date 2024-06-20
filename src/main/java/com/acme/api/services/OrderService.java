@@ -6,12 +6,17 @@ import com.acme.api.entities.Order;
 import com.acme.api.dto.OrderRequestBody;
 import com.acme.api.mapper.GetAllOrdersDTOMapper;
 import com.acme.api.repositories.OrderRepository;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static com.acme.api.entities.Order.generateDate;
 import static com.acme.api.entities.Order.generateReference;
+import static java.util.Arrays.stream;
 
 @Service
 public class OrderService implements OrderInterface{
@@ -34,36 +39,39 @@ public class OrderService implements OrderInterface{
 
     @Override
     public Stream<GetOrderDTO> getOrdersFromCustomer(String email) {
-        return orderRepository.findAllByIdCustomer_Email(email)
-                .stream().map(getAllOrdersDTOMapper);
+        Set<Order> ordersInDB = orderRepository.findAllByIdCustomer_Email(email);
+        if (ordersInDB.isEmpty()) {
+            throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Aucune occurence.");
+        }
+        return ordersInDB.stream().map(getAllOrdersDTOMapper);
     }
 
     @Override
-    public Order getOrderEntity(String reference) throws Exception {
+    public Order getOrderEntity(String reference) throws ResponseStatusException {
         Order orderInDB = orderRepository.findByReference(reference);
         if (orderInDB == null) {
-            throw new Exception("Commande non référencée");
+            throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Commande non référencée.");
         }
         return orderInDB;
     }
 
     @Override
-    public GetOrderDTO getOrderByReference(String reference) throws Exception {
+    public GetOrderDTO getOrderByReference(String reference) throws ResponseStatusException {
         Order orderInDB = orderRepository.findByReference(reference);
         if (orderInDB == null) {
-            throw new Exception("Commande non référencée.");
+            throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Commande non référencée.");
         }
         return new GetOrderDTO(orderInDB.getReference(), orderInDB.getDate(), orderInDB.getIdCustomer().getEmail());
     }
 
     @Override
-    public void createOrder(OrderRequestBody orderRequestBody) throws Exception {
+    public void createOrder(OrderRequestBody orderRequestBody) throws ResponseStatusException {
         Order order = new Order();
         try {
             Customer customer = customerService.getOrCreateCustomer(orderRequestBody.getIdCustomer());
             order.setIdCustomer(customer);
         } catch (Exception e) {
-            throw new Exception("Données invalides ou incomplètes.");
+            throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Données invalides ou incomplètes.");
         }
 
         if (orderRequestBody.getDate() == null) {
@@ -83,17 +91,18 @@ public class OrderService implements OrderInterface{
     }
 
     @Override
-    public void updateOrder(String reference, OrderRequestBody orderRequestBody) throws Exception {
+    public void updateOrder(String reference, OrderRequestBody orderRequestBody) throws ResponseStatusException {
         Order orderToUpdate = orderRepository.findByReference(reference);
         if (orderToUpdate == null) {
-            throw new Exception("Commande non référencé.");
+            throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Commande non référencée.");
         }
         if (orderRequestBody.getIdCustomer() != null) {
             try {
                 Customer customer = customerService.getOrCreateCustomer(orderRequestBody.getIdCustomer());
                 orderToUpdate.setIdCustomer(customer);
             } catch (Exception e) {
-                throw new Exception("Données saisies invalides ou incomplètes.");
+
+                throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Données saisies invalides ou incomplètes.");
             }
         }
         if (orderRequestBody.getDate() != null) {
@@ -103,12 +112,12 @@ public class OrderService implements OrderInterface{
     }
 
     @Override
-    public void deleteOrder(String reference) throws Exception {
+    public void deleteOrder(String reference) throws ResponseStatusException {
         Order orderToDelete = orderRepository.findByReference(reference);
         if (orderToDelete != null) {
             orderRepository.delete(orderToDelete);
         } else {
-            throw new Exception("Commande non référencé.");
+            throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Ligne de facturation inconnu.");
         }
     }
 

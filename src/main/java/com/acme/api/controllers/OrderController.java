@@ -37,8 +37,8 @@ public class OrderController {
     public GetOrderDTO getOrder(@RequestParam(name = "reference", required=true) String reference) {
         try {
             return orderService.getOrderByReference(reference);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (ResponseStatusException e) {
+            throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
         }
     }
 
@@ -48,8 +48,8 @@ public class OrderController {
         try {
             orderService.createOrder(orderRequestBody);
             return "Création effectuée.";
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        } catch (ResponseStatusException e) {
+            throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
         }
     }
 
@@ -58,8 +58,8 @@ public class OrderController {
        try {
            orderService.updateOrder(reference, orderRequestBody);
            return "Mise à jour effectuée.";
-       } catch (Exception e) {
-           throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+       } catch (ResponseStatusException e) {
+           throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
        }
     }
 
@@ -68,8 +68,8 @@ public class OrderController {
         try {
         orderService.deleteOrder(reference);
             return "Supression effectuée.";
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        } catch (ResponseStatusException e) {
+            throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
         }
     }
 }

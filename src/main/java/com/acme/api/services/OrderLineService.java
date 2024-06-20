@@ -7,8 +7,11 @@ import com.acme.api.dto.OrderLineRequestBody;
 import com.acme.api.entities.Product;
 import com.acme.api.mapper.GetAllOrderLinesDTOMapper;
 import com.acme.api.repositories.OrderLineRepository;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Set;
 import java.util.stream.Stream;
 
 @Service
@@ -36,48 +39,55 @@ public class OrderLineService implements OrderLineInterface{
 
     @Override
     public Stream<GetOrderLineDTO> getOrderLinesFromOrder(String orderReference) {
-        return orderLineRepository.findAllByIdOrder_Reference(orderReference)
-                .stream().map(getAllOrderLinesDTOMapper);
+        Set<OrderLine> orderLinesInDB = orderLineRepository.findAllByIdOrder_Reference(orderReference);
+        if (orderLinesInDB.isEmpty()) {
+            throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Aucune occurence.");
+        } else {
+            return orderLinesInDB.stream().map(getAllOrderLinesDTOMapper);
+        }
     }
 
     @Override
     public Stream<GetOrderLineDTO> getOrderLinesFromProduct(String productReference) {
-        return orderLineRepository.findAllByIdProduct_Reference(productReference)
-                .stream().map(getAllOrderLinesDTOMapper);
+        Set<OrderLine> orderLineInDB = orderLineRepository.findAllByIdProduct_Reference(productReference);
+        if (orderLineInDB.isEmpty()) {
+            throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Aucune occurence.");
+        }
+        return orderLineInDB.stream().map(getAllOrderLinesDTOMapper);
     }
 
     @Override
-    public void createOrderLine(OrderLineRequestBody orderLineRequestBody) throws Exception {
+    public void createOrderLine(OrderLineRequestBody orderLineRequestBody) throws ResponseStatusException {
         OrderLine orderLine = new OrderLine();
         try {
             Product product = productService.getOrCreateProduct(productService.getProductEntity(orderLineRequestBody.getIdProductReference()));
             orderLine.setIdProduct(product);
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
+        } catch (ResponseStatusException e) {
+            throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
         }
         try {
             Order order = orderService.getOrCreateOrder(orderService.getOrderEntity(orderLineRequestBody.getIdOrderReference()));
             orderLine.setIdOrder(order);
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
+        } catch (ResponseStatusException e) {
+            throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
         }
         orderLine.setQuantity(orderLineRequestBody.getQuantity());
         orderRepository.save(orderLine);
     }
 
     @Override
-    public void updateOrderLine(long id, OrderLineRequestBody orderLineRequestBody) throws Exception {
+    public void updateOrderLine(long id, OrderLineRequestBody orderLineRequestBody) throws ResponseStatusException {
         OrderLine orderLineToUpdate = orderLineRepository.findById(id);
         if (orderLineToUpdate == null) {
-            throw new Exception("Ligne de facturation inconnu.");
+            throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Ligne de facturation inconnu.");
         }
 
         if (orderLineRequestBody.getIdProduct() != null) {
             try {
                 Product product = productService.getOrCreateProduct(productService.getProductEntity(orderLineRequestBody.getIdProductReference()));
                 orderLineToUpdate.setIdProduct(product);
-            } catch (Exception e) {
-                throw new Exception(e.getMessage());
+            } catch (ResponseStatusException e) {
+                throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
             }
         }
 
@@ -85,8 +95,8 @@ public class OrderLineService implements OrderLineInterface{
             try {
                 Order order = orderService.getOrCreateOrder(orderService.getOrderEntity(orderLineRequestBody.getIdOrderReference()));
                 orderLineToUpdate.setIdOrder(order);
-            } catch (Exception e) {
-                throw new Exception(e.getMessage());
+            } catch (ResponseStatusException e) {
+                throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
             }
         }
 
@@ -98,12 +108,12 @@ public class OrderLineService implements OrderLineInterface{
     }
 
     @Override
-    public void deleteOrderLine(long id) throws Exception {
+    public void deleteOrderLine(long id) throws ResponseStatusException {
         OrderLine orderLineToDelete = orderLineRepository.findById(id);
         if (orderLineToDelete != null) {
             orderLineRepository.delete(orderLineToDelete);
         } else {
-            throw new Exception("Ligne de facturation inconnu.");
+            throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Ligne de facturation inconnu.");
         }
     }
 }
