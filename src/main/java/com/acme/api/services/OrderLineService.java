@@ -71,17 +71,23 @@ public class OrderLineService implements OrderLineInterface{
         if (orderLineToUpdate == null) {
             throw new Exception("Ligne de facturation inconnu.");
         }
-        try {
-            Product product = productService.getOrCreateProduct(productService.getProductEntity(orderLineRequestBody.getIdProductReference()));
-            orderLineToUpdate.setIdProduct(product);
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
+
+        if (orderLineRequestBody.getIdProduct() != null) {
+            try {
+                Product product = productService.getOrCreateProduct(productService.getProductEntity(orderLineRequestBody.getIdProductReference()));
+                orderLineToUpdate.setIdProduct(product);
+            } catch (Exception e) {
+                throw new Exception(e.getMessage());
+            }
         }
-        try {
-            Order order = orderService.getOrCreateOrder(orderService.getOrderEntity(orderLineRequestBody.getIdOrderReference()));
-            orderLineToUpdate.setIdOrder(order);
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
+
+        if (orderLineRequestBody.getIdOrder() != null) {
+            try {
+                Order order = orderService.getOrCreateOrder(orderService.getOrderEntity(orderLineRequestBody.getIdOrderReference()));
+                orderLineToUpdate.setIdOrder(order);
+            } catch (Exception e) {
+                throw new Exception(e.getMessage());
+            }
         }
 
         if (orderLineRequestBody.getQuantity() != null) {
