@@ -4,7 +4,7 @@ import com.acme.api.dto.GetOrderDTO;
 import com.acme.api.entities.Customer;
 import com.acme.api.entities.Order;
 import com.acme.api.dto.OrderRequestBody;
-import com.acme.api.mapper.GetAllOrdersDTOMapper;
+import com.acme.api.mappers.GetAllOrdersDTOMapper;
 import com.acme.api.repositories.OrderRepository;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;

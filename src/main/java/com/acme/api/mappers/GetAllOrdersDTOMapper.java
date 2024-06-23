@@ -1,4 +1,4 @@
-package com.acme.api.mapper;
+package com.acme.api.mappers;
 
 import com.acme.api.dto.GetOrderDTO;
 import com.acme.api.entities.Order;

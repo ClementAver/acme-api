@@ -1,7 +1,6 @@
 package com.acme.api.controllers;
 
 import com.acme.api.dto.GetProductDTO;
-import com.acme.api.entities.Product;
 import com.acme.api.dto.ProductRequestBody;
 import com.acme.api.services.ProductService;
 import org.springframework.http.HttpStatus;
@@ -28,8 +27,8 @@ public class ProductController {
         return productService.getProducts();
     }
 
-    @GetMapping("/product")
-    public GetProductDTO getProduct(@RequestParam(name = "reference", required=true) String reference) {
+    @GetMapping("/product/{reference}")
+    public GetProductDTO getProduct(@PathVariable String reference) {
         try {
         return productService.getProductByReference(reference);
         } catch (ResponseStatusException e) {
@@ -37,8 +36,8 @@ public class ProductController {
         }
     }
 
-    @GetMapping("/products-by-name")
-    public Stream<GetProductDTO> getProductsByName(@RequestParam(name = "name", required=true) String name) {
+    @GetMapping("/products-by-name/{name}")
+    public Stream<GetProductDTO> getProductsByName(@PathVariable String name) {
         return productService.getProductsByName(name);
     }
 
@@ -53,8 +52,8 @@ public class ProductController {
         }
     }
 
-    @PutMapping(value = "/product", consumes = APPLICATION_JSON_VALUE)
-    public String updateProduct(@RequestParam(name = "reference", required=true) String reference, @RequestBody ProductRequestBody productRequestBody) {
+    @PutMapping(value = "/product/{reference}", consumes = APPLICATION_JSON_VALUE)
+    public String updateProduct(@PathVariable String reference, @RequestBody ProductRequestBody productRequestBody) {
         try {
             productService.updateProduct(reference, productRequestBody);
             return "Mise à jour effectuée.";
@@ -63,8 +62,8 @@ public class ProductController {
         }
     }
 
-    @DeleteMapping("/product")
-    public String deleteProduct(@RequestParam(name = "reference", required=true) String reference) {
+    @DeleteMapping("/product/{reference}")
+    public String deleteProduct(@PathVariable String reference) {
         try {
             productService.deleteProduct(reference);
             return "Supression effectuée.";

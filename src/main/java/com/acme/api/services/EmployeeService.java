@@ -4,7 +4,7 @@ package com.acme.api.services;
 import com.acme.api.dto.GetEmployeeDTO;
 import com.acme.api.entities.Employee;
 import com.acme.api.dto.EmployeeRequestBody;
-import com.acme.api.mapper.GetEmployeeDTOMapper;
+import com.acme.api.mappers.GetEmployeeDTOMapper;
 import com.acme.api.repositories.EmployeeRepository;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;

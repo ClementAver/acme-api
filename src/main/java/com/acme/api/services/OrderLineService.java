@@ -5,7 +5,7 @@ import com.acme.api.entities.Order;
 import com.acme.api.entities.OrderLine;
 import com.acme.api.dto.OrderLineRequestBody;
 import com.acme.api.entities.Product;
-import com.acme.api.mapper.GetAllOrderLinesDTOMapper;
+import com.acme.api.mappers.GetAllOrderLinesDTOMapper;
 import com.acme.api.repositories.OrderLineRepository;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;

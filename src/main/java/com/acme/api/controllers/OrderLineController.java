@@ -27,13 +27,13 @@ public class OrderLineController {
         return orderLineService.getOrderLines();
     }
 
-    @GetMapping("/order-lines-from-order")
-    public Stream<GetOrderLineDTO> getOrderLinesFromOrder(@RequestParam(name = "reference", required=true) String orderReference) {
+    @GetMapping("/order-lines-from-order/{orderReference}")
+    public Stream<GetOrderLineDTO> getOrderLinesFromOrder(@PathVariable String orderReference) {
         return orderLineService.getOrderLinesFromOrder(orderReference);
     }
 
-    @GetMapping("/order-lines-from-product")
-    public Stream<GetOrderLineDTO> getOrderLinesFromProduct(@RequestParam(name = "reference", required=true) String productReference) {
+    @GetMapping("/order-lines-from-product/{productReference}")
+    public Stream<GetOrderLineDTO> getOrderLinesFromProduct(@PathVariable String productReference) {
         return orderLineService.getOrderLinesFromProduct(productReference);
     }
 
@@ -48,8 +48,8 @@ public class OrderLineController {
         }
     }
 
-    @PutMapping(value = "/order-line", consumes = APPLICATION_JSON_VALUE)
-    public String updateOrderLine(@RequestParam(name = "id", required=true) long id, @RequestBody OrderLineRequestBody orderLineRequestBody) {
+    @PutMapping(value = "/order-line/{id}", consumes = APPLICATION_JSON_VALUE)
+    public String updateOrderLine(@PathVariable long id, @RequestBody OrderLineRequestBody orderLineRequestBody) {
         try {
             orderLineService.updateOrderLine(id, orderLineRequestBody);
             return "Mise à jour effectuée.";
@@ -58,8 +58,8 @@ public class OrderLineController {
         }
     }
 
-    @DeleteMapping("/order-line")
-    public String deleteOrderLine(@RequestParam(name = "id", required=true) long id) {
+    @DeleteMapping("/order-line/{id}")
+    public String deleteOrderLine(@PathVariable long id) {
         try {
             orderLineService.deleteOrderLine(id);
             return "Supression effectuée.";

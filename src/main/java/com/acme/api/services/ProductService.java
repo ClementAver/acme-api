@@ -3,7 +3,7 @@ package com.acme.api.services;
 import com.acme.api.dto.GetProductDTO;
 import com.acme.api.entities.Product;
 import com.acme.api.dto.ProductRequestBody;
-import com.acme.api.mapper.GetAllProductsDTOMapper;
+import com.acme.api.mappers.GetAllProductsDTOMapper;
 import com.acme.api.repositories.ProductRepository;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;

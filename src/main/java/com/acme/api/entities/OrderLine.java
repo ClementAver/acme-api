@@ -32,7 +32,6 @@ public class OrderLine {
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "id_order", nullable = false)
     @JsonIgnoreProperties({"orderLines", "id"})
-
     private Order idOrder;
 
 

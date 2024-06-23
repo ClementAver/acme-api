@@ -29,8 +29,8 @@ public class EmployeeController {
         return employeeService.getEmployees();
     }
 
-    @GetMapping("/employee")
-    public GetEmployeeDTO getEmployee(@RequestParam(name = "email", required=true) String email) {
+    @GetMapping("/employee/{email}")
+    public GetEmployeeDTO getEmployee(@PathVariable String email) {
         try {
             return employeeService.getEmployeeByEmail(email);
         } catch (ResponseStatusException e) {
@@ -38,8 +38,8 @@ public class EmployeeController {
         }
     }
 
-    @GetMapping("/employee-by-username")
-    public GetEmployeeDTO getEmployeeByUsername(@RequestParam(name = "username", required=true) String username) {
+    @GetMapping("/employee-by-username/{username}")
+    public GetEmployeeDTO getEmployeeByUsername(@PathVariable String username) {
         try {
             return employeeService.getEmployeeByUsername(username);
         } catch (ResponseStatusException e) {
@@ -58,8 +58,8 @@ public class EmployeeController {
         }
     }
 
-    @PutMapping(value = "/employee", consumes = APPLICATION_JSON_VALUE)
-    public String updateEmployee(@RequestParam(name = "email", required=true) String email, @RequestBody EmployeeRequestBody employeeRequestBody) {
+    @PutMapping(value = "/employee/{email}", consumes = APPLICATION_JSON_VALUE)
+    public String updateEmployee(@PathVariable String email, @RequestBody EmployeeRequestBody employeeRequestBody) {
         try {
             employeeService.updateEmployee(email, employeeRequestBody);
             return "Mise à jour effectuée.";
@@ -68,8 +68,8 @@ public class EmployeeController {
         }
     }
 
-    @DeleteMapping("/employee")
-    public String deleteEmployee(@RequestParam(name = "email", required=true) String email) {
+    @DeleteMapping("/employee/{email}")
+    public String deleteEmployee(@PathVariable String email) {
         try {
             employeeService.deleteEmployee(email);
             return "Supression effectuée.";

@@ -28,13 +28,13 @@ public class OrderController {
         return orderService.getOrders();
     }
 
-    @GetMapping("/orders-from-customer")
-    public Stream<GetOrderDTO> getOrdersFromCustomer(@RequestParam(name = "email", required=true) String email) {
+    @GetMapping("/orders-from-customer/{email}")
+    public Stream<GetOrderDTO> getOrdersFromCustomer(@PathVariable String email) {
         return orderService.getOrdersFromCustomer(email);
     }
 
-    @GetMapping("/order")
-    public GetOrderDTO getOrder(@RequestParam(name = "reference", required=true) String reference) {
+    @GetMapping("/order/{reference}")
+    public GetOrderDTO getOrder(@PathVariable String reference) {
         try {
             return orderService.getOrderByReference(reference);
         } catch (ResponseStatusException e) {
@@ -53,8 +53,8 @@ public class OrderController {
         }
     }
 
-    @PutMapping(value = "/order", consumes = APPLICATION_JSON_VALUE)
-    public String updateOrder(@RequestParam(name = "reference", required=true) String reference, @RequestBody OrderRequestBody orderRequestBody) {
+    @PutMapping(value = "/order/{reference}", consumes = APPLICATION_JSON_VALUE)
+    public String updateOrder(@PathVariable String reference, @RequestBody OrderRequestBody orderRequestBody) {
        try {
            orderService.updateOrder(reference, orderRequestBody);
            return "Mise à jour effectuée.";
@@ -63,8 +63,8 @@ public class OrderController {
        }
     }
 
-    @DeleteMapping("/order")
-    public String deleteOrder(@RequestParam(name = "reference", required=true) String reference) {
+    @DeleteMapping("/order/{reference}")
+    public String deleteOrder(@PathVariable String reference) {
         try {
         orderService.deleteOrder(reference);
             return "Supression effectuée.";

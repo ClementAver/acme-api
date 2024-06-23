@@ -3,7 +3,7 @@ package com.acme.api.services;
 import com.acme.api.dto.GetCustomerDTO;
 import com.acme.api.entities.Customer;
 import com.acme.api.dto.CustomerRequestBody;
-import com.acme.api.mapper.GetCustomerDTOMapper;
+import com.acme.api.mappers.GetCustomerDTOMapper;
 import com.acme.api.repositories.CustomerRepository;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;

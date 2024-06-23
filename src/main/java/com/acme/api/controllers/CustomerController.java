@@ -3,6 +3,7 @@ package com.acme.api.controllers;
 import com.acme.api.dto.GetCustomerDTO;
 import com.acme.api.dto.CustomerRequestBody;
 import com.acme.api.services.CustomerService;
+import jakarta.websocket.server.PathParam;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -27,8 +28,8 @@ public class CustomerController {
         return customerService.getCustomers();
     }
 
-    @GetMapping("/customer")
-    public GetCustomerDTO getCustomer(@RequestParam(name = "email", required=true) String email) {
+    @GetMapping("/customer/{email}")
+    public GetCustomerDTO getCustomer(@PathVariable String email) {
         try {
             return customerService.getCustomerByEmail(email);
         } catch (ResponseStatusException e) {
@@ -47,8 +48,8 @@ public class CustomerController {
         }
     }
 
-    @PutMapping(value = "/customer", consumes = APPLICATION_JSON_VALUE)
-    public String updateCustomer(@RequestParam(name = "email", required=true) String email, @RequestBody CustomerRequestBody customerRequestBody) {
+    @PutMapping(value = "/customer/{email}", consumes = APPLICATION_JSON_VALUE)
+    public String updateCustomer(@PathVariable String email, @RequestBody CustomerRequestBody customerRequestBody) {
         try {
             customerService.updateCustomer(email, customerRequestBody);
             return "Mise à jour effectuée.";
@@ -57,8 +58,8 @@ public class CustomerController {
         }
     }
 
-    @DeleteMapping("/customer")
-    public String deleteCustomer(@RequestParam(name = "email", required=true) String email) {
+    @DeleteMapping("/customer/{email}")
+    public String deleteCustomer(@PathVariable String email) {
         try {
             customerService.deleteCustomer(email);
             return "Supression effectuée.";
