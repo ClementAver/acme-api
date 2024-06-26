@@ -71,7 +71,7 @@ public class CustomerController {
     }
 
     @GetMapping("/customer/{email}/orders")
-    public Stream<OrderDTO> getOrdersFromCustomer(@PathVariable String email) {
+    public Stream<OrderDTO> getOrdersFromCustomer(@Valid @PathVariable @Email String email) {
         return customerService.getOrdersFromCustomer(email);
     }
 }

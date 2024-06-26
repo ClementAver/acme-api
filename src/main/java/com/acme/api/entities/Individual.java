@@ -16,7 +16,7 @@ public abstract class Individual {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id_individual", nullable = false, unique = true)
-    private Long id;
+    private long id;
 
     @Column(name = "first_name", nullable = false)
     private String firstName;

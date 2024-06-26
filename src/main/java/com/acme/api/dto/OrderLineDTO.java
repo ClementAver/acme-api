@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class OrderLineDTO {
-    Long id;
+    long id;
     Integer quantity;
     String referenceProduct;
     String referenceOrder;

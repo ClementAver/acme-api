@@ -1,8 +1,11 @@
 package com.acme.api.controllers;
 
+import com.acme.api.dto.OrderLineDTO;
 import com.acme.api.dto.ProductDTO;
 import com.acme.api.dto.ProductRequestBody;
 import com.acme.api.services.ProductService;
+import jakarta.validation.Valid;
+import jakarta.websocket.server.PathParam;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -27,8 +30,8 @@ public class ProductController {
         return productService.getProducts();
     }
 
-    @GetMapping("/product/{reference}")
-    public ProductDTO getProduct(@PathVariable String reference) {
+    @GetMapping("/product")
+    public ProductDTO getProduct(@Valid @PathParam(value="reference") String reference) {
         try {
         return productService.getProductByReference(reference);
         } catch (ResponseStatusException e) {
@@ -36,40 +39,43 @@ public class ProductController {
         }
     }
 
-    @GetMapping("/products-by-name/{name}")
-    public Stream<ProductDTO> getProductsByName(@PathVariable String name) {
+    // to be fixed.
+    @GetMapping("/products/search")
+    public Stream<ProductDTO> getProductsByName(@PathParam(value="name") String name) {
         return productService.getProductsByName(name);
     }
 
     @ResponseStatus(value = HttpStatus.CREATED)
     @PostMapping(value = "/product", consumes = APPLICATION_JSON_VALUE)
-    public String createProduct(@RequestBody ProductRequestBody productRequestBody) {
+    public ProductDTO createProduct(@RequestBody ProductRequestBody productRequestBody) {
         try {
-            productService.createProduct(productRequestBody);
-            return "Création effectuée.";
+           return productService.createProduct(productRequestBody);
         } catch (ResponseStatusException e) {
             throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
         }
     }
 
-    @PutMapping(value = "/product/{reference}", consumes = APPLICATION_JSON_VALUE)
-    public String updateProduct(@PathVariable String reference, @RequestBody ProductRequestBody productRequestBody) {
+    @PutMapping(value = "/product", consumes = APPLICATION_JSON_VALUE)
+    public ProductDTO updateProduct(@Valid @PathParam(value="reference") String reference, @RequestBody ProductRequestBody productRequestBody) {
         try {
-            productService.updateProduct(reference, productRequestBody);
-            return "Mise à jour effectuée.";
+            return productService.updateProduct(reference, productRequestBody);
         } catch (ResponseStatusException e) {
             throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
         }
     }
 
-    @DeleteMapping("/product/{reference}")
-    public String deleteProduct(@PathVariable String reference) {
+    @DeleteMapping("/product")
+    public String deleteProduct(@Valid @PathParam(value="reference") String reference) {
         try {
-            productService.deleteProduct(reference);
-            return "Supression effectuée.";
+            return productService.deleteProduct(reference);
         } catch (ResponseStatusException e) {
             throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
         }
+    }
+
+    @GetMapping("/product/{reference}/order-lines")
+    public Stream<OrderLineDTO> getOrderLinesFromProduct(@Valid @PathVariable String reference) {
+        return productService.getOrderLinesFromProduct(reference);
     }
 }
 

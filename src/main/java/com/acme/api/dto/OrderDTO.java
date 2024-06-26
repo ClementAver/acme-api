@@ -5,13 +5,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 public class OrderDTO {
     String reference;
-    String date;
+    LocalDate date;
     String emailCustomer;
 }
 

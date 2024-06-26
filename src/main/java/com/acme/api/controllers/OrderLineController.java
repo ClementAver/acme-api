@@ -1,8 +1,11 @@
 package com.acme.api.controllers;
 
+import com.acme.api.dto.OrderDTO;
 import com.acme.api.dto.OrderLineDTO;
 import com.acme.api.dto.OrderLineRequestBody;
 import com.acme.api.services.OrderLineService;
+import jakarta.validation.Valid;
+import jakarta.websocket.server.PathParam;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -27,42 +30,38 @@ public class OrderLineController {
         return orderLineService.getOrderLines();
     }
 
-    @GetMapping("/order-lines-from-order/{orderReference}")
-    public Stream<OrderLineDTO> getOrderLinesFromOrder(@PathVariable String orderReference) {
-        return orderLineService.getOrderLinesFromOrder(orderReference);
-    }
-
-    @GetMapping("/order-lines-from-product/{productReference}")
-    public Stream<OrderLineDTO> getOrderLinesFromProduct(@PathVariable String productReference) {
-        return orderLineService.getOrderLinesFromProduct(productReference);
+    @GetMapping("/order-line/{id}")
+    public OrderLineDTO getOrderLine(@Valid @PathVariable String id) {
+        try {
+            return orderLineService.getOrderLine(Long.parseLong(id));
+        } catch (ResponseStatusException e) {
+            throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
+        }
     }
 
     @ResponseStatus(value = HttpStatus.CREATED)
     @PostMapping(value = "/order-line", consumes = APPLICATION_JSON_VALUE)
-    public String createOrderLine(@RequestBody OrderLineRequestBody orderLineRequestBody) {
+    public OrderLineDTO createOrderLine(@RequestBody OrderLineRequestBody orderLineRequestBody) {
         try {
-            orderLineService.createOrderLine(orderLineRequestBody);
-            return "Création effectuée.";
+            return orderLineService.createOrderLine(orderLineRequestBody);
         } catch (ResponseStatusException e) {
             throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
         }
     }
 
     @PutMapping(value = "/order-line/{id}", consumes = APPLICATION_JSON_VALUE)
-    public String updateOrderLine(@PathVariable long id, @RequestBody OrderLineRequestBody orderLineRequestBody) {
+    public OrderLineDTO updateOrderLine(@PathVariable Long id, @RequestBody OrderLineRequestBody orderLineRequestBody) {
         try {
-            orderLineService.updateOrderLine(id, orderLineRequestBody);
-            return "Mise à jour effectuée.";
+            return orderLineService.updateOrderLine(id, orderLineRequestBody);
         } catch (ResponseStatusException e) {
             throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
         }
     }
 
     @DeleteMapping("/order-line/{id}")
-    public String deleteOrderLine(@PathVariable long id) {
+    public Long deleteOrderLine(@PathVariable Long id) {
         try {
-            orderLineService.deleteOrderLine(id);
-            return "Supression effectuée.";
+            return orderLineService.deleteOrderLine(id);
         } catch (ResponseStatusException e) {
             throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
         }

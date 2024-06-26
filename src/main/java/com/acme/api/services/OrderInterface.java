@@ -1,6 +1,7 @@
 package com.acme.api.services;
 
 import com.acme.api.dto.OrderDTO;
+import com.acme.api.dto.OrderLineDTO;
 import com.acme.api.entities.Order;
 import com.acme.api.dto.OrderRequestBody;
 import org.springframework.web.server.ResponseStatusException;
@@ -15,4 +16,5 @@ public interface OrderInterface {
     OrderDTO updateOrder(String reference, OrderRequestBody orderRequestBody) throws ResponseStatusException;
     String deleteOrder(String reference) throws ResponseStatusException;
     Order getOrCreateOrder(Order order);
+    Stream<OrderLineDTO> getOrderLinesFromOrder(String orderReference);
 }

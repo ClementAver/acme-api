@@ -1,8 +1,11 @@
 package com.acme.api.controllers;
 
 import com.acme.api.dto.OrderDTO;
+import com.acme.api.dto.OrderLineDTO;
 import com.acme.api.dto.OrderRequestBody;
+import com.acme.api.services.OrderLineService;
 import com.acme.api.services.OrderService;
+import com.acme.api.services.ProductService;
 import jakarta.validation.Valid;
 import jakarta.websocket.server.PathParam;
 import org.springframework.http.HttpStatus;
@@ -40,7 +43,7 @@ public class OrderController {
 
     @ResponseStatus(value = HttpStatus.CREATED)
     @PostMapping(value = "/order", consumes = APPLICATION_JSON_VALUE)
-    public OrderDTO createOrder(@RequestBody OrderRequestBody orderRequestBody) {
+    public OrderDTO createOrder(@Valid @RequestBody OrderRequestBody orderRequestBody) {
         try {
             return orderService.createOrder(orderRequestBody);
         } catch (ResponseStatusException e) {
@@ -49,7 +52,7 @@ public class OrderController {
     }
 
     @PutMapping(value = "/order", consumes = APPLICATION_JSON_VALUE)
-    public OrderDTO updateOrder(@Valid @PathParam(value="reference") String reference, @RequestBody OrderRequestBody orderRequestBody) {
+    public OrderDTO updateOrder(@Valid @PathParam(value="reference") String reference, @Valid @RequestBody OrderRequestBody orderRequestBody) {
        try {
            return orderService.updateOrder(reference, orderRequestBody);
        } catch (ResponseStatusException e) {
@@ -64,6 +67,11 @@ public class OrderController {
         } catch (ResponseStatusException e) {
             throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
         }
+    }
+
+    @GetMapping("/order/{reference}/order-lines")
+    public Stream<OrderLineDTO> getOrderLinesFromOrder(@Valid @PathVariable String reference) {
+        return orderService.getOrderLinesFromOrder(reference);
     }
 }
 

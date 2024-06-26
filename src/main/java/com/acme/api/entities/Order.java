@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedHashSet;
@@ -26,14 +27,14 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_order", nullable = false, unique = true)
-    private Long id;
+    private long id;
 
     // UUID type Generated Value
     @Column(name = "reference", nullable = false)
     private String reference;
 
     @Column(name = "date", nullable = false, length = 64)
-    private String date;
+    private LocalDate date;
 
     // PERSIST = a customer will be created too / MERGE = a customer will be updated too.
     @ManyToOne(fetch = FetchType.EAGER, optional = false, cascade = {PERSIST, MERGE})
@@ -49,12 +50,5 @@ public class Order {
 
     public static String generateReference() {
         return "ORD-" + new Date().getTime();
-    }
-
-    public static String generateDate() {
-        String pattern = "dd/MM/yyyy";
-        DateFormat df = new SimpleDateFormat(pattern);
-        Date today = Calendar.getInstance().getTime();
-        return df.format(today);
     }
 }

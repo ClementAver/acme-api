@@ -8,9 +8,8 @@ import java.util.stream.Stream;
 
 public interface OrderLineInterface {
     Stream<OrderLineDTO> getOrderLines();
-    Stream<OrderLineDTO> getOrderLinesFromOrder(String orderReference);
-    Stream<OrderLineDTO> getOrderLinesFromProduct(String productReference);
-    void createOrderLine(OrderLineRequestBody orderLineRequestBody) throws ResponseStatusException;
-    void updateOrderLine(long id, OrderLineRequestBody orderLineRequestBody) throws ResponseStatusException;
-    void deleteOrderLine(long id) throws ResponseStatusException;
+    OrderLineDTO getOrderLine(Long id);
+    OrderLineDTO createOrderLine(OrderLineRequestBody orderLineRequestBody) throws ResponseStatusException;
+    OrderLineDTO updateOrderLine(Long id, OrderLineRequestBody orderLineRequestBody) throws ResponseStatusException;
+    Long deleteOrderLine(Long id) throws ResponseStatusException;
 }
