@@ -9,11 +9,10 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class GetOrderLineDTO {
-    Long id;
-    Integer quantity;
-    String referenceProduct;
-    String referenceOrder;
+public class ProductDTO {
+    String reference;
+    String name;
+    Integer price;
 }
 
 

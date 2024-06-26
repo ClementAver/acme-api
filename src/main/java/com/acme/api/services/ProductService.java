@@ -1,9 +1,9 @@
 package com.acme.api.services;
 
-import com.acme.api.dto.GetProductDTO;
+import com.acme.api.dto.ProductDTO;
 import com.acme.api.entities.Product;
 import com.acme.api.dto.ProductRequestBody;
-import com.acme.api.mappers.GetAllProductsDTOMapper;
+import com.acme.api.mappers.ProductsDTOMapper;
 import com.acme.api.repositories.ProductRepository;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
@@ -18,26 +18,26 @@ import static com.acme.api.entities.Product.generateReference;
 public class ProductService implements ProductInterface{
 
     private final ProductRepository productRepository;
-    private final GetAllProductsDTOMapper getAllProductsDTOMapper;
+    private final ProductsDTOMapper productsDTOMapper;
 
     public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
-        this.getAllProductsDTOMapper = new GetAllProductsDTOMapper();
+        this.productsDTOMapper = new ProductsDTOMapper();
     }
 
     @Override
-    public Stream<GetProductDTO> getProducts() {
+    public Stream<ProductDTO> getProducts() {
         return productRepository.findAll()
-                .stream().map(getAllProductsDTOMapper);
+                .stream().map(productsDTOMapper);
     }
 
     @Override
-    public Stream<GetProductDTO> getProductsByName(String name) {
+    public Stream<ProductDTO> getProductsByName(String name) {
         Set<Product> productInDB = productRepository.findAllByName(name);
         if (productInDB.isEmpty()) {
             throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Aucune occurence.");
         }
-         return productInDB.stream().map(getAllProductsDTOMapper);
+         return productInDB.stream().map(productsDTOMapper);
     }
 
     @Override
@@ -50,12 +50,12 @@ public class ProductService implements ProductInterface{
     }
 
     @Override
-    public GetProductDTO getProductByReference(String reference) throws ResponseStatusException {
+    public ProductDTO getProductByReference(String reference) throws ResponseStatusException {
         Product productInDB = productRepository.findByReference(reference);
         if (productInDB == null) {
             throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Produit non référencé.");
         }
-        return new GetProductDTO(productInDB.getReference(), productInDB.getName(), productInDB.getPrice());
+        return new ProductDTO(productInDB.getReference(), productInDB.getName(), productInDB.getPrice());
     }
 
     @Override

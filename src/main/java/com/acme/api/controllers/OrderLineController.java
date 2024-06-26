@@ -1,6 +1,6 @@
 package com.acme.api.controllers;
 
-import com.acme.api.dto.GetOrderLineDTO;
+import com.acme.api.dto.OrderLineDTO;
 import com.acme.api.dto.OrderLineRequestBody;
 import com.acme.api.services.OrderLineService;
 import org.springframework.http.HttpStatus;
@@ -23,17 +23,17 @@ public class OrderLineController {
     }
 
     @GetMapping("/order-lines")
-    public Stream<GetOrderLineDTO> getOrderLines() {
+    public Stream<OrderLineDTO> getOrderLines() {
         return orderLineService.getOrderLines();
     }
 
     @GetMapping("/order-lines-from-order/{orderReference}")
-    public Stream<GetOrderLineDTO> getOrderLinesFromOrder(@PathVariable String orderReference) {
+    public Stream<OrderLineDTO> getOrderLinesFromOrder(@PathVariable String orderReference) {
         return orderLineService.getOrderLinesFromOrder(orderReference);
     }
 
     @GetMapping("/order-lines-from-product/{productReference}")
-    public Stream<GetOrderLineDTO> getOrderLinesFromProduct(@PathVariable String productReference) {
+    public Stream<OrderLineDTO> getOrderLinesFromProduct(@PathVariable String productReference) {
         return orderLineService.getOrderLinesFromProduct(productReference);
     }
 

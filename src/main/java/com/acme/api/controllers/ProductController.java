@@ -1,6 +1,6 @@
 package com.acme.api.controllers;
 
-import com.acme.api.dto.GetProductDTO;
+import com.acme.api.dto.ProductDTO;
 import com.acme.api.dto.ProductRequestBody;
 import com.acme.api.services.ProductService;
 import org.springframework.http.HttpStatus;
@@ -23,12 +23,12 @@ public class ProductController {
     }
 
     @GetMapping("/products")
-    public Stream<GetProductDTO> getProducts() {
+    public Stream<ProductDTO> getProducts() {
         return productService.getProducts();
     }
 
     @GetMapping("/product/{reference}")
-    public GetProductDTO getProduct(@PathVariable String reference) {
+    public ProductDTO getProduct(@PathVariable String reference) {
         try {
         return productService.getProductByReference(reference);
         } catch (ResponseStatusException e) {
@@ -37,7 +37,7 @@ public class ProductController {
     }
 
     @GetMapping("/products-by-name/{name}")
-    public Stream<GetProductDTO> getProductsByName(@PathVariable String name) {
+    public Stream<ProductDTO> getProductsByName(@PathVariable String name) {
         return productService.getProductsByName(name);
     }
 

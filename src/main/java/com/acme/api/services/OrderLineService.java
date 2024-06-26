@@ -1,11 +1,11 @@
 package com.acme.api.services;
 
-import com.acme.api.dto.GetOrderLineDTO;
+import com.acme.api.dto.OrderLineDTO;
 import com.acme.api.entities.Order;
 import com.acme.api.entities.OrderLine;
 import com.acme.api.dto.OrderLineRequestBody;
 import com.acme.api.entities.Product;
-import com.acme.api.mappers.GetAllOrderLinesDTOMapper;
+import com.acme.api.mappers.OrderLinesDTOMapper;
 import com.acme.api.repositories.OrderLineRepository;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ public class OrderLineService implements OrderLineInterface{
 
     private final OrderLineRepository orderRepository;
     private final OrderLineRepository orderLineRepository;
-    private final GetAllOrderLinesDTOMapper getAllOrderLinesDTOMapper;
+    private final OrderLinesDTOMapper orderLinesDTOMapper;
     private final ProductService productService;
     private final OrderService orderService;
 
@@ -27,33 +27,33 @@ public class OrderLineService implements OrderLineInterface{
         this.orderRepository = orderRepository;
         this.orderLineRepository = orderLineRepository;
         this.orderService = orderService;
-        this.getAllOrderLinesDTOMapper = new GetAllOrderLinesDTOMapper();
+        this.orderLinesDTOMapper = new OrderLinesDTOMapper();
         this.productService = productService;
     }
 
     @Override
-    public Stream<GetOrderLineDTO> getOrderLines() {
+    public Stream<OrderLineDTO> getOrderLines() {
         return orderLineRepository.findAll()
-                .stream().map(getAllOrderLinesDTOMapper);
+                .stream().map(orderLinesDTOMapper);
     }
 
     @Override
-    public Stream<GetOrderLineDTO> getOrderLinesFromOrder(String orderReference) {
+    public Stream<OrderLineDTO> getOrderLinesFromOrder(String orderReference) {
         Set<OrderLine> orderLinesInDB = orderLineRepository.findAllByIdOrder_Reference(orderReference);
         if (orderLinesInDB.isEmpty()) {
             throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Aucune occurence.");
         } else {
-            return orderLinesInDB.stream().map(getAllOrderLinesDTOMapper);
+            return orderLinesInDB.stream().map(orderLinesDTOMapper);
         }
     }
 
     @Override
-    public Stream<GetOrderLineDTO> getOrderLinesFromProduct(String productReference) {
+    public Stream<OrderLineDTO> getOrderLinesFromProduct(String productReference) {
         Set<OrderLine> orderLineInDB = orderLineRepository.findAllByIdProduct_Reference(productReference);
         if (orderLineInDB.isEmpty()) {
             throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Aucune occurence.");
         }
-        return orderLineInDB.stream().map(getAllOrderLinesDTOMapper);
+        return orderLineInDB.stream().map(orderLinesDTOMapper);
     }
 
     @Override

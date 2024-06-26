@@ -1,10 +1,11 @@
 package com.acme.api.controllers;
 
-import com.acme.api.dto.CustomerRequestBody;
-import com.acme.api.dto.GetEmployeeDTO;
-import com.acme.api.entities.Employee;
+import com.acme.api.dto.EmployeeDTO;
 import com.acme.api.dto.EmployeeRequestBody;
 import com.acme.api.services.EmployeeService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
+import jakarta.websocket.server.PathParam;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -25,12 +26,12 @@ public class EmployeeController {
     }
 
     @GetMapping("/employees")
-    public Stream<GetEmployeeDTO> getEmployees() {
+    public Stream<EmployeeDTO> getEmployees() {
         return employeeService.getEmployees();
     }
 
-    @GetMapping("/employee/{email}")
-    public GetEmployeeDTO getEmployee(@PathVariable String email) {
+    @GetMapping("/employee")
+    public EmployeeDTO getEmployee(@Valid @PathParam(value="email") @Email String email) {
         try {
             return employeeService.getEmployeeByEmail(email);
         } catch (ResponseStatusException e) {
@@ -38,41 +39,29 @@ public class EmployeeController {
         }
     }
 
-    @GetMapping("/employee-by-username/{username}")
-    public GetEmployeeDTO getEmployeeByUsername(@PathVariable String username) {
-        try {
-            return employeeService.getEmployeeByUsername(username);
-        } catch (ResponseStatusException e) {
-            throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
-        }
-    }
-
     @ResponseStatus(value = HttpStatus.CREATED)
     @PostMapping(value = "/employee", consumes = APPLICATION_JSON_VALUE)
-    public String createEmployee(@RequestBody EmployeeRequestBody employeeRequestBody) {
+    public EmployeeDTO createEmployee(@Valid @RequestBody EmployeeRequestBody employeeRequestBody) {
         try {
-            employeeService.createEmployee(employeeRequestBody);
-            return "Création effectuée.";
+            return employeeService.createEmployee(employeeRequestBody);
         } catch (ResponseStatusException e) {
             throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
         }
     }
 
-    @PutMapping(value = "/employee/{email}", consumes = APPLICATION_JSON_VALUE)
-    public String updateEmployee(@PathVariable String email, @RequestBody EmployeeRequestBody employeeRequestBody) {
+    @PutMapping(value = "/employee", consumes = APPLICATION_JSON_VALUE)
+    public EmployeeDTO updateEmployee(@Valid @PathParam(value="email") @Email String email, @Valid @RequestBody EmployeeRequestBody employeeRequestBody) {
         try {
-            employeeService.updateEmployee(email, employeeRequestBody);
-            return "Mise à jour effectuée.";
+            return employeeService.updateEmployee(email, employeeRequestBody);
         } catch (ResponseStatusException e) {
             throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
         }
     }
 
-    @DeleteMapping("/employee/{email}")
-    public String deleteEmployee(@PathVariable String email) {
+    @DeleteMapping("/employee")
+    public String deleteEmployee(@Valid @PathParam(value="email") @Email String email) {
         try {
-            employeeService.deleteEmployee(email);
-            return "Supression effectuée.";
+            return employeeService.deleteEmployee(email);
         } catch (ResponseStatusException e) {
             throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
         }

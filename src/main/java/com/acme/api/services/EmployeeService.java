@@ -1,10 +1,10 @@
 package com.acme.api.services;
 
 
-import com.acme.api.dto.GetEmployeeDTO;
+import com.acme.api.dto.EmployeeDTO;
 import com.acme.api.entities.Employee;
 import com.acme.api.dto.EmployeeRequestBody;
-import com.acme.api.mappers.GetEmployeeDTOMapper;
+import com.acme.api.mappers.EmployeeDTOMapper;
 import com.acme.api.repositories.EmployeeRepository;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
@@ -16,39 +16,30 @@ import java.util.stream.Stream;
 public class EmployeeService implements EmployeeInterface{
 
     private final EmployeeRepository employeeRepository;
-    private final GetEmployeeDTOMapper getEmployeeDTOMapper;
+    private final EmployeeDTOMapper employeeDTOMapper;
 
-    public EmployeeService(EmployeeRepository employeeRepository, GetEmployeeDTOMapper getEmployeeDTOMapper) {
+    public EmployeeService(EmployeeRepository employeeRepository, EmployeeDTOMapper employeeDTOMapper) {
         this.employeeRepository = employeeRepository;
-        this.getEmployeeDTOMapper = getEmployeeDTOMapper;
+        this.employeeDTOMapper = employeeDTOMapper;
     }
 
     @Override
-    public Stream<GetEmployeeDTO> getEmployees() {
+    public Stream<EmployeeDTO> getEmployees() {
         return employeeRepository.findAll()
-                .stream().map(getEmployeeDTOMapper);
+                .stream().map(employeeDTOMapper);
     }
 
     @Override
-    public GetEmployeeDTO getEmployeeByEmail(String email) throws ResponseStatusException {
+    public EmployeeDTO getEmployeeByEmail(String email) throws ResponseStatusException {
         Employee employeeInDB = employeeRepository.findByEmail(email);
         if (employeeInDB == null) {
             throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Email inconnu.");
         }
-        return new GetEmployeeDTO(employeeInDB.getFirstName(), employeeInDB.getLastName(), employeeInDB.getEmail(), employeeInDB.getUsername());
+        return new EmployeeDTO(employeeInDB.getFirstName(), employeeInDB.getLastName(), employeeInDB.getEmail(), employeeInDB.getUsername());
     }
 
     @Override
-    public GetEmployeeDTO getEmployeeByUsername(String username) throws ResponseStatusException {
-        Employee employeeInDB = employeeRepository.findByUsername(username);
-        if (employeeInDB == null) {
-            throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Pseudonyme inconnu.");
-        }
-        return new GetEmployeeDTO(employeeInDB.getFirstName(), employeeInDB.getLastName(), employeeInDB.getEmail(), employeeInDB.getUsername());
-    }
-
-    @Override
-    public void createEmployee(EmployeeRequestBody employeeRequestBody) throws ResponseStatusException {
+    public EmployeeDTO createEmployee(EmployeeRequestBody employeeRequestBody) throws ResponseStatusException {
         Employee employee = new Employee();
         employee.setFirstName(employeeRequestBody.getFirstName());
         employee.setLastName(employeeRequestBody.getLastName());
@@ -65,10 +56,11 @@ public class EmployeeService implements EmployeeInterface{
             throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Ce pseudonyme n'est pas disponible.");
         }
         employeeRepository.save(employee);
+        return new EmployeeDTO(employee.getFirstName(), employee.getLastName(), employee.getEmail(), employee.getUsername());
     }
 
     @Override
-    public void updateEmployee(String email, EmployeeRequestBody employeeRequestBody) throws ResponseStatusException {
+    public EmployeeDTO updateEmployee(String email, EmployeeRequestBody employeeRequestBody) throws ResponseStatusException {
         Employee employeeToUpdate = employeeRepository.findByEmail(email);
         if (employeeToUpdate == null) {
             throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Employé inconnu.");
@@ -89,13 +81,15 @@ public class EmployeeService implements EmployeeInterface{
             employeeToUpdate.setPassword(employeeRequestBody.getPassword());
         }
         employeeRepository.save(employeeToUpdate);
+        return new EmployeeDTO(employeeToUpdate.getFirstName(), employeeToUpdate.getLastName(), employeeToUpdate.getEmail(), employeeToUpdate.getUsername());
     }
 
     @Override
-    public void deleteEmployee(String email) throws ResponseStatusException {
+    public String deleteEmployee(String email) throws ResponseStatusException {
         Employee employeeToDelete = employeeRepository.findByEmail(email);
         if (employeeToDelete != null) {
             employeeRepository.delete(employeeToDelete);
+            return employeeToDelete.getEmail();
         } else {
             throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Employé inconnu.");
         }

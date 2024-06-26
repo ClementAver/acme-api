@@ -1,7 +1,6 @@
 package com.acme.api.controllers;
 
-import com.acme.api.dto.GetOrderDTO;
-import com.acme.api.entities.Order;
+import com.acme.api.dto.OrderDTO;
 import com.acme.api.dto.OrderRequestBody;
 import com.acme.api.services.OrderService;
 import org.springframework.http.HttpStatus;
@@ -24,17 +23,17 @@ public class OrderController {
     }
 
     @GetMapping("/orders")
-    public Stream<GetOrderDTO> getOrders() {
+    public Stream<OrderDTO> getOrders() {
         return orderService.getOrders();
     }
 
     @GetMapping("/orders-from-customer/{email}")
-    public Stream<GetOrderDTO> getOrdersFromCustomer(@PathVariable String email) {
+    public Stream<OrderDTO> getOrdersFromCustomer(@PathVariable String email) {
         return orderService.getOrdersFromCustomer(email);
     }
 
     @GetMapping("/order/{reference}")
-    public GetOrderDTO getOrder(@PathVariable String reference) {
+    public OrderDTO getOrder(@PathVariable String reference) {
         try {
             return orderService.getOrderByReference(reference);
         } catch (ResponseStatusException e) {
@@ -44,20 +43,18 @@ public class OrderController {
 
     @ResponseStatus(value = HttpStatus.CREATED)
     @PostMapping(value = "/order", consumes = APPLICATION_JSON_VALUE)
-    public String createOrder(@RequestBody OrderRequestBody orderRequestBody) {
+    public OrderDTO createOrder(@RequestBody OrderRequestBody orderRequestBody) {
         try {
-            orderService.createOrder(orderRequestBody);
-            return "Création effectuée.";
+            return orderService.createOrder(orderRequestBody);
         } catch (ResponseStatusException e) {
             throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
         }
     }
 
     @PutMapping(value = "/order/{reference}", consumes = APPLICATION_JSON_VALUE)
-    public String updateOrder(@PathVariable String reference, @RequestBody OrderRequestBody orderRequestBody) {
+    public OrderDTO updateOrder(@PathVariable String reference, @RequestBody OrderRequestBody orderRequestBody) {
        try {
-           orderService.updateOrder(reference, orderRequestBody);
-           return "Mise à jour effectuée.";
+           return orderService.updateOrder(reference, orderRequestBody);
        } catch (ResponseStatusException e) {
            throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
        }
@@ -66,8 +63,7 @@ public class OrderController {
     @DeleteMapping("/order/{reference}")
     public String deleteOrder(@PathVariable String reference) {
         try {
-        orderService.deleteOrder(reference);
-            return "Supression effectuée.";
+        return orderService.deleteOrder(reference);
         } catch (ResponseStatusException e) {
             throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
         }

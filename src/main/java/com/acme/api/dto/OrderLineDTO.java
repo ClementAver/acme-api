@@ -9,10 +9,11 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class GetOrderDTO {
-    String reference;
-    String date;
-    String emailCustomer;
+public class OrderLineDTO {
+    Long id;
+    Integer quantity;
+    String referenceProduct;
+    String referenceOrder;
 }
 
 

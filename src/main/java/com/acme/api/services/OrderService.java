@@ -1,10 +1,10 @@
 package com.acme.api.services;
 
-import com.acme.api.dto.GetOrderDTO;
+import com.acme.api.dto.OrderDTO;
 import com.acme.api.entities.Customer;
 import com.acme.api.entities.Order;
 import com.acme.api.dto.OrderRequestBody;
-import com.acme.api.mappers.GetAllOrdersDTOMapper;
+import com.acme.api.mappers.OrdersDTOMapper;
 import com.acme.api.repositories.OrderRepository;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
@@ -23,27 +23,27 @@ public class OrderService implements OrderInterface{
 
     private final OrderRepository orderRepository;
     private final CustomerService customerService;
-    private final GetAllOrdersDTOMapper getAllOrdersDTOMapper;
+    private final OrdersDTOMapper ordersDTOMapper;
 
-    public OrderService(OrderRepository orderRepository, CustomerService customerService, GetAllOrdersDTOMapper getAllOrdersDTOMapper) {
+    public OrderService(OrderRepository orderRepository, CustomerService customerService, OrdersDTOMapper ordersDTOMapper) {
         this.orderRepository = orderRepository;
         this.customerService = customerService;
-        this.getAllOrdersDTOMapper = getAllOrdersDTOMapper;
+        this.ordersDTOMapper = ordersDTOMapper;
     }
 
     @Override
-    public Stream<GetOrderDTO> getOrders() {
+    public Stream<OrderDTO> getOrders() {
         return orderRepository.findAll()
-                .stream().map(getAllOrdersDTOMapper);
+                .stream().map(ordersDTOMapper);
     }
 
     @Override
-    public Stream<GetOrderDTO> getOrdersFromCustomer(String email) {
+    public Stream<OrderDTO> getOrdersFromCustomer(String email) {
         Set<Order> ordersInDB = orderRepository.findAllByIdCustomer_Email(email);
         if (ordersInDB.isEmpty()) {
             throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Aucune occurence.");
         }
-        return ordersInDB.stream().map(getAllOrdersDTOMapper);
+        return ordersInDB.stream().map(ordersDTOMapper);
     }
 
     @Override
@@ -56,16 +56,16 @@ public class OrderService implements OrderInterface{
     }
 
     @Override
-    public GetOrderDTO getOrderByReference(String reference) throws ResponseStatusException {
+    public OrderDTO getOrderByReference(String reference) throws ResponseStatusException {
         Order orderInDB = orderRepository.findByReference(reference);
         if (orderInDB == null) {
             throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Commande non référencée.");
         }
-        return new GetOrderDTO(orderInDB.getReference(), orderInDB.getDate(), orderInDB.getIdCustomer().getEmail());
+        return new OrderDTO(orderInDB.getReference(), orderInDB.getDate(), orderInDB.getIdCustomer().getEmail());
     }
 
     @Override
-    public void createOrder(OrderRequestBody orderRequestBody) throws ResponseStatusException {
+    public OrderDTO createOrder(OrderRequestBody orderRequestBody) throws ResponseStatusException {
         Order order = new Order();
         try {
             Customer customer = customerService.getOrCreateCustomer(orderRequestBody.getIdCustomer());
@@ -88,10 +88,11 @@ public class OrderService implements OrderInterface{
         order.setReference(generateReference());
 
         orderRepository.save(order);
+        return new OrderDTO(order.getReference(), order.getDate(), order.getIdCustomer().getEmail());
     }
 
     @Override
-    public void updateOrder(String reference, OrderRequestBody orderRequestBody) throws ResponseStatusException {
+    public OrderDTO updateOrder(String reference, OrderRequestBody orderRequestBody) throws ResponseStatusException {
         Order orderToUpdate = orderRepository.findByReference(reference);
         if (orderToUpdate == null) {
             throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Commande non référencée.");
@@ -101,7 +102,6 @@ public class OrderService implements OrderInterface{
                 Customer customer = customerService.getOrCreateCustomer(orderRequestBody.getIdCustomer());
                 orderToUpdate.setIdCustomer(customer);
             } catch (Exception e) {
-
                 throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Données saisies invalides ou incomplètes.");
             }
         }
@@ -109,13 +109,15 @@ public class OrderService implements OrderInterface{
             orderToUpdate.setDate(orderRequestBody.getDate());
         }
         orderRepository.save(orderToUpdate);
+        return new OrderDTO(orderToUpdate.getReference(), orderToUpdate.getDate(), orderToUpdate.getIdCustomer().getEmail());
     }
 
     @Override
-    public void deleteOrder(String reference) throws ResponseStatusException {
+    public String deleteOrder(String reference) throws ResponseStatusException {
         Order orderToDelete = orderRepository.findByReference(reference);
         if (orderToDelete != null) {
             orderRepository.delete(orderToDelete);
+            return orderToDelete.getReference();
         } else {
             throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Ligne de facturation inconnu.");
         }
