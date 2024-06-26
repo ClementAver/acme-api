@@ -3,6 +3,8 @@ package com.acme.api.controllers;
 import com.acme.api.dto.OrderDTO;
 import com.acme.api.dto.OrderRequestBody;
 import com.acme.api.services.OrderService;
+import jakarta.validation.Valid;
+import jakarta.websocket.server.PathParam;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -27,8 +29,8 @@ public class OrderController {
         return orderService.getOrders();
     }
 
-    @GetMapping("/order/{reference}")
-    public OrderDTO getOrder(@PathVariable String reference) {
+    @GetMapping("/order")
+    public OrderDTO getOrder(@Valid @PathParam(value="reference") String reference) {
         try {
             return orderService.getOrderByReference(reference);
         } catch (ResponseStatusException e) {
@@ -46,8 +48,8 @@ public class OrderController {
         }
     }
 
-    @PutMapping(value = "/order/{reference}", consumes = APPLICATION_JSON_VALUE)
-    public OrderDTO updateOrder(@PathVariable String reference, @RequestBody OrderRequestBody orderRequestBody) {
+    @PutMapping(value = "/order", consumes = APPLICATION_JSON_VALUE)
+    public OrderDTO updateOrder(@Valid @PathParam(value="reference") String reference, @RequestBody OrderRequestBody orderRequestBody) {
        try {
            return orderService.updateOrder(reference, orderRequestBody);
        } catch (ResponseStatusException e) {
@@ -55,8 +57,8 @@ public class OrderController {
        }
     }
 
-    @DeleteMapping("/order/{reference}")
-    public String deleteOrder(@PathVariable String reference) {
+    @DeleteMapping("/order")
+    public String deleteOrder(@Valid @PathParam(value="reference") String reference) {
         try {
         return orderService.deleteOrder(reference);
         } catch (ResponseStatusException e) {

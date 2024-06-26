@@ -11,12 +11,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.LinkedHashSet;
-import java.util.Set;
 import java.util.stream.Stream;
 
 import static com.acme.api.entities.Order.generateDate;
 import static com.acme.api.entities.Order.generateReference;
-import static java.util.Arrays.stream;
 
 @Service
 public class OrderService implements OrderInterface{
