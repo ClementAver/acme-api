@@ -2,7 +2,9 @@ package com.acme.api.controllers;
 
 import com.acme.api.dto.CustomerDTO;
 import com.acme.api.dto.CustomerRequestBody;
+import com.acme.api.dto.OrderDTO;
 import com.acme.api.services.CustomerService;
+import com.acme.api.services.OrderService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.websocket.server.PathParam;
@@ -19,9 +21,11 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class CustomerController {
     // @Autowired if no constructor.
     final private CustomerService customerService;
+    final private OrderService orderService;
 
-    public CustomerController(CustomerService customerService) {
+    public CustomerController(CustomerService customerService, OrderService orderService) {
         this.customerService = customerService;
+        this.orderService = orderService;
     }
 
     @GetMapping("/customers")
@@ -64,5 +68,10 @@ public class CustomerController {
         } catch (ResponseStatusException e) {
             throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
         }
+    }
+
+    @GetMapping("/customer/{email}/orders")
+    public Stream<OrderDTO> getOrdersFromCustomer(@PathVariable String email) {
+        return customerService.getOrdersFromCustomer(email);
     }
 }

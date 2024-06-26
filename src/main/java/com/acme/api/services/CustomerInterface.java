@@ -1,6 +1,7 @@
 package com.acme.api.services;
 
 import com.acme.api.dto.CustomerDTO;
+import com.acme.api.dto.OrderDTO;
 import com.acme.api.entities.Customer;
 import com.acme.api.dto.CustomerRequestBody;
 import org.springframework.web.server.ResponseStatusException;
@@ -13,5 +14,7 @@ public interface CustomerInterface {
     CustomerDTO createCustomer(CustomerRequestBody customerRequestBody) throws ResponseStatusException;
     CustomerDTO updateCustomer(String email, CustomerRequestBody customerRequestBody) throws ResponseStatusException;
     String deleteCustomer(String email) throws ResponseStatusException;
+    Stream<OrderDTO> getOrdersFromCustomer(String email);
     Customer getOrCreateCustomer(Customer customer);
+
 }

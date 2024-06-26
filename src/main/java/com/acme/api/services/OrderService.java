@@ -38,15 +38,6 @@ public class OrderService implements OrderInterface{
     }
 
     @Override
-    public Stream<OrderDTO> getOrdersFromCustomer(String email) {
-        Set<Order> ordersInDB = orderRepository.findAllByIdCustomer_Email(email);
-        if (ordersInDB.isEmpty()) {
-            throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Aucune occurence.");
-        }
-        return ordersInDB.stream().map(ordersDTOMapper);
-    }
-
-    @Override
     public Order getOrderEntity(String reference) throws ResponseStatusException {
         Order orderInDB = orderRepository.findByReference(reference);
         if (orderInDB == null) {

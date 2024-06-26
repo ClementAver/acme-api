@@ -27,11 +27,6 @@ public class OrderController {
         return orderService.getOrders();
     }
 
-    @GetMapping("/orders-from-customer/{email}")
-    public Stream<OrderDTO> getOrdersFromCustomer(@PathVariable String email) {
-        return orderService.getOrdersFromCustomer(email);
-    }
-
     @GetMapping("/order/{reference}")
     public OrderDTO getOrder(@PathVariable String reference) {
         try {

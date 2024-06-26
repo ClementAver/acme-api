@@ -1,14 +1,19 @@
 package com.acme.api.services;
 
 import com.acme.api.dto.CustomerDTO;
+import com.acme.api.dto.OrderDTO;
 import com.acme.api.entities.Customer;
 import com.acme.api.dto.CustomerRequestBody;
+import com.acme.api.entities.Order;
 import com.acme.api.mappers.CustomerDTOMapper;
+import com.acme.api.mappers.OrdersDTOMapper;
 import com.acme.api.repositories.CustomerRepository;
+import com.acme.api.repositories.OrderRepository;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Set;
 import java.util.stream.Stream;
 
 @Service
@@ -16,10 +21,14 @@ public class CustomerService implements CustomerInterface{
 
     private final CustomerRepository customerRepository;
     private final CustomerDTOMapper customerDTOMapper;
+    private final OrderRepository orderRepository;
+    private final OrdersDTOMapper ordersDTOMapper;
 
-    public CustomerService(CustomerRepository customerRepository, CustomerDTOMapper customerDTOMapper) {
+    public CustomerService(CustomerRepository customerRepository, CustomerDTOMapper customerDTOMapper, OrderRepository orderRepository, OrdersDTOMapper ordersDTOMapper) {
         this.customerRepository = customerRepository;
         this.customerDTOMapper = customerDTOMapper;
+        this.orderRepository = orderRepository;
+        this.ordersDTOMapper = ordersDTOMapper;
     }
 
     @Override
@@ -96,6 +105,15 @@ public class CustomerService implements CustomerInterface{
         } else {
             throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Client inconnu.");
         }
+    }
+
+    @Override
+    public Stream<OrderDTO> getOrdersFromCustomer(String email) {
+        Set<Order> ordersInDB = orderRepository.findAllByIdCustomer_Email(email);
+        if (ordersInDB.isEmpty()) {
+            throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Aucune occurence.");
+        }
+        return ordersInDB.stream().map(ordersDTOMapper);
     }
 
     // Tools

@@ -9,7 +9,6 @@ import java.util.stream.Stream;
 
 public interface OrderInterface {
     Stream<OrderDTO> getOrders();
-    Stream<OrderDTO> getOrdersFromCustomer(String customerEmail);
     Order getOrderEntity(String reference) throws ResponseStatusException;
     OrderDTO getOrderByReference(String reference) throws ResponseStatusException;
     OrderDTO createOrder(OrderRequestBody orderRequestBody) throws ResponseStatusException;
