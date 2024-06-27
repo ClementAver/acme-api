@@ -8,6 +8,7 @@ import com.acme.api.dto.OrderRequestBody;
 import com.acme.api.entities.OrderLine;
 import com.acme.api.mappers.OrderLinesDTOMapper;
 import com.acme.api.mappers.OrdersDTOMapper;
+import com.acme.api.repositories.CustomerRepository;
 import com.acme.api.repositories.OrderLineRepository;
 import com.acme.api.repositories.OrderRepository;
 import org.springframework.http.HttpStatusCode;
@@ -16,6 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.LinkedHashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -29,13 +31,15 @@ public class OrderService implements OrderInterface{
     private final CustomerService customerService;
     private final OrdersDTOMapper ordersDTOMapper;
     private final OrderLinesDTOMapper orderLinesDTOMapper;
+    private final CustomerRepository customerRepository;
 
-    public OrderService(OrderRepository orderRepository, OrderLineRepository orderLineRepository, CustomerService customerService, OrdersDTOMapper ordersDTOMapper, OrderLinesDTOMapper orderLinesDTOMapper) {
+    public OrderService(OrderRepository orderRepository, OrderLineRepository orderLineRepository, CustomerService customerService, OrdersDTOMapper ordersDTOMapper, OrderLinesDTOMapper orderLinesDTOMapper, CustomerRepository customerRepository) {
         this.orderRepository = orderRepository;
         this.orderLineRepository = orderLineRepository;
         this.customerService = customerService;
         this.ordersDTOMapper = ordersDTOMapper;
         this.orderLinesDTOMapper = orderLinesDTOMapper;
+        this.customerRepository = customerRepository;
     }
 
     @Override
@@ -46,41 +50,41 @@ public class OrderService implements OrderInterface{
 
     @Override
     public Order getOrderEntity(String reference) throws ResponseStatusException {
-        Order orderInDB = orderRepository.findByReference(reference);
-        if (orderInDB == null) {
+        Optional<Order> orderInDB = orderRepository.findByReference(reference);
+        if (orderInDB.isPresent()) {
+            return orderInDB.get();
+        } else {
             throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Commande non référencée.");
         }
-        return orderInDB;
     }
 
     @Override
     public OrderDTO getOrderByReference(String reference) throws ResponseStatusException {
-        Order orderInDB = orderRepository.findByReference(reference);
-        if (orderInDB == null) {
+        Optional<Order> orderInDB = orderRepository.findByReference(reference);
+        if (orderInDB.isPresent()) {
+            Order order = orderInDB.get();
+        return new OrderDTO(order.getReference(), order.getDate(), order.getIdCustomer().getEmail());
+        } else {
             throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Commande non référencée.");
         }
-        return new OrderDTO(orderInDB.getReference(), orderInDB.getDate(), orderInDB.getIdCustomer().getEmail());
     }
 
     @Override
     public OrderDTO createOrder(OrderRequestBody orderRequestBody) throws ResponseStatusException {
         Order order = new Order();
-        try {
-            Customer customer = customerService.getOrCreateCustomer(orderRequestBody.getIdCustomer());
+
+        Optional<Customer> customerInDB = customerRepository.findByEmail(orderRequestBody.getCustomerEmail());
+        if (customerInDB.isPresent()) {
+            Customer customer = customerInDB.get();
             order.setIdCustomer(customer);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Données invalides ou incomplètes.");
+        } else {
+            throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Client non référencé.");
         }
 
         if (orderRequestBody.getDate() == null) {
             order.setDate(LocalDate.now());
         } else {
             order.setDate(orderRequestBody.getDate());
-        }
-        if (orderRequestBody.getOrderLines() == null) {
-            order.setOrderLines(new LinkedHashSet<>());
-        } else {
-            order.setOrderLines(orderRequestBody.getOrderLines());
         }
 
         order.setReference(generateReference());
@@ -91,31 +95,37 @@ public class OrderService implements OrderInterface{
 
     @Override
     public OrderDTO updateOrder(String reference, OrderRequestBody orderRequestBody) throws ResponseStatusException {
-        Order orderToUpdate = orderRepository.findByReference(reference);
-        if (orderToUpdate == null) {
+        Optional<Order> orderToUpdate = orderRepository.findByReference(reference);
+        if (orderToUpdate.isPresent()) {
+            Order order = orderToUpdate.get();
+
+            if (orderRequestBody.getCustomerEmail() != null) {
+                Optional<Customer> customerInDB = customerRepository.findByEmail(orderRequestBody.getCustomerEmail());
+                if (customerInDB.isPresent()) {
+                    Customer customer = customerInDB.get();
+                    order.setIdCustomer(customer);
+                } else {
+                    throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Client non référencé.");
+                }
+            }
+
+            if (orderRequestBody.getDate() != null) {
+                order.setDate(orderRequestBody.getDate());
+            }
+            orderRepository.save(order);
+            return new OrderDTO(order.getReference(), order.getDate(), order.getIdCustomer().getEmail());
+        } else {
             throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Commande non référencée.");
         }
-        if (orderRequestBody.getIdCustomer() != null) {
-            try {
-                Customer customer = customerService.getOrCreateCustomer(orderRequestBody.getIdCustomer());
-                orderToUpdate.setIdCustomer(customer);
-            } catch (Exception e) {
-                throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Données saisies invalides ou incomplètes.");
-            }
-        }
-        if (orderRequestBody.getDate() != null) {
-            orderToUpdate.setDate(orderRequestBody.getDate());
-        }
-        orderRepository.save(orderToUpdate);
-        return new OrderDTO(orderToUpdate.getReference(), orderToUpdate.getDate(), orderToUpdate.getIdCustomer().getEmail());
     }
 
     @Override
     public String deleteOrder(String reference) throws ResponseStatusException {
-        Order orderToDelete = orderRepository.findByReference(reference);
-        if (orderToDelete != null) {
-            orderRepository.delete(orderToDelete);
-            return orderToDelete.getReference();
+        Optional<Order> orderToDelete = orderRepository.findByReference(reference);
+        if (orderToDelete.isPresent()) {
+            Order order = orderToDelete.get();
+            orderRepository.delete(order);
+            return order.getReference();
         } else {
             throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Ligne de facturation inconnu.");
         }
@@ -133,12 +143,12 @@ public class OrderService implements OrderInterface{
 
     // Tools
 
-    @Override
-    public Order getOrCreateOrder(Order order) {
-        Order orderInDB = orderRepository.findByReference(order.getReference());
-        if (orderInDB == null) {
-            orderInDB = orderRepository.save(order);
-        }
-        return orderInDB;
-    }
+//    @Override
+//    public Order getOrCreateOrder(Order order) {
+//        Order orderInDB = orderRepository.findByReference(order.getReference());
+//        if (orderInDB == null) {
+//            orderInDB = orderRepository.save(order);
+//        }
+//        return orderInDB;
+//    }
 }

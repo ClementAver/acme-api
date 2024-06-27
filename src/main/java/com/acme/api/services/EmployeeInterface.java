@@ -13,5 +13,5 @@ public interface EmployeeInterface {
     EmployeeDTO createEmployee(EmployeeRequestBody employeeRequestBody) throws ResponseStatusException;
     EmployeeDTO updateEmployee(String email, EmployeeRequestBody employeeRequestBody) throws ResponseStatusException;
     String deleteEmployee(String email) throws ResponseStatusException;
-    Employee getOrCreateEmployee(Employee employee);
+    // Employee getOrCreateEmployee(Employee employee);
     }

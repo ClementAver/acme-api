@@ -19,23 +19,20 @@ import java.util.Set;
 @Setter
 @Validated
 public class CustomerRequestBody {
-    @Size(max = 64)
+    @Size(max = 64, message = "Le prénom de doit pas dépasser 64 aractères.")
     String firstName;
 
-    @Size(max = 128)
+    @Size(max = 128, message = "Le nom de doit pas dépasser 64 aractères.")
     String lastName;
 
-    @Email(message = "Addresse email invalide.")
+    @Email(message = "L'adresse email doit être valide.")
     String email;
 
-    @Size(min = 10, max = 10)
-    @Digits(integer = 10, fraction = 0)
+    @Pattern(regexp = "^\\d{10}$", message = "Le numéro de téléphone doit faire 10 chiffres.")
     String phone;
 
-    @Size(max = 128)
+    @Size(max = 256, message = "L'addresse de doit pas dépasser 256 caractères.")
     String address;
-
-    Set<Order> orders;
 
     public String toString() {
         log.info("mon objet");

@@ -15,6 +15,6 @@ public interface CustomerInterface {
     CustomerDTO updateCustomer(String email, CustomerRequestBody customerRequestBody) throws ResponseStatusException;
     String deleteCustomer(String email) throws ResponseStatusException;
     Stream<OrderDTO> getOrdersFromCustomer(String email);
-    Customer getOrCreateCustomer(Customer customer);
+    // Customer getOrCreateCustomer(Customer customer);
 
 }

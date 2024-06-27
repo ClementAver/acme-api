@@ -7,6 +7,8 @@ import com.acme.api.dto.OrderLineRequestBody;
 import com.acme.api.entities.Product;
 import com.acme.api.mappers.OrderLinesDTOMapper;
 import com.acme.api.repositories.OrderLineRepository;
+import com.acme.api.repositories.OrderRepository;
+import com.acme.api.repositories.ProductRepository;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -17,18 +19,20 @@ import java.util.stream.Stream;
 @Service
 public class OrderLineService implements OrderLineInterface{
 
-    private final OrderLineRepository orderRepository;
+    private final OrderRepository orderRepository;
     private final OrderLineRepository orderLineRepository;
     private final OrderLinesDTOMapper orderLinesDTOMapper;
     private final ProductService productService;
     private final OrderService orderService;
+    private final ProductRepository productRepository;
 
-    public OrderLineService(OrderLineRepository orderRepository, OrderLineRepository orderLineRepository, ProductService productService, OrderService orderService) {
+    public OrderLineService(OrderRepository orderRepository, OrderLineRepository orderLineRepository, ProductService productService, OrderService orderService, ProductRepository productRepository) {
         this.orderRepository = orderRepository;
         this.orderLineRepository = orderLineRepository;
         this.orderService = orderService;
         this.orderLinesDTOMapper = new OrderLinesDTOMapper();
         this.productService = productService;
+        this.productRepository = productRepository;
     }
 
     @Override
@@ -51,20 +55,26 @@ public class OrderLineService implements OrderLineInterface{
     @Override
     public OrderLineDTO createOrderLine(OrderLineRequestBody orderLineRequestBody) throws ResponseStatusException {
         OrderLine orderLine = new OrderLine();
-        try {
-            Product product = productService.getOrCreateProduct(productService.getProductEntity(orderLineRequestBody.getIdProductReference()));
+
+        Optional<Product> productInDB = productRepository.findByReference(orderLineRequestBody.getProductReference());
+        if (productInDB.isPresent()) {
+            Product product = productInDB.get();
             orderLine.setIdProduct(product);
-        } catch (ResponseStatusException e) {
-            throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
+        } else {
+            throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Produit non référencée.");
         }
-        try {
-            Order order = orderService.getOrCreateOrder(orderService.getOrderEntity(orderLineRequestBody.getIdOrderReference()));
+
+        Optional<Order> orderInDB = orderRepository.findByReference(orderLineRequestBody.getOrderReference());
+        if (orderInDB.isPresent()) {
+            Order order = orderInDB.get();
             orderLine.setIdOrder(order);
-        } catch (ResponseStatusException e) {
-            throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
+        } else {
+            throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Commande non référencée.");
         }
+
         orderLine.setQuantity(orderLineRequestBody.getQuantity());
-        orderRepository.save(orderLine);
+
+        orderLineRepository.save(orderLine);
         return new OrderLineDTO(orderLine.getId(), orderLine.getQuantity(), orderLine.getProductReference(), orderLine.getOrderReference());
     }
 
@@ -73,21 +83,23 @@ public class OrderLineService implements OrderLineInterface{
         Optional<OrderLine> orderLineToUpdate = orderLineRepository.findById(id);
         if (orderLineToUpdate.isPresent()) {
             OrderLine orderLine = orderLineToUpdate.get();
-            if (orderLineRequestBody.getIdProduct() != null) {
-                try {
-                    Product product = productService.getOrCreateProduct(productService.getProductEntity(orderLineRequestBody.getIdProductReference()));
+            if (orderLineRequestBody.getProductReference() != null) {
+                Optional<Product> productInDB = productRepository.findByReference(orderLineRequestBody.getProductReference());
+                if (productInDB.isPresent()) {
+                    Product product = productInDB.get();
                     orderLine.setIdProduct(product);
-                } catch (ResponseStatusException e) {
-                    throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
+                } else {
+                    throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Produit non référencée.");
                 }
             }
 
-            if (orderLineRequestBody.getIdOrder() != null) {
-                try {
-                    Order order = orderService.getOrCreateOrder(orderService.getOrderEntity(orderLineRequestBody.getIdOrderReference()));
+            if (orderLineRequestBody.getOrderReference() != null) {
+                Optional<Order> orderInDB = orderRepository.findByReference(orderLineRequestBody.getOrderReference());
+                if (orderInDB.isPresent()) {
+                    Order order = orderInDB.get();
                     orderLine.setIdOrder(order);
-                } catch (ResponseStatusException e) {
-                    throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
+                } else {
+                    throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Commande non référencée.");
                 }
             }
 

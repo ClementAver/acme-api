@@ -16,6 +16,6 @@ public interface ProductInterface {
     ProductDTO createProduct(ProductRequestBody productRequestBody);
     ProductDTO updateProduct(String reference, ProductRequestBody productRequestBody) throws ResponseStatusException;
     String deleteProduct(String reference) throws ResponseStatusException;
-    Product getOrCreateProduct(Product product);
+    // Product getOrCreateProduct(Product product);
     Stream<OrderLineDTO> getOrderLinesFromProduct(String productReference);
 }

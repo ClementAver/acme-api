@@ -25,8 +25,6 @@ public class ProductRequestBody {
     @Digits(integer = 8, fraction = 0)
     Integer price;
 
-    Set<OrderLine> orderlines;
-
     public String toString() {
         log.info("mon objet");
         return super.toString();

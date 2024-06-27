@@ -15,6 +15,6 @@ public interface OrderInterface {
     OrderDTO createOrder(OrderRequestBody orderRequestBody) throws ResponseStatusException;
     OrderDTO updateOrder(String reference, OrderRequestBody orderRequestBody) throws ResponseStatusException;
     String deleteOrder(String reference) throws ResponseStatusException;
-    Order getOrCreateOrder(Order order);
+    // Order getOrCreateOrder(Order order);
     Stream<OrderLineDTO> getOrderLinesFromOrder(String orderReference);
 }

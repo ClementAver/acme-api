@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -50,20 +51,24 @@ public class ProductService implements ProductInterface{
 
     @Override
     public Product getProductEntity(String reference) throws ResponseStatusException {
-        Product productInDB = productRepository.findByReference(reference);
-        if (productInDB == null) {
+        Optional<Product> productInDB = productRepository.findByReference(reference);
+        if (productInDB.isPresent()) {
+            Product product = productInDB.get();
+        return product;
+        } else {
             throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Produit non référencé.");
         }
-        return productInDB;
     }
 
     @Override
     public ProductDTO getProductByReference(String reference) throws ResponseStatusException {
-        Product productInDB = productRepository.findByReference(reference);
-        if (productInDB == null) {
+        Optional<Product> productInDB = productRepository.findByReference(reference);
+        if (productInDB.isPresent()) {
+            Product product = productInDB.get();
+            return new ProductDTO(product.getReference(), product.getName(), product.getPrice());
+        } else {
             throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Produit non référencé.");
         }
-        return new ProductDTO(productInDB.getReference(), productInDB.getName(), productInDB.getPrice());
     }
 
     @Override
@@ -78,41 +83,32 @@ public class ProductService implements ProductInterface{
 
     @Override
     public ProductDTO updateProduct(String reference, ProductRequestBody productRequestBody) throws ResponseStatusException {
-        Product productToUpdate = productRepository.findByReference(reference);
-        if (productToUpdate == null) {
-
-            throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Produit non référencé.");
-        }
-        if (productRequestBody.getName() != null) {
-            productToUpdate.setName(productRequestBody.getName());
-        }
-        if (productRequestBody.getPrice() != null) {
-            productToUpdate.setPrice(productRequestBody.getPrice());
-        }
-        productRepository.save(productToUpdate);
-        return new ProductDTO(reference, productToUpdate.getName(), productToUpdate.getPrice());
-    }
-
-    @Override
-    public String deleteProduct(String reference) throws ResponseStatusException {
-        Product productToDelete = productRepository.findByReference(reference);
-        if (productToDelete != null) {
-            productRepository.delete(productToDelete);
-            return productToDelete.getReference();
+        Optional<Product> productToUpdate = productRepository.findByReference(reference);
+        if (productToUpdate.isPresent()) {
+            Product product = productToUpdate.get();
+            if (productRequestBody.getName() != null) {
+                product.setName(productRequestBody.getName());
+            }
+            if (productRequestBody.getPrice() != null) {
+                product.setPrice(productRequestBody.getPrice());
+            }
+            productRepository.save(product);
+            return new ProductDTO(reference, product.getName(), product.getPrice());
         } else {
             throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Produit non référencé.");
         }
     }
 
-    // Tools
-
     @Override
-    public Product getOrCreateProduct(Product product) {
-        Product productInDB = productRepository.findByReference(product.getReference());
-        if (productInDB == null) {
-            productInDB = productRepository.save(product);
+    public String deleteProduct(String reference) throws ResponseStatusException {
+        Optional<Product> productToDelete = productRepository.findByReference(reference);
+        if (productToDelete.isPresent()) {
+            Product product = productToDelete.get();
+            productRepository.delete(product);
+            return product.getReference();
+        } else {
+            throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Produit non référencé.");
         }
-        return productInDB;
     }
 
     @Override
@@ -124,4 +120,14 @@ public class ProductService implements ProductInterface{
         return orderLineInDB.stream().map(orderLinesDTOMapper);
     }
 
+    // Tools
+
+//    @Override
+//    public Product getOrCreateProduct(Product product) {
+//        Product productInDB = productRepository.findByReference(product.getReference());
+//        if (productInDB == null) {
+//            productInDB = productRepository.save(product);
+//        }
+//        return productInDB;
+//    }
 }

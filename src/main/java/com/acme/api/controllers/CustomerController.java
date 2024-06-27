@@ -21,11 +21,9 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class CustomerController {
     // @Autowired if no constructor.
     final private CustomerService customerService;
-    final private OrderService orderService;
 
-    public CustomerController(CustomerService customerService, OrderService orderService) {
+    public CustomerController(CustomerService customerService) {
         this.customerService = customerService;
-        this.orderService = orderService;
     }
 
     @GetMapping("/customers")

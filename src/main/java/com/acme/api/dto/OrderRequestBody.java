@@ -1,7 +1,6 @@
 package com.acme.api.dto;
 
-import com.acme.api.entities.Customer;
-import com.acme.api.entities.OrderLine;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.PastOrPresent;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,12 +19,11 @@ import java.util.Set;
 @Setter
 @Validated
 public class OrderRequestBody {
-    Customer idCustomer;
+    @Email(message = "L'adresse email doit être valide.")
+    String customerEmail;
 
     @PastOrPresent
     LocalDate date;
-
-    Set<OrderLine> orderLines;
 
     public String toString() {
         log.info("mon objet");
