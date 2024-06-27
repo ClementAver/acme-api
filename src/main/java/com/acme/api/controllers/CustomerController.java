@@ -4,7 +4,6 @@ import com.acme.api.dto.CustomerDTO;
 import com.acme.api.dto.CustomerRequestBody;
 import com.acme.api.dto.OrderDTO;
 import com.acme.api.services.CustomerService;
-import com.acme.api.services.OrderService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.websocket.server.PathParam;

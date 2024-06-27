@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
-import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -53,7 +52,8 @@ public class OrderService implements OrderInterface{
         Optional<Order> orderInDB = orderRepository.findByReference(reference);
         if (orderInDB.isPresent()) {
             return orderInDB.get();
-        } else {
+        }
+        else {
             throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Commande non référencée.");
         }
     }

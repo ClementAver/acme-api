@@ -1,10 +1,7 @@
 package com.acme.api.repositories;
 
-import com.acme.api.dto.OrderLineDTO;
-import com.acme.api.dto.OrderLineRequestBody;
 import com.acme.api.entities.OrderLine;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 import java.util.Set;

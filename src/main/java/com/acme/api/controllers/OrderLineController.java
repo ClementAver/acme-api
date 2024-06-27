@@ -1,11 +1,9 @@
 package com.acme.api.controllers;
 
-import com.acme.api.dto.OrderDTO;
 import com.acme.api.dto.OrderLineDTO;
 import com.acme.api.dto.OrderLineRequestBody;
 import com.acme.api.services.OrderLineService;
 import jakarta.validation.Valid;
-import jakarta.websocket.server.PathParam;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;

@@ -28,5 +28,4 @@ public class GlobalExceptionHandler {
         errorResponse.put("errors", errors);
         return errorResponse;
     }
-
 }

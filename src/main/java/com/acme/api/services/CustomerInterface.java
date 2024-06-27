@@ -2,7 +2,6 @@ package com.acme.api.services;
 
 import com.acme.api.dto.CustomerDTO;
 import com.acme.api.dto.OrderDTO;
-import com.acme.api.entities.Customer;
 import com.acme.api.dto.CustomerRequestBody;
 import org.springframework.web.server.ResponseStatusException;
 

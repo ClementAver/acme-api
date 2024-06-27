@@ -1,7 +1,6 @@
 package com.acme.api.services;
 
 import com.acme.api.dto.EmployeeDTO;
-import com.acme.api.entities.Employee;
 import com.acme.api.dto.EmployeeRequestBody;
 import org.springframework.web.server.ResponseStatusException;
 

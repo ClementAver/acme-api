@@ -1,11 +1,7 @@
 package com.acme.api.dto;
 
-import com.acme.api.entities.Order;
-import com.acme.api.entities.Product;
-import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -1,13 +1,11 @@
 package com.acme.api.dto;
 
-import com.acme.api.entities.Order;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.validator.constraints.Length;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.Set;
