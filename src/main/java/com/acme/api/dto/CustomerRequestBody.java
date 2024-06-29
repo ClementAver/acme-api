@@ -5,17 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.validation.annotation.Validated;
 
-import java.util.Set;
-
-@Slf4j
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-@Validated
 public class CustomerRequestBody {
     @Size(max = 64, message = "Le prénom de doit pas dépasser 64 aractères.")
     String firstName;
@@ -31,11 +25,4 @@ public class CustomerRequestBody {
 
     @Size(max = 256, message = "L'addresse de doit pas dépasser 256 caractères.")
     String address;
-
-    public String toString() {
-        log.info("mon objet");
-        return super.toString();
-    }
 }
-
-

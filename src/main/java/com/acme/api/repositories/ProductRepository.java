@@ -8,5 +8,5 @@ import java.util.Set;
 public interface ProductRepository extends JpaRepository<Product, Long> {
     Product findById(long id);
     Optional<Product> findByReference(String reference);
-    Set<Product> findByNameContaining(String name);
+    Optional<Set<Product>> findProductsByNameContainingIgnoreCase(String name);
 }

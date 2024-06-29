@@ -43,11 +43,12 @@ public class ProductService implements ProductInterface{
 
     @Override
     public Stream<ProductDTO> getProductsByName(String name) throws NoMatchException {
-        Set<Product> productInDB = productRepository.findByNameContaining(name);
-        if (productInDB.isEmpty()) {
-            throw new NoMatchException("Aucune occurence.");
+        Optional<Set<Product>> productsInDB = productRepository.findProductsByNameContainingIgnoreCase(name);
+        if (productsInDB.isPresent() && !productsInDB.get().isEmpty()) {
+            Set<Product> products = productsInDB.get();
+         return products.stream().map(productsDTOMapper);
         }
-         return productInDB.stream().map(productsDTOMapper);
+            throw new NoMatchException("Aucune occurence.");
     }
 
     @Override

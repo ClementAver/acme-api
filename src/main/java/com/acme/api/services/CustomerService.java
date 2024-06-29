@@ -13,14 +13,14 @@ import com.acme.api.mappers.OrdersDTOMapper;
 import com.acme.api.repositories.CustomerRepository;
 import com.acme.api.repositories.OrderRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
 @Service
+@Validated
 public class CustomerService implements CustomerInterface{
 
     private final CustomerRepository customerRepository;
