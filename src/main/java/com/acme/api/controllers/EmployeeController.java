@@ -2,13 +2,14 @@ package com.acme.api.controllers;
 
 import com.acme.api.dto.EmployeeDTO;
 import com.acme.api.dto.EmployeeRequestBody;
+import com.acme.api.exceptions.AlreadyExistException;
+import com.acme.api.exceptions.NotFoundException;
 import com.acme.api.services.EmployeeService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.websocket.server.PathParam;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.stream.Stream;
 
@@ -31,40 +32,24 @@ public class EmployeeController {
     }
 
     @GetMapping("/employee")
-    public EmployeeDTO getEmployee(@Valid @PathParam(value="email") @Email String email) {
-        try {
+    public EmployeeDTO getEmployee(@Valid @PathParam(value="email") @Email String email) throws NotFoundException {
             return employeeService.getEmployeeByEmail(email);
-        } catch (ResponseStatusException e) {
-            throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
-        }
     }
 
     @ResponseStatus(value = HttpStatus.CREATED)
     @PostMapping(value = "/employee", consumes = APPLICATION_JSON_VALUE)
-    public EmployeeDTO createEmployee(@Valid @RequestBody EmployeeRequestBody employeeRequestBody) {
-        try {
+    public EmployeeDTO createEmployee(@Valid @RequestBody EmployeeRequestBody employeeRequestBody) throws AlreadyExistException {
             return employeeService.createEmployee(employeeRequestBody);
-        } catch (ResponseStatusException e) {
-            throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
-        }
     }
 
     @PutMapping(value = "/employee", consumes = APPLICATION_JSON_VALUE)
-    public EmployeeDTO updateEmployee(@Valid @PathParam(value="email") @Email String email, @Valid @RequestBody EmployeeRequestBody employeeRequestBody) {
-        try {
+    public EmployeeDTO updateEmployee(@Valid @PathParam(value="email") @Email String email, @Valid @RequestBody EmployeeRequestBody employeeRequestBody) throws NotFoundException {
             return employeeService.updateEmployee(email, employeeRequestBody);
-        } catch (ResponseStatusException e) {
-            throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
-        }
     }
 
     @DeleteMapping("/employee")
-    public String deleteEmployee(@Valid @PathParam(value="email") @Email String email) {
-        try {
+    public String deleteEmployee(@Valid @PathParam(value="email") @Email String email) throws NotFoundException {
             return employeeService.deleteEmployee(email);
-        } catch (ResponseStatusException e) {
-            throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
-        }
     }
 }
 

@@ -3,12 +3,13 @@ package com.acme.api.controllers;
 import com.acme.api.dto.OrderLineDTO;
 import com.acme.api.dto.ProductDTO;
 import com.acme.api.dto.ProductRequestBody;
+import com.acme.api.exceptions.NoMatchException;
+import com.acme.api.exceptions.NotFoundException;
 import com.acme.api.services.ProductService;
 import jakarta.validation.Valid;
 import jakarta.websocket.server.PathParam;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.stream.Stream;
 
@@ -31,50 +32,34 @@ public class ProductController {
     }
 
     @GetMapping("/product")
-    public ProductDTO getProduct(@Valid @PathParam(value="reference") String reference) {
-        try {
+    public ProductDTO getProduct(@Valid @PathParam(value="reference") String reference) throws NotFoundException {
         return productService.getProductByReference(reference);
-        } catch (ResponseStatusException e) {
-            throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
-        }
     }
 
     // to be fixed.
     @GetMapping("/products/search")
-    public Stream<ProductDTO> getProductsByName(@PathParam(value="name") String name) {
+    public Stream<ProductDTO> getProductsByName(@PathParam(value="name") String name) throws NoMatchException {
         return productService.getProductsByName(name);
     }
 
     @ResponseStatus(value = HttpStatus.CREATED)
     @PostMapping(value = "/product", consumes = APPLICATION_JSON_VALUE)
     public ProductDTO createProduct(@RequestBody ProductRequestBody productRequestBody) {
-        try {
            return productService.createProduct(productRequestBody);
-        } catch (ResponseStatusException e) {
-            throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
-        }
     }
 
     @PutMapping(value = "/product", consumes = APPLICATION_JSON_VALUE)
-    public ProductDTO updateProduct(@Valid @PathParam(value="reference") String reference, @RequestBody ProductRequestBody productRequestBody) {
-        try {
+    public ProductDTO updateProduct(@Valid @PathParam(value="reference") String reference, @RequestBody ProductRequestBody productRequestBody) throws NotFoundException {
             return productService.updateProduct(reference, productRequestBody);
-        } catch (ResponseStatusException e) {
-            throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
-        }
     }
 
     @DeleteMapping("/product")
-    public String deleteProduct(@Valid @PathParam(value="reference") String reference) {
-        try {
+    public String deleteProduct(@Valid @PathParam(value="reference") String reference) throws NotFoundException {
             return productService.deleteProduct(reference);
-        } catch (ResponseStatusException e) {
-            throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
-        }
     }
 
     @GetMapping("/product/{reference}/order-lines")
-    public Stream<OrderLineDTO> getOrderLinesFromProduct(@Valid @PathVariable String reference) {
+    public Stream<OrderLineDTO> getOrderLinesFromProduct(@Valid @PathVariable String reference) throws NoMatchException, NotFoundException {
         return productService.getOrderLinesFromProduct(reference);
     }
 }

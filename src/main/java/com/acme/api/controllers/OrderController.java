@@ -3,6 +3,8 @@ package com.acme.api.controllers;
 import com.acme.api.dto.OrderDTO;
 import com.acme.api.dto.OrderLineDTO;
 import com.acme.api.dto.OrderRequestBody;
+import com.acme.api.exceptions.NoMatchException;
+import com.acme.api.exceptions.NotFoundException;
 import com.acme.api.services.OrderService;
 import jakarta.validation.Valid;
 import jakarta.websocket.server.PathParam;
@@ -31,44 +33,28 @@ public class OrderController {
     }
 
     @GetMapping("/order")
-    public OrderDTO getOrder(@Valid @PathParam(value="reference") String reference) {
-        try {
+    public OrderDTO getOrder(@Valid @PathParam(value="reference") String reference) throws NotFoundException {
             return orderService.getOrderByReference(reference);
-        } catch (ResponseStatusException e) {
-            throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
-        }
     }
 
     @ResponseStatus(value = HttpStatus.CREATED)
     @PostMapping(value = "/order", consumes = APPLICATION_JSON_VALUE)
-    public OrderDTO createOrder(@Valid @RequestBody OrderRequestBody orderRequestBody) {
-        try {
+    public OrderDTO createOrder(@Valid @RequestBody OrderRequestBody orderRequestBody) throws NotFoundException {
             return orderService.createOrder(orderRequestBody);
-        } catch (ResponseStatusException e) {
-            throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
-        }
     }
 
     @PutMapping(value = "/order", consumes = APPLICATION_JSON_VALUE)
-    public OrderDTO updateOrder(@Valid @PathParam(value="reference") String reference, @Valid @RequestBody OrderRequestBody orderRequestBody) {
-       try {
+    public OrderDTO updateOrder(@Valid @PathParam(value="reference") String reference, @Valid @RequestBody OrderRequestBody orderRequestBody) throws NotFoundException {
            return orderService.updateOrder(reference, orderRequestBody);
-       } catch (ResponseStatusException e) {
-           throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
-       }
     }
 
     @DeleteMapping("/order")
-    public String deleteOrder(@Valid @PathParam(value="reference") String reference) {
-        try {
+    public String deleteOrder(@Valid @PathParam(value="reference") String reference) throws NotFoundException {
         return orderService.deleteOrder(reference);
-        } catch (ResponseStatusException e) {
-            throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
-        }
     }
 
     @GetMapping("/order/{reference}/order-lines")
-    public Stream<OrderLineDTO> getOrderLinesFromOrder(@Valid @PathVariable String reference) {
+    public Stream<OrderLineDTO> getOrderLinesFromOrder(@Valid @PathVariable String reference) throws NoMatchException, NotFoundException {
         return orderService.getOrderLinesFromOrder(reference);
     }
 }

@@ -3,13 +3,16 @@ package com.acme.api.controllers;
 import com.acme.api.dto.CustomerDTO;
 import com.acme.api.dto.CustomerRequestBody;
 import com.acme.api.dto.OrderDTO;
+import com.acme.api.exceptions.AlreadyExistException;
+import com.acme.api.exceptions.NoMatchException;
+import com.acme.api.exceptions.NotFoundException;
 import com.acme.api.services.CustomerService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.websocket.server.PathParam;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.stream.Stream;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -31,44 +34,28 @@ public class CustomerController {
     }
 
     @GetMapping("/customer")
-    public CustomerDTO getCustomer(@Valid @PathParam(value="email") @Email String email) {
-        try {
+    public CustomerDTO getCustomer(@Valid @PathParam(value="email") @Email String email) throws NotFoundException {
             return customerService.getCustomerByEmail(email);
-        } catch (ResponseStatusException e) {
-            throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
-        }
     }
 
     @ResponseStatus(value = HttpStatus.CREATED)
     @PostMapping(value = "/customer", consumes = APPLICATION_JSON_VALUE)
-    public CustomerDTO createCustomer(@Valid @RequestBody CustomerRequestBody customerRequestBody) {
-        try {
+    public CustomerDTO createCustomer(@Valid @RequestBody CustomerRequestBody customerRequestBody) throws AlreadyExistException {
             return customerService.createCustomer(customerRequestBody);
-        } catch (ResponseStatusException e) {
-            throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
-        }
     }
 
     @PutMapping(value = "/customer", consumes = APPLICATION_JSON_VALUE)
-    public CustomerDTO updateCustomer(@Valid @PathParam(value="email") @Email String email, @Valid @RequestBody CustomerRequestBody customerRequestBody) {
-        try {
+    public CustomerDTO updateCustomer(@Valid @PathParam(value="email") @Email String email, @Valid @RequestBody CustomerRequestBody customerRequestBody) throws NotFoundException {
             return customerService.updateCustomer(email, customerRequestBody);
-        } catch (ResponseStatusException e) {
-            throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
-        }
     }
 
     @DeleteMapping("/customer")
-    public String deleteCustomer(@Valid @PathParam(value="email") @Email String email) {
-        try {
+    public String deleteCustomer(@Valid @PathParam(value="email") @Email String email) throws NotFoundException {
             return customerService.deleteCustomer(email);
-        } catch (ResponseStatusException e) {
-            throw new ResponseStatusException(e.getStatusCode(), e.getMessage());
-        }
     }
 
     @GetMapping("/customer/{email}/orders")
-    public Stream<OrderDTO> getOrdersFromCustomer(@Valid @PathVariable @Email String email) {
+    public Stream<OrderDTO> getOrdersFromCustomer(@Valid @PathVariable @Email String email) throws NoMatchException {
         return customerService.getOrdersFromCustomer(email);
     }
 }

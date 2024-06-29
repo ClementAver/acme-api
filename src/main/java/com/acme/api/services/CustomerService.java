@@ -5,12 +5,15 @@ import com.acme.api.dto.OrderDTO;
 import com.acme.api.entities.Customer;
 import com.acme.api.dto.CustomerRequestBody;
 import com.acme.api.entities.Order;
+import com.acme.api.exceptions.AlreadyExistException;
+import com.acme.api.exceptions.NoMatchException;
+import com.acme.api.exceptions.NotFoundException;
 import com.acme.api.mappers.CustomerDTOMapper;
 import com.acme.api.mappers.OrdersDTOMapper;
 import com.acme.api.repositories.CustomerRepository;
 import com.acme.api.repositories.OrderRepository;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
@@ -39,31 +42,30 @@ public class CustomerService implements CustomerInterface{
     }
 
     @Override
-    public CustomerDTO getCustomerByEmail(String email) throws ResponseStatusException {
+    public CustomerDTO getCustomerByEmail(String email) throws NotFoundException {
         Optional<Customer> customerInDB = customerRepository.findByEmail(email);
         if (customerInDB.isPresent()) {
             Customer customer = customerInDB.get();
             return new CustomerDTO(customer.getFirstName(), customer.getLastName(), customer.getEmail(), customer.getPhone(), customer.getAddress());
         } else {
-        throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Client non référencé.");
+        throw new NotFoundException("Client non référencé.");
         }
     }
 
     @Override
-    public Stream<OrderDTO> getOrdersFromCustomer(String email) {
+    public Stream<OrderDTO> getOrdersFromCustomer(String email) throws NoMatchException {
         Set<Order> ordersInDB = orderRepository.findAllByIdCustomer_Email(email);
         if (ordersInDB.isEmpty()) {
-            throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Aucune occurence.");
+            throw new NoMatchException("Aucune occurence.");
         }
         return ordersInDB.stream().map(ordersDTOMapper);
     }
 
-
     @Override
-    public CustomerDTO createCustomer(CustomerRequestBody customerRequestBody) throws ResponseStatusException {
+    public CustomerDTO createCustomer(CustomerRequestBody customerRequestBody) throws AlreadyExistException {
         Optional<Customer> customerInDB = customerRepository.findByEmail(customerRequestBody.getEmail());
         if (customerInDB.isPresent()) {
-            throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Cet email a déjà été renseigné.");
+            throw new AlreadyExistException("Cet email a déjà été renseigné.");
         }
 
         Customer customer = new Customer();
@@ -82,7 +84,7 @@ public class CustomerService implements CustomerInterface{
     }
 
     @Override
-    public CustomerDTO updateCustomer(String email, CustomerRequestBody customerRequestBody) throws ResponseStatusException {
+    public CustomerDTO updateCustomer(String email, CustomerRequestBody customerRequestBody) throws NotFoundException {
         Optional<Customer> customerToUpdate = customerRepository.findByEmail(email);
         if (customerToUpdate.isPresent()) {
             Customer customer = customerToUpdate.get();
@@ -101,23 +103,22 @@ public class CustomerService implements CustomerInterface{
             if (customerRequestBody.getAddress() != null) {
                 customer.setAddress(customerRequestBody.getAddress());
             }
-
             customerRepository.save(customer);
             return new CustomerDTO(customer.getFirstName(), customer.getLastName(), customer.getEmail(), customer.getPhone(), customer.getAddress());
         } else {
-            throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Client non référencé.");
+            throw new NotFoundException( "Client non référencé.");
         }
     }
 
     @Override
-    public String deleteCustomer(String email) throws ResponseStatusException {
+    public String deleteCustomer(String email) throws NotFoundException {
         Optional<Customer> customerToDelete = customerRepository.findByEmail(email);
         if (customerToDelete.isPresent()) {
             Customer customer = customerToDelete.get();
             customerRepository.delete(customer);
             return customer.getEmail();
         } else {
-            throw new ResponseStatusException(HttpStatusCode.valueOf(404), "Client non référencé.");
+            throw new NotFoundException("Client non référencé.");
         }
     }
 
