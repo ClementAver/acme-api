@@ -6,7 +6,6 @@ import com.acme.api.entities.Product;
 import com.acme.api.dto.ProductRequestBody;
 import com.acme.api.exceptions.NoMatchException;
 import com.acme.api.exceptions.NotFoundException;
-
 import java.util.stream.Stream;
 
 public interface ProductInterface {

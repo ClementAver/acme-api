@@ -11,13 +11,10 @@ import com.acme.api.mappers.OrderLinesDTOMapper;
 import com.acme.api.mappers.ProductsDTOMapper;
 import com.acme.api.repositories.OrderLineRepository;
 import com.acme.api.repositories.ProductRepository;
-import org.aspectj.weaver.ast.Not;
 import org.springframework.stereotype.Service;
-
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
-
 import static com.acme.api.entities.Product.generateReference;
 
 @Service

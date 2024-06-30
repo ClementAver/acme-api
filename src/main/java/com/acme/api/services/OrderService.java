@@ -14,12 +14,10 @@ import com.acme.api.repositories.CustomerRepository;
 import com.acme.api.repositories.OrderLineRepository;
 import com.acme.api.repositories.OrderRepository;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
-
 import static com.acme.api.entities.Order.generateReference;
 
 @Service

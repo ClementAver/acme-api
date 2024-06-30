@@ -6,7 +6,6 @@ import com.acme.api.entities.Order;
 import com.acme.api.dto.OrderRequestBody;
 import com.acme.api.exceptions.NoMatchException;
 import com.acme.api.exceptions.NotFoundException;
-
 import java.util.stream.Stream;
 
 public interface OrderInterface {
