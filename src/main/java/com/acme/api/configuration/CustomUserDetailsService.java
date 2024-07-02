@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+// Retrieves user details and assigns roles based on the user's data stored in DB.
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
@@ -31,7 +32,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     // Assign the right permissions to the user (GrantedAuthorities collection)
     private List<GrantedAuthority> getGrantedAuthorities(String role) {
-        List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+        List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("ROLE_" + role));
         return authorities;
     }

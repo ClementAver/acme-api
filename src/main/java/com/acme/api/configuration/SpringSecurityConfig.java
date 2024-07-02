@@ -2,8 +2,8 @@ package com.acme.api.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -13,9 +13,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
-// Will be instanciated and loaded into the spring context.
+// Enables any Java application to work with Spring Security in the Spring framework.
 @Configuration
+// Informs your Spring Boot application that it will be using Spring Security.
 @EnableWebSecurity
 public class SpringSecurityConfig {
 
@@ -28,27 +30,40 @@ public class SpringSecurityConfig {
     // Used to configure the filter chain.
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        return http.authorizeHttpRequests(auth -> {
-            auth.requestMatchers("/admin").hasRole("ADMIN");
-            auth.requestMatchers("/user").hasRole("USER");
+        /*
+         * HTTP requests are sent to authorizeHttpRequests() to restrict access based on roles,
+         * then requestMatchers() matches the request to a specific pattern, which is either "ADMIN" (1) or "USER" (0).
+         */
+        http.authorizeHttpRequests(auth -> {
+            // No Auth or Permissions on login (else can't be done...).
+            auth.requestMatchers("/api/login").permitAll();
+            // Must be at least a user to request the api.
+            auth.requestMatchers("/api/**").hasRole("USER");
+            // Must be admin to run POST or PUT method on employees (create or update).
+            auth.requestMatchers(HttpMethod.POST, "/api/employee").hasRole("ADMIN");
+            auth.requestMatchers(HttpMethod.PUT, "/api/employee").hasRole("ADMIN");
+            // Ensures that all unauthenticated requests trigger a 401 error.
             auth.anyRequest().authenticated();
-        }).formLogin(Customizer.withDefaults()).build();
+        }).httpBasic().and().sessionManagement().maximumSessions(1);
+    // .formLogin(Customizer.withDefaults()).build();
+
+    return http.build();
     }
 
-    // Used to generate a user and an admin for testing purpose.
-    //!\ Not for production. /!\\
-    @Bean
-    public UserDetailsService users() {
-        UserDetails user = User.builder()
-                .username("user")
-                .password(passwordEncoder().encode("user"))
-                .roles("USER").build();
-        UserDetails admin = User.builder()
-                .username("admin")
-                .password(passwordEncoder().encode("admin"))
-                .roles("USER", "ADMIN").build();
-        return new InMemoryUserDetailsManager(user, admin);
-    }
+//    // Used to generate a user and an admin for testing purpose.
+//    //!\ Not for production. /!\\
+//    @Bean
+//    public UserDetailsService users() {
+//        UserDetails user = User.builder()
+//                .username("user")
+//                .password(passwordEncoder().encode("user"))
+//                .roles("USER").build();
+//        UserDetails admin = User.builder()
+//                .username("admin")
+//                .password(passwordEncoder().encode("admin"))
+//                .roles("USER", "ADMIN").build();
+//        return new InMemoryUserDetailsManager(user, admin);
+//    }
 
     // Password encryption.
     @Bean
@@ -63,5 +78,4 @@ public class SpringSecurityConfig {
         authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
         return authenticationManagerBuilder.build();
     }
-
 }
