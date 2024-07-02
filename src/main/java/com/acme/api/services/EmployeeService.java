@@ -7,6 +7,7 @@ import com.acme.api.exceptions.AlreadyExistException;
 import com.acme.api.exceptions.NotFoundException;
 import com.acme.api.mappers.EmployeeDTOMapper;
 import com.acme.api.repositories.EmployeeRepository;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.stream.Stream;
 
@@ -43,7 +44,7 @@ public class EmployeeService implements EmployeeInterface{
         employee.setLastName(employeeRequestBody.getLastName());
         employee.setEmail(employeeRequestBody.getEmail());
         employee.setUsername(employeeRequestBody.getUsername());
-        employee.setPassword(employeeRequestBody.getPassword());
+        employee.setPassword(passwordEncoder().encode(employeeRequestBody.getPassword()));
 
         Employee mailInDB = employeeRepository.findByEmail(employee.getEmail());
         if (mailInDB != null) {
@@ -76,7 +77,7 @@ public class EmployeeService implements EmployeeInterface{
             employeeToUpdate.setUsername(employeeRequestBody.getUsername());
         }
         if(employeeRequestBody.getPassword() != null){
-            employeeToUpdate.setPassword(employeeRequestBody.getPassword());
+            employeeToUpdate.setPassword(passwordEncoder().encode(employeeRequestBody.getPassword()));
         }
         employeeRepository.save(employeeToUpdate);
         return new EmployeeDTO(employeeToUpdate.getFirstName(), employeeToUpdate.getLastName(), employeeToUpdate.getEmail(), employeeToUpdate.getUsername());
@@ -91,6 +92,10 @@ public class EmployeeService implements EmployeeInterface{
         } else {
             throw new NotFoundException("Employé inconnu.");
         }
+    }
+
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     // Tools
