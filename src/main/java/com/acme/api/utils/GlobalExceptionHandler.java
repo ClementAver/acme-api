@@ -7,12 +7,14 @@ import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.validation.*;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-//import org.springframework.web.method.annotation.HandlerMethodValidationException;
+// import org.springframework.web.method.annotation.HandlerMethodValidationException;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -29,6 +31,16 @@ public class GlobalExceptionHandler {
                 .stream().map(FieldError::getDefaultMessage).collect(Collectors.toList());
         return new ResponseEntity<>(getErrorsMap(errors), new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<String> handleUsernameNotFoundException(UsernameNotFoundException ex) {
+        return new ResponseEntity<>("User not found: " + ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+//    @ExceptionHandler(BadCredentialsException.class)
+//    public ResponseEntity<String> handleBadCredentialsException(BadCredentialsException ex) {
+//        return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
+//    }
 
 //    @ExceptionHandler(HandlerMethodValidationException.class)
 //    public ResponseEntity<Map<String, List<String>>> handleHandlerMethodValidationErrors(HandlerMethodValidationException ex) {
