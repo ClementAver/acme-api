@@ -10,6 +10,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,18 +21,19 @@ import java.util.List;
 public class CustomUserDetailsService implements UserDetailsService {
 
     private final EmployeeRepository employeeRepository;
+    private static final Logger logger = LoggerFactory.getLogger(CustomUserDetailsService.class);
 
     public CustomUserDetailsService(EmployeeRepository employeeRepository) {
         this.employeeRepository = employeeRepository;
     }
 
-    // Retrieve the user details from the DB and make it usable for spring security authentication ans autorisation logic.
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Employee employee = employeeRepository.findByUsername(username);
         if (employee == null) {
             throw new UsernameNotFoundException("User not found with username: " + username);
         }
+        logger.info("User found with username: {}, roles: {}", username, employee.getRole().toString());
         return new User(employee.getUsername(), employee.getPassword(), getGrantedAuthorities(employee.getRole().toString()));
     }
 

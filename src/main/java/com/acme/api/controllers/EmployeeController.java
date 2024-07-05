@@ -1,13 +1,18 @@
 package com.acme.api.controllers;
 
+import com.acme.api.configuration.SpringSecurityConfig;
 import com.acme.api.dto.EmployeeDTO;
 import com.acme.api.dto.EmployeeRequestBody;
 import com.acme.api.exceptions.AlreadyExistException;
 import com.acme.api.exceptions.NotFoundException;
 import com.acme.api.services.EmployeeService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import java.util.stream.Stream;
@@ -16,17 +21,22 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RestController
 @Validated
 @RequestMapping("/api")
+@CrossOrigin(origins = "http://localhost:4200")
 public class EmployeeController {
 
     // @Autowired if no constructor.
     final private EmployeeService employeeService;
+
+    private static final Logger logger = LoggerFactory.getLogger(SpringSecurityConfig.class);
 
     public EmployeeController(EmployeeService employeeService) {
         this.employeeService = employeeService;
     }
 
     @GetMapping("/employees")
-    public Stream<EmployeeDTO> getEmployees() {
+    public Stream<EmployeeDTO> getEmployees(HttpServletRequest request) {
+        String sessionId = request.getSession().getId();
+        logger.info("Session : {}", request.getSession());
         return employeeService.getEmployees();
     }
 

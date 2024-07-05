@@ -1,5 +1,7 @@
 package com.acme.api.configuration;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -9,12 +11,14 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
 
 import java.util.Arrays;
 import java.util.List;
@@ -27,6 +31,8 @@ public class SpringSecurityConfig {
 
     private final CustomUserDetailsService userDetailsService;
 
+    private static final Logger logger = LoggerFactory.getLogger(CustomUserDetailsService.class);
+
     public SpringSecurityConfig(CustomUserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
@@ -38,18 +44,30 @@ public class SpringSecurityConfig {
          * HTTP requests are sent to authorizeHttpRequests() to restrict access based on roles,
          * then requestMatchers() matches the request to a specific pattern, which is either "ADMIN" (1) or "USER" (0).
          */
-            http.csrf(AbstractHttpConfigurer::disable)  // Utilisation de AbstractHttpConfigurer pour désactiver CSRF
-                .cors(cors -> cors.configurationSource(corsConfigurationSource())).authorizeHttpRequests(auth -> {
-                // No Auth or Permissions on login (else can't be done...).
-                auth.requestMatchers("/api/login").permitAll();
-                // Must be at least a user to request the api.
-                auth.requestMatchers("/api/**").hasRole("USER");
-                // Must be admin to run POST or PUT method on employees (create or update).
-                auth.requestMatchers(HttpMethod.POST, "/api/employee").hasRole("ADMIN");
-                auth.requestMatchers(HttpMethod.PUT, "/api/employee").hasRole("ADMIN");
-                // Ensures that all unauthenticated requests trigger a 401 error.
-                auth.anyRequest().authenticated();
-            }).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED));
+            http
+                    .csrf(AbstractHttpConfigurer::disable)  // Utilisation de AbstractHttpConfigurer pour désactiver CSRF
+                    .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                    .authorizeHttpRequests(auth -> {
+//                // No Auth or Permissions on login (else can't be done...).
+                  auth.requestMatchers("/api/login").permitAll();
+//                // Must be at least a user to request the api.
+//                auth.requestMatchers("/api/**").hasRole("USER");
+//                // Must be admin to run POST or PUT method on employees (create or update).
+//                auth.requestMatchers(HttpMethod.POST, "/api/employee").hasRole("ADMIN");
+//                auth.requestMatchers(HttpMethod.PUT, "/api/employee").hasRole("ADMIN");
+//                // Ensures that all unauthenticated requests trigger a 401 error.
+//                auth.anyRequest().authenticated();
+            }).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)).addFilterBefore((request, response, chain) -> {
+                        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+                        if (auth != null) {
+                            logger.info("Authenticated user: {}", auth.getName());
+                            logger.info("User authorities: {}", auth.getAuthorities());
+                            logger.info("Session ID: {}", request.toString());  // Log the session ID
+                        } else {
+                            logger.info("No authentication in context");
+                        }
+                        chain.doFilter(request, response);
+                    }, UsernamePasswordAuthenticationFilter.class);
 
     return http.build();
     }
@@ -58,30 +76,14 @@ public class SpringSecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         final CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        // config.setAllowedOrigins(List.of("http://localhost:4200"));
         config.setAllowedOriginPatterns(List.of("http://localhost:4200"));
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", config);
+        source.registerCorsConfiguration("/api/**", config);
         return source;
     }
-
-//    // Used to generate a user and an admin for testing purpose.
-//    //!\ Not for production. /!\\
-//    @Bean
-//    public UserDetailsService users() {
-//        UserDetails user = User.builder()
-//                .username("user")
-//                .password(passwordEncoder().encode("user"))
-//                .roles("USER").build();
-//        UserDetails admin = User.builder()
-//                .username("admin")
-//                .password(passwordEncoder().encode("admin"))
-//                .roles("USER", "ADMIN").build();
-//        return new InMemoryUserDetailsManager(user, admin);
-//    }
 
     // Password encryption.
     @Bean
