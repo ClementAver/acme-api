@@ -1,17 +1,21 @@
 package com.acme.api.configuration;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -22,6 +26,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 import java.util.List;
+
+import static org.springframework.security.web.context.HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY;
 
 // Enables any Java application to work with Spring Security in the Spring framework.
 @Configuration
@@ -48,21 +54,21 @@ public class SpringSecurityConfig {
                     .csrf(AbstractHttpConfigurer::disable)  // Utilisation de AbstractHttpConfigurer pour désactiver CSRF
                     .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                     .authorizeHttpRequests(auth -> {
-//                // No Auth or Permissions on login (else can't be done...).
-                  auth.requestMatchers("/api/login").permitAll();
-//                // Must be at least a user to request the api.
-//                auth.requestMatchers("/api/**").hasRole("USER");
-//                // Must be admin to run POST or PUT method on employees (create or update).
-//                auth.requestMatchers(HttpMethod.POST, "/api/employee").hasRole("ADMIN");
-//                auth.requestMatchers(HttpMethod.PUT, "/api/employee").hasRole("ADMIN");
-//                // Ensures that all unauthenticated requests trigger a 401 error.
-//                auth.anyRequest().authenticated();
-            }).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)).addFilterBefore((request, response, chain) -> {
+                        // No Auth or Permissions on login (else can't be done...).
+                        auth.requestMatchers("/api/login").permitAll();
+                        // Must be at least a user to request the api.
+                        auth.requestMatchers("/api/**").hasRole("ADMIN");
+                        // Must be admin to run POST or PUT method on employees (create or update).
+                        auth.requestMatchers(HttpMethod.POST, "/api/employee").hasRole("ADMIN");
+                        auth.requestMatchers(HttpMethod.PUT, "/api/employee").hasRole("ADMIN");
+                        // Ensures that all unauthenticated requests trigger a 401 error.
+                        auth.anyRequest().authenticated();
+                    }).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)).addFilterAfter((request, response, chain) -> {
                         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
                         if (auth != null) {
                             logger.info("Authenticated user: {}", auth.getName());
                             logger.info("User authorities: {}", auth.getAuthorities());
-                            logger.info("Session ID: {}", request.toString());  // Log the session ID
+                            logger.info("Sesssion ID: {}", request.toString());  // Log the session ID
                         } else {
                             logger.info("No authentication in context");
                         }
