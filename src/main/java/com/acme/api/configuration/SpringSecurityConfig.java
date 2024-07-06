@@ -54,10 +54,8 @@ public class SpringSecurityConfig {
                     .csrf(AbstractHttpConfigurer::disable)  // Utilisation de AbstractHttpConfigurer pour désactiver CSRF
                     .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                     .authorizeHttpRequests(auth -> {
-                        // No Auth or Permissions on login (else can't be done...).
+                        // No Auth needed on login.
                         auth.requestMatchers("/api/login").permitAll();
-                        // Must be at least a user to request the api.
-                        auth.requestMatchers("/api/**").hasRole("ADMIN");
                         // Must be admin to run POST or PUT method on employees (create or update).
                         auth.requestMatchers(HttpMethod.POST, "/api/employee").hasRole("ADMIN");
                         auth.requestMatchers(HttpMethod.PUT, "/api/employee").hasRole("ADMIN");
