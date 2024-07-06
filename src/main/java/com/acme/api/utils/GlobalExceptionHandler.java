@@ -7,15 +7,13 @@ import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.validation.*;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-// import org.springframework.web.method.annotation.HandlerMethodValidationException;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -37,9 +35,14 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>("User not found: " + ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<String> handleAuthenticationException(AuthenticationException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
+    }
+
 //    @ExceptionHandler(BadCredentialsException.class)
 //    public ResponseEntity<String> handleBadCredentialsException(BadCredentialsException ex) {
-//        return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
+//        return new ResponseEntity<>("L'authentification a échoué.", HttpStatus.UNAUTHORIZED);
 //    }
 
 //    @ExceptionHandler(HandlerMethodValidationException.class)
