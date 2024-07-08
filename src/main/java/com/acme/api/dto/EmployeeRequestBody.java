@@ -1,7 +1,9 @@
 package com.acme.api.dto;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Size;
+import com.acme.api.enums.Role;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +22,9 @@ public class EmployeeRequestBody {
 
     @Email(message = "L'adresse email doit être valide.")
     String email;
+
+    @Enumerated(EnumType.ORDINAL)
+    Role role;
 
     @Size(max = 64, message = "Le pseudonyme ne doit pas dépasser 64 caractères.")
     String username;

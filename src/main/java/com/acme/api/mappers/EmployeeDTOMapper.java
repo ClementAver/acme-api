@@ -9,6 +9,6 @@ import java.util.function.Function;
 public class EmployeeDTOMapper implements Function<Employee, EmployeeDTO> {
     @Override
     public EmployeeDTO apply(Employee employee) {
-        return new EmployeeDTO(employee.getFirstName(), employee.getLastName(), employee.getEmail(), employee.getUsername());
+        return new EmployeeDTO(employee.getFirstName(), employee.getLastName(), employee.getEmail(), employee.getUsername(), employee.getRole());
     }
 }

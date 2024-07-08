@@ -1,5 +1,6 @@
 package com.acme.api.dto;
 
+import com.acme.api.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,7 @@ public class EmployeeDTO {
     String lastName;
     String email;
     String username;
+    Role role;
 }
 
 

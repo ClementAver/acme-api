@@ -24,7 +24,4 @@ public abstract class Individual {
 
     @Column(name = "email", nullable = false, unique = true)
     private String email;
-
-    @Column(name = "role", nullable = false)
-    private Role role;
 }

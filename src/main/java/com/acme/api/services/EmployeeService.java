@@ -34,7 +34,7 @@ public class EmployeeService implements EmployeeInterface{
         if (employeeInDB == null) {
             throw new NotFoundException("Email inconnu.");
         }
-        return new EmployeeDTO(employeeInDB.getFirstName(), employeeInDB.getLastName(), employeeInDB.getEmail(), employeeInDB.getUsername());
+        return new EmployeeDTO(employeeInDB.getFirstName(), employeeInDB.getLastName(), employeeInDB.getEmail(), employeeInDB.getUsername(), employeeInDB.getRole());
     }
 
     @Override
@@ -45,6 +45,7 @@ public class EmployeeService implements EmployeeInterface{
         employee.setEmail(employeeRequestBody.getEmail());
         employee.setUsername(employeeRequestBody.getUsername());
         employee.setPassword(passwordEncoder().encode(employeeRequestBody.getPassword()));
+        employee.setRole(employeeRequestBody.getRole());
 
         Employee mailInDB = employeeRepository.findByEmail(employee.getEmail());
         if (mailInDB != null) {
@@ -55,7 +56,7 @@ public class EmployeeService implements EmployeeInterface{
             throw new AlreadyExistException("Ce pseudonyme n'est pas disponible.");
         }
         employeeRepository.save(employee);
-        return new EmployeeDTO(employee.getFirstName(), employee.getLastName(), employee.getEmail(), employee.getUsername());
+        return new EmployeeDTO(employee.getFirstName(), employee.getLastName(), employee.getEmail(), employee.getUsername(), employee.getRole());
     }
 
     @Override
@@ -79,8 +80,11 @@ public class EmployeeService implements EmployeeInterface{
         if(employeeRequestBody.getPassword() != null){
             employeeToUpdate.setPassword(passwordEncoder().encode(employeeRequestBody.getPassword()));
         }
+        if(employeeRequestBody.getRole() != null){
+            employeeToUpdate.setRole(employeeRequestBody.getRole());
+        }
         employeeRepository.save(employeeToUpdate);
-        return new EmployeeDTO(employeeToUpdate.getFirstName(), employeeToUpdate.getLastName(), employeeToUpdate.getEmail(), employeeToUpdate.getUsername());
+        return new EmployeeDTO(employeeToUpdate.getFirstName(), employeeToUpdate.getLastName(), employeeToUpdate.getEmail(), employeeToUpdate.getUsername(), employeeToUpdate.getRole());
     }
 
     @Override
