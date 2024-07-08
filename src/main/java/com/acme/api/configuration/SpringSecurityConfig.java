@@ -56,6 +56,7 @@ public class SpringSecurityConfig {
                     .authorizeHttpRequests(auth -> {
                         // No Auth needed on login.
                         auth.requestMatchers("/api/login").permitAll();
+                        auth.requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll();
                         // Must be admin to run POST or PUT method on employees (create or update).
                         auth.requestMatchers(HttpMethod.POST, "/api/employee").hasRole("ADMIN");
                         auth.requestMatchers(HttpMethod.PUT, "/api/employee").hasRole("ADMIN");
