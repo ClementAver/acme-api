@@ -1,6 +1,5 @@
 package com.acme.api.entities;
 
-import com.acme.api.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
 

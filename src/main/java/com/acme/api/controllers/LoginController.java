@@ -36,7 +36,6 @@ public class LoginController {
         this.employeeRepository = employeeRepository;
     }
 
-    @CrossOrigin(origins = "http://localhost:4200")
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginRequestBody loginRequestBody, HttpServletRequest request, HttpServletResponse response) {
 

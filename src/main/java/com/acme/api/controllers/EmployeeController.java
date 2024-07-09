@@ -20,7 +20,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RestController
 @Validated
 @RequestMapping("/api")
-@CrossOrigin(origins = "http://localhost:4200")
 public class EmployeeController {
 
     // @Autowired if no constructor.
