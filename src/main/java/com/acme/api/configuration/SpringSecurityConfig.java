@@ -23,8 +23,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.springframework.security.web.context.HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY;
-
 // Enables any Java application to work with Spring Security in the Spring framework.
 @Configuration
 // Informs your Spring Boot application that it will be using Spring Security.
@@ -50,12 +48,14 @@ public class SpringSecurityConfig {
                     .csrf(AbstractHttpConfigurer::disable)  // Utilisation de AbstractHttpConfigurer pour désactiver CSRF
                     .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                     .authorizeHttpRequests(auth -> {
+                        // auth.requestMatchers("/**").permitAll();
                         // No Auth needed on login.
                         auth.requestMatchers("/api/login").permitAll();
                         auth.requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll();
                         // Must be admin to run POST or PUT method on employees (create or update).
                         auth.requestMatchers(HttpMethod.POST, "/api/employee").hasRole("ADMIN");
                         auth.requestMatchers(HttpMethod.PUT, "/api/employee").hasRole("ADMIN");
+                        auth.requestMatchers(HttpMethod.DELETE, "/api/employee").hasRole("ADMIN");
                         // Ensures that all unauthenticated requests trigger a 401 error.
                         auth.anyRequest().authenticated();
                     }).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)).addFilterAfter((request, response, chain) -> {
@@ -63,7 +63,7 @@ public class SpringSecurityConfig {
                         if (auth != null) {
                             logger.info("Authenticated user: {}", auth.getName());
                             logger.info("User authorities: {}", auth.getAuthorities());
-                            logger.info("Sesssion ID: {}", request.toString());  // Log the session ID
+                            logger.info("Sesssion ID: {}", request.toString());
                         } else {
                             logger.info("No authentication in context");
                         }
@@ -82,7 +82,7 @@ public class SpringSecurityConfig {
         config.setAllowedHeaders(List.of("*"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/api/**", config);
+        source.registerCorsConfiguration("/**", config);
         return source;
     }
 

@@ -50,6 +50,17 @@ public class LoginController {
             HttpSession session = request.getSession(true);
             session.setAttribute(SPRING_SECURITY_CONTEXT_KEY, sc);
 
+            Cookie cookie = new Cookie("JSESSIONID", session.getId());
+            cookie.setHttpOnly(false);
+            cookie.setSecure(false);
+
+            cookie.setPath("/");
+            cookie.setMaxAge(30 * 60);
+
+            response.addCookie(cookie);
+            response.setHeader("Access-Control-Allow-Origin", "http://127.0.0.1:5173");
+            response.setHeader("Access-Control-Allow-Credentials", "true");
+
             // If authentication successful :
             Employee employee = employeeRepository.findByUsername(loginRequestBody.getUsername());
             return ResponseEntity.ok("Bienvenue, " + employee.getFirstName() + " " + employee.getLastName());
@@ -65,7 +76,7 @@ public class LoginController {
         response.addCookie(cookie);
 
         // Ajouter les en-têtes CORS
-        response.setHeader("Access-Control-Allow-Origin", "http://localhost:4200");
+        response.setHeader("Access-Control-Allow-Origin", "http://127.0.0.1:5173");
         response.setHeader("Access-Control-Allow-Credentials", "true");
 
         return ResponseEntity.ok("Logged out");
