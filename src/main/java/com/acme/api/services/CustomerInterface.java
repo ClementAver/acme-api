@@ -7,6 +7,7 @@ import com.acme.api.exceptions.AlreadyExistException;
 import com.acme.api.exceptions.NoMatchException;
 import com.acme.api.exceptions.NotFoundException;
 
+import javax.json.JsonObject;
 import java.util.stream.Stream;
 
 public interface CustomerInterface {
@@ -14,7 +15,7 @@ public interface CustomerInterface {
     CustomerDTO getCustomerByEmail(String email) throws NotFoundException;
     CustomerDTO createCustomer(CustomerRequestBody customerRequestBody) throws AlreadyExistException;
     CustomerDTO updateCustomer(String email, CustomerRequestBody customerRequestBody) throws NoMatchException, NotFoundException;
-    String deleteCustomer(String email) throws NoMatchException, NotFoundException;
+    JsonObject deleteCustomer(String email) throws NoMatchException, NotFoundException;
     Stream<OrderDTO> getOrdersFromCustomer(String email) throws NotFoundException, NoMatchException;
     // Customer getOrCreateCustomer(Customer customer);
 

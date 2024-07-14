@@ -14,6 +14,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.json.JsonObject;
 import java.util.stream.Stream;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -55,7 +57,7 @@ public class EmployeeController {
     }
 
     @DeleteMapping("/employee")
-    public String deleteEmployee(@RequestParam(value="email") @Email(message = "L'adresse email passée en paramètre de la requête n'est pas valide.") String email) throws NotFoundException {
+    public JsonObject deleteEmployee(@RequestParam(value="email") @Email(message = "L'adresse email passée en paramètre de la requête n'est pas valide.") String email) throws NotFoundException {
             return employeeService.deleteEmployee(email);
     }
 }

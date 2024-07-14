@@ -9,6 +9,9 @@ import com.acme.api.mappers.EmployeeDTOMapper;
 import com.acme.api.repositories.EmployeeRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import javax.json.Json;
+import javax.json.JsonObject;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 @Service
@@ -30,15 +33,26 @@ public class EmployeeService implements EmployeeInterface{
 
     @Override
     public EmployeeDTO getEmployeeByEmail(String email) throws NotFoundException {
-        Employee employeeInDB = employeeRepository.findByEmail(email);
-        if (employeeInDB == null) {
-            throw new NotFoundException("Email inconnu.");
+        Optional<Employee> employeeInDB = employeeRepository.findByEmail(email);
+        if (employeeInDB.isPresent()) {
+            Employee employee = employeeInDB.get();
+            return new EmployeeDTO(employee.getFirstName(), employee.getLastName(), employee.getEmail(), employee.getUsername(), employee.getRole());
+        } else {
+            throw new NotFoundException("Employé non référencé.");
         }
-        return new EmployeeDTO(employeeInDB.getFirstName(), employeeInDB.getLastName(), employeeInDB.getEmail(), employeeInDB.getUsername(), employeeInDB.getRole());
     }
 
     @Override
     public EmployeeDTO createEmployee(EmployeeRequestBody employeeRequestBody) throws AlreadyExistException {
+        Optional<Employee> mailInDB = employeeRepository.findByEmail(employeeRequestBody.getEmail());
+        if (mailInDB.isPresent()) {
+            throw new AlreadyExistException("Cet email a déjà été renseigné.");
+        }
+        Optional<Employee> usernameInDB = employeeRepository.findByUsername(employeeRequestBody.getUsername());
+        if (usernameInDB.isPresent()) {
+            throw new AlreadyExistException("Ce pseudonyme n'est pas disponible.");
+        }
+
         Employee employee = new Employee();
         employee.setFirstName(employeeRequestBody.getFirstName());
         employee.setLastName(employeeRequestBody.getLastName());
@@ -47,54 +61,52 @@ public class EmployeeService implements EmployeeInterface{
         employee.setPassword(passwordEncoder().encode(employeeRequestBody.getPassword()));
         employee.setRole(employeeRequestBody.getRole());
 
-        Employee mailInDB = employeeRepository.findByEmail(employee.getEmail());
-        if (mailInDB != null) {
-            throw new AlreadyExistException("Cet email a déjà été renseigné.");
-        }
-        Employee usernameInDB = employeeRepository.findByUsername(employee.getUsername());
-        if (usernameInDB != null) {
-            throw new AlreadyExistException("Ce pseudonyme n'est pas disponible.");
-        }
         employeeRepository.save(employee);
         return new EmployeeDTO(employee.getFirstName(), employee.getLastName(), employee.getEmail(), employee.getUsername(), employee.getRole());
     }
 
     @Override
     public EmployeeDTO updateEmployee(String email, EmployeeRequestBody employeeRequestBody) throws NotFoundException {
-        Employee employeeToUpdate = employeeRepository.findByEmail(email);
-        if (employeeToUpdate == null) {
-            throw new NotFoundException("Employé inconnu.");
+        Optional<Employee> employeeToUpdate = employeeRepository.findByEmail(email);
+        if (employeeToUpdate.isPresent()) {
+            Employee employee = employeeToUpdate.get();
+
+            if(employeeRequestBody.getFirstName() != null){
+                employee.setFirstName(employeeRequestBody.getFirstName());
+            }
+            if(employeeRequestBody.getLastName() != null) {
+                employee.setLastName(employeeRequestBody.getLastName());
+            }
+            if(employeeRequestBody.getEmail() != null){
+                employee.setEmail(employeeRequestBody.getEmail());
+            }
+            if(employeeRequestBody.getUsername() != null){
+                employee.setUsername(employeeRequestBody.getUsername());
+            }
+            if(employeeRequestBody.getPassword() != null){
+                employee.setPassword(passwordEncoder().encode(employeeRequestBody.getPassword()));
+            }
+            if(employeeRequestBody.getRole() != null){
+                employee.setRole(employeeRequestBody.getRole());
+            }
+            employeeRepository.save(employee);
+            return new EmployeeDTO(employee.getFirstName(), employee.getLastName(), employee.getEmail(), employee.getUsername(), employee.getRole());
+        } else {
+            throw new NotFoundException( "Client non référencé.");
         }
-        if(employeeRequestBody.getFirstName() != null){
-            employeeToUpdate.setFirstName(employeeRequestBody.getFirstName());
-        }
-        if(employeeRequestBody.getLastName() != null) {
-            employeeToUpdate.setLastName(employeeRequestBody.getLastName());
-        }
-        if(employeeRequestBody.getEmail() != null){
-            employeeToUpdate.setEmail(employeeRequestBody.getEmail());
-        }
-        if(employeeRequestBody.getUsername() != null){
-            employeeToUpdate.setUsername(employeeRequestBody.getUsername());
-        }
-        if(employeeRequestBody.getPassword() != null){
-            employeeToUpdate.setPassword(passwordEncoder().encode(employeeRequestBody.getPassword()));
-        }
-        if(employeeRequestBody.getRole() != null){
-            employeeToUpdate.setRole(employeeRequestBody.getRole());
-        }
-        employeeRepository.save(employeeToUpdate);
-        return new EmployeeDTO(employeeToUpdate.getFirstName(), employeeToUpdate.getLastName(), employeeToUpdate.getEmail(), employeeToUpdate.getUsername(), employeeToUpdate.getRole());
     }
 
     @Override
-    public String deleteEmployee(String email) throws NotFoundException {
-        Employee employeeToDelete = employeeRepository.findByEmail(email);
-        if (employeeToDelete != null) {
-            employeeRepository.delete(employeeToDelete);
-            return employeeToDelete.getEmail();
+    public JsonObject deleteEmployee(String email) throws NotFoundException {
+        Optional<Employee> employeeToDelete = employeeRepository.findByEmail(email);
+        if (employeeToDelete.isPresent()) {
+            Employee employee = employeeToDelete.get();
+            employeeRepository.delete(employee);
+            return Json.createObjectBuilder()
+                    .add("deleted", employee.getEmail())
+                    .build();
         } else {
-            throw new NotFoundException("Employé inconnu.");
+            throw new NotFoundException("Employé non référencé.");
         }
     }
 

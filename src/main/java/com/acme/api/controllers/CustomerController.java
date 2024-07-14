@@ -7,11 +7,16 @@ import com.acme.api.exceptions.AlreadyExistException;
 import com.acme.api.exceptions.NoMatchException;
 import com.acme.api.exceptions.NotFoundException;
 import com.acme.api.services.CustomerService;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.json.JsonObject;
+import javax.json.JsonString;
 import java.util.stream.Stream;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -49,7 +54,7 @@ public class CustomerController {
     }
 
     @DeleteMapping("/customer")
-    public String deleteCustomer(@RequestParam(value="email") @Email(message = "L'adresse email passée en paramètre de la requête n'est pas valide.") String email) throws NotFoundException {
+    public JsonObject deleteCustomer(@RequestParam(value="email") @Email(message = "L'adresse email passée en paramètre de la requête n'est pas valide.") String email) throws NotFoundException {
             return customerService.deleteCustomer(email);
     }
 

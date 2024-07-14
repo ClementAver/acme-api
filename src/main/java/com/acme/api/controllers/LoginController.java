@@ -3,6 +3,7 @@ package com.acme.api.controllers;
 import com.acme.api.configuration.CustomUserDetailsService;
 import com.acme.api.dto.LoginRequestBody;
 import com.acme.api.entities.Employee;
+import com.acme.api.exceptions.NoMatchException;
 import com.acme.api.repositories.EmployeeRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,6 +19,8 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 import static org.springframework.security.web.context.HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY;
 
@@ -37,7 +40,7 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginRequestBody loginRequestBody, HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<String> login(@RequestBody LoginRequestBody loginRequestBody, HttpServletRequest request, HttpServletResponse response) throws NoMatchException {
 
             // Authentication : throws "AuthenticationException".
             Authentication authentication = authenticationManager.authenticate(
@@ -62,8 +65,13 @@ public class LoginController {
             response.setHeader("Access-Control-Allow-Credentials", "true");
 
             // If authentication successful :
-            Employee employee = employeeRepository.findByUsername(loginRequestBody.getUsername());
-            return ResponseEntity.ok("Bienvenue, " + employee.getFirstName() + " " + employee.getLastName());
+            Optional<Employee> employeeInDB = employeeRepository.findByUsername(loginRequestBody.getUsername());
+            if (employeeInDB.isPresent()) {
+                Employee employee = employeeInDB.get();
+                return ResponseEntity.ok("Bienvenue, " + employee.getFirstName() + " " + employee.getLastName());
+            } else {
+                throw new NoMatchException("Employé non référencé.");
+            }
     }
 
     @PostMapping("/logout")

@@ -5,6 +5,7 @@ import com.acme.api.dto.EmployeeRequestBody;
 import com.acme.api.exceptions.AlreadyExistException;
 import com.acme.api.exceptions.NotFoundException;
 
+import javax.json.JsonObject;
 import java.util.stream.Stream;
 
 public interface EmployeeInterface {
@@ -12,6 +13,6 @@ public interface EmployeeInterface {
     EmployeeDTO getEmployeeByEmail(String email) throws NotFoundException;
     EmployeeDTO createEmployee(EmployeeRequestBody employeeRequestBody) throws AlreadyExistException;
     EmployeeDTO updateEmployee(String email, EmployeeRequestBody employeeRequestBody) throws NotFoundException;
-    String deleteEmployee(String email) throws NotFoundException;
+    JsonObject deleteEmployee(String email) throws NotFoundException;
     // Employee getOrCreateEmployee(Employee employee);
     }

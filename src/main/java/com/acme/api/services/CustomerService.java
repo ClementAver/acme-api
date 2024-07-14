@@ -14,6 +14,9 @@ import com.acme.api.repositories.CustomerRepository;
 import com.acme.api.repositories.OrderRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
+
+import javax.json.Json;
+import javax.json.JsonObject;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -110,12 +113,14 @@ public class CustomerService implements CustomerInterface{
     }
 
     @Override
-    public String deleteCustomer(String email) throws NotFoundException {
+    public JsonObject deleteCustomer(String email) throws NotFoundException {
         Optional<Customer> customerToDelete = customerRepository.findByEmail(email);
         if (customerToDelete.isPresent()) {
             Customer customer = customerToDelete.get();
             customerRepository.delete(customer);
-            return customer.getEmail();
+            return Json.createObjectBuilder()
+                    .add("deleted", customer.getEmail())
+                    .build();
         } else {
             throw new NotFoundException("Client non référencé.");
         }

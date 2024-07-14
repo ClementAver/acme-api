@@ -48,16 +48,16 @@ public class SpringSecurityConfig {
                     .csrf(AbstractHttpConfigurer::disable)  // Utilisation de AbstractHttpConfigurer pour désactiver CSRF
                     .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                     .authorizeHttpRequests(auth -> {
-                        // auth.requestMatchers("/**").permitAll();
-                        // No Auth needed on login.
-                        auth.requestMatchers("/api/login").permitAll();
-                        auth.requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll();
-                        // Must be admin to run POST or PUT method on employees (create or update).
-                        auth.requestMatchers(HttpMethod.POST, "/api/employee").hasRole("ADMIN");
-                        auth.requestMatchers(HttpMethod.PUT, "/api/employee").hasRole("ADMIN");
-                        auth.requestMatchers(HttpMethod.DELETE, "/api/employee").hasRole("ADMIN");
-                        // Ensures that all unauthenticated requests trigger a 401 error.
-                        auth.anyRequest().authenticated();
+                        auth.requestMatchers("/**").permitAll();
+//                        // No Auth needed on login.
+//                        auth.requestMatchers("/api/login").permitAll();
+//                        auth.requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll();
+//                        // Must be admin to run POST or PUT method on employees (create or update).
+//                        auth.requestMatchers(HttpMethod.POST, "/api/employee").hasRole("ADMIN");
+//                        auth.requestMatchers(HttpMethod.PUT, "/api/employee").hasRole("ADMIN");
+//                        auth.requestMatchers(HttpMethod.DELETE, "/api/employee").hasRole("ADMIN");
+//                        // Ensures that all unauthenticated requests trigger a 401 error.
+//                        auth.anyRequest().authenticated();
                     }).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)).addFilterAfter((request, response, chain) -> {
                         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
                         if (auth != null) {

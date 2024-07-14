@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 // Retrieves user details and assigns roles based on the user's data stored in DB.
 @Service
@@ -29,12 +30,14 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Employee employee = employeeRepository.findByUsername(username);
-        if (employee == null) {
+        Optional<Employee> employeeInDB = employeeRepository.findByUsername(username);
+        if (employeeInDB.isEmpty()) {
             throw new UsernameNotFoundException("User not found with username: " + username);
+        } else {
+            Employee employee = employeeInDB.get();
+            logger.info("User found with username: {}, roles: {}", username, employee.getRole().toString());
+            return new User(employee.getUsername(), employee.getPassword(), getGrantedAuthorities(employee.getRole().toString()));
         }
-        logger.info("User found with username: {}, roles: {}", username, employee.getRole().toString());
-        return new User(employee.getUsername(), employee.getPassword(), getGrantedAuthorities(employee.getRole().toString()));
     }
 
     // Assign the right permissions to the user (GrantedAuthorities collection)
